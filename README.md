@@ -1,4 +1,4 @@
-﻿# MannMitraFinal
+﻿# MannMitra
 
 **MannMitra** is a student-first digital mental health and psychological support ecosystem.
 
@@ -24,5 +24,6 @@
 - Smart dashboards for colleges/universities → track wellbeing, spot early risks.
 - Policy model: 1 counselor per 50 students, CSR tie-ups for funding rural outreach.
 - Mental health literacy as part of curriculum → awareness at an early stage.
+
 
 
