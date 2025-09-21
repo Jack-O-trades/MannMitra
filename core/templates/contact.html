@@ -1,0 +1,240 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link
+      as="style"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+      onload="this.rel='stylesheet'"
+      rel="stylesheet"
+    />
+    <title>HealingHub - Emergency Support</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+      :root {
+        --primary-color: #007c7c;
+        --primary-color-dark: #005f5f;
+        --secondary-color: #e0f7fa;
+        --background-color: #f0fdfa;
+        --text-primary: #1f2937;
+        --text-secondary: #4b5563;
+        --accent-color: #ff6b6b;
+        --sos-button-color: #ef4444;
+        --sos-button-hover-color: #dc2626;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-gradient-to-br from-[var(--background-color)] to-white group/design-root overflow-x-hidden"
+    >
+      <div class="layout-container flex h-full grow flex-col">
+        <header
+          class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200/80 px-10 py-4 shadow-sm bg-white/80 backdrop-blur-sm sticky top-0 z-50"
+        >
+          <!-- Logo section -->
+          <div class="flex items-center gap-3">
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="MannMitra Logo"
+              class="h-10 w-10 object-cover rounded-full"
+            />
+            <span class="text-2xl font-bold text-[var(--text-primary)]"
+              >MannMitra</span
+            >
+          </div>
+
+          <!-- Navigation section -->
+          <nav class="flex items-center gap-10">
+            <a
+              class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-base font-medium leading-normal transition-colors duration-300"
+              href="{% url 'home' %}"
+              >Home</a
+            >
+            <a
+              class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-base font-medium leading-normal transition-colors duration-300"
+              href="{% url 'resources' %}"
+              >Resources</a
+            >
+            <a
+              class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-base font-medium leading-normal transition-colors duration-300"
+              href="{% url 'home' %}"
+              >Community</a
+            >
+            <a
+              class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-base font-medium leading-normal transition-colors duration-300"
+              href="{% url 'aboutus' %}"
+              >About Us</a
+            >
+          </nav>
+
+          <!-- Action buttons -->
+          <div class="flex gap-4">
+            <button
+              class="flex min-w-[90px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-11 px-6 bg-[var(--secondary-color)] text-[var(--primary-color)] text-sm font-bold leading-normal tracking-wide hover:bg-teal-100 hover:shadow-md transition-all duration-300"
+            >
+              <span class="truncate">Login</span>
+            </button>
+            <button
+              class="flex min-w-[90px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-11 px-6 bg-gradient-to-r from-[var(--primary-color)] to-teal-500 text-white text-sm font-bold leading-normal tracking-wide hover:shadow-lg hover:shadow-teal-500/20 transition-all duration-300 transform hover:-translate-y-0.5"
+            >
+              <span class="truncate">Sign Up</span>
+            </button>
+          </div>
+        </header>
+        <main class="flex flex-1 justify-center py-16 px-4 sm:px-6 lg:px-8">
+          <div
+            class="layout-content-container flex flex-col max-w-4xl flex-1 items-center"
+          >
+            <h1
+              class="text-[var(--text-primary)] tracking-tight text-5xl font-extrabold leading-tight text-center pb-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-cyan-800"
+            >
+              Need Help Now?
+            </h1>
+            <p
+              class="text-[var(--text-secondary)] text-lg font-normal leading-relaxed pb-10 text-center max-w-2xl"
+            >
+              If you're in immediate danger, please call emergency services. For
+              urgent mental health support, use the SOS button or contact a
+              helpline below.
+            </p>
+            <div class="flex justify-center py-5">
+              <button
+                class="flex min-w-[280px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-20 px-12 bg-gradient-to-r from-[var(--sos-button-color)] to-red-600 text-white text-2xl font-bold leading-normal tracking-wider shadow-xl shadow-red-500/30 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+              >
+                <svg
+                  class="h-8 w-8 mr-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+                <span class="truncate">SOS - Emergency Help</span>
+              </button>
+            </div>
+            <h2
+              class="text-[var(--text-primary)] text-3xl font-bold leading-tight tracking-tight pt-16 pb-8"
+            >
+              Verified Helplines
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+              <div
+                class="flex flex-col justify-between gap-4 rounded-2xl bg-white p-7 shadow-lg shadow-cyan-100/50 hover:shadow-xl hover:shadow-cyan-200/60 transition-shadow duration-300 transform hover:-translate-y-1"
+              >
+                <div class="flex flex-col gap-2">
+                  <p
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight"
+                  >
+                    National Institute of Mental Health and Neurosciences
+                    (NIMHANS)
+                  </p>
+                  <p
+                    class="text-[var(--text-secondary)] text-base font-normal leading-relaxed"
+                  >
+                    Helpline: 080-46110007. This Bangalore-based institute
+                    provides medical advice, counseling, and rehabilitation
+                    services.
+                  </p>
+                </div>
+                <button
+                  class="flex items-center justify-center rounded-xl h-11 px-6 bg-gradient-to-r from-teal-50 to-cyan-100 text-[var(--primary-color)] text-base font-semibold leading-normal w-fit hover:from-teal-100 hover:to-cyan-200 hover:text-[var(--primary-color-dark)] transition-all duration-300 shadow-sm hover:shadow-md"
+                >
+                  <span class="truncate">Call 080-46110007</span>
+                </button>
+              </div>
+              <div
+                class="flex flex-col justify-between gap-4 rounded-2xl bg-white p-7 shadow-lg shadow-cyan-100/50 hover:shadow-xl hover:shadow-cyan-200/60 transition-shadow duration-300 transform hover:-translate-y-1"
+              >
+                <div class="flex flex-col gap-2">
+                  <p
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight"
+                  >
+                    Tele MANAS
+                  </p>
+                  <p
+                    class="text-[var(--text-secondary)] text-base font-normal leading-relaxed"
+                  >
+                    Dial 14416 or 1800-89-14416 (toll-free) for 24x7 mental
+                    health support and counseling. The service is available in
+                    multiple languages.
+                  </p>
+                </div>
+                <button
+                  class="flex items-center justify-center rounded-xl h-11 px-6 bg-gradient-to-r from-teal-50 to-cyan-100 text-[var(--primary-color)] text-base font-semibold leading-normal w-fit hover:from-teal-100 hover:to-cyan-200 hover:text-[var(--primary-color-dark)] transition-all duration-300 shadow-sm hover:shadow-md"
+                >
+                  <a
+                    href="https://telemanas.mohfw.gov.in"
+                    target="_blank"
+                    class="truncate"
+                  >
+                    telemanas.mohfw.gov.in
+                  </a>
+                </button>
+              </div>
+              <div
+                class="flex flex-col justify-between gap-4 rounded-2xl bg-white p-7 shadow-lg shadow-cyan-100/50 hover:shadow-xl hover:shadow-cyan-200/60 transition-shadow duration-300 transform hover:-translate-y-1"
+              >
+                <div class="flex flex-col gap-2">
+                  <p
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight"
+                  >
+                    KIRAN Helpline
+                  </p>
+                  <p
+                    class="text-[var(--text-secondary)] text-base font-normal leading-relaxed"
+                  >
+                    For mental health rehabilitation, you can call 1800-599-0019
+                  </p>
+                </div>
+
+                <button
+                  class="flex items-center justify-center rounded-xl h-11 px-6 bg-gradient-to-r from-teal-50 to-cyan-100 text-[var(--primary-color)] text-base font-semibold leading-normal w-fit hover:from-teal-100 hover:to-cyan-200 hover:text-[var(--primary-color-dark)] transition-all duration-300 shadow-sm hover:shadow-md"
+                >
+                  <span class="truncate">Call 1800-599-0019</span>
+                </button>
+              </div>
+              <div
+                class="flex flex-col justify-between gap-4 rounded-2xl bg-white p-7 shadow-lg shadow-cyan-100/50 hover:shadow-xl hover:shadow-cyan-200/60 transition-shadow duration-300 transform hover:-translate-y-1"
+              >
+                <div class="flex flex-col gap-2">
+                  <p
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight"
+                  >
+                    AIIMS Delhi Helpline (for autism)
+                  </p>
+                  <p
+                    class="text-[var(--text-secondary)] text-base font-normal leading-relaxed"
+                  >
+                    1800-11-7776. This 24/7 toll-free service is for parents
+                    seeking information and assistance regarding autistic
+                    disorders in children.
+                  </p>
+                </div>
+                <button
+                  class="flex items-center justify-center rounded-xl h-11 px-6 bg-gradient-to-r from-teal-50 to-cyan-100 text-[var(--primary-color)] text-base font-semibold leading-normal w-fit hover:from-teal-100 hover:to-cyan-200 hover:text-[var(--primary-color-dark)] transition-all duration-300 shadow-sm hover:shadow-md"
+                >
+                  <span class="truncate">Dial 1800-11-7776</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

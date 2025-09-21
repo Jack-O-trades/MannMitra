@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MannMitra - Login</title>
+    <style>
+      /* General Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f4f6f8;
+      }
+      .container {
+        width: 100%;
+        max-width: 400px;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        color: #666;
+      }
+      .form-group {
+        text-align: left;
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+        color: #444;
+      }
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+      .roles {
+        display: flex;
+        gap: 1rem;
+        margin: 0.5rem 0 1.5rem;
+      }
+      .roles label {
+        font-size: 0.9rem;
+        color: #444;
+      }
+      .btn {
+        width: 100%;
+        background: #1d7a63;
+        color: #fff;
+        border: none;
+        padding: 0.9rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      .btn:hover {
+        background: #15624f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Welcome Back</h2>
+      <p>Sign in to continue to MannMitra.</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Select Role</label>
+          <div class="roles">
+            <label
+              ><input type="radio" name="role" value="Admin" required />
+              Admin</label
+            >
+            <label
+              ><input type="radio" name="role" value="Institution" />
+              Institution</label
+            >
+          </div>
+        </div>
+
+        <button type="submit" class="btn">Sign in</button>
+      </form>
+    </div>
+
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      // IMPORTANT: Replace these with your actual Supabase Project URL and Anon Key
+      const supabaseUrl = "https://nrjxvuzhvfvxpvdvrxdf.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yanh2dXpodmZ2eHB2ZHZyeGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjcwMjUsImV4cCI6MjA3MzEwMzAyNX0.hCga9sEp1hLuRFcAzpbz0rePyaQYUNu2DWCpBe2SGxg";
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const loginForm = document.getElementById("loginForm");
+
+      loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        // 1. Get form values and validate that a role was selected
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const selectedRole = document.querySelector(
+          "input[name='role']:checked"
+        )?.value;
+
+        if (!selectedRole) {
+          alert("Please select a role!");
+          return;
+        }
+
+        // 2. Attempt to sign in the user with their email and password
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+
+        if (error) {
+          alert("Login failed: " + error.message);
+          return;
+        }
+
+        // 3. If login is successful (data.user exists), redirect based on the selected radio button.
+        if (data.user) {
+          //alert("Login successful! Redirecting...");
+          if (selectedRole === "Admin") {
+            window.location.href = "{% url 'admin_dashboard' %}";
+          } else if (selectedRole === "Institution") {
+            window.location.href = "{% url 'inst_dashboard' %}";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

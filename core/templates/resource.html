@@ -1,0 +1,632 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MannMitra - Resource Hub</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-500: #0ea5e9;
+        --primary-600: #0284c7;
+        --primary-50: #f0f9ff;
+        --soft-blue: #bfdbfe;
+        --soft-green: #dcfce7;
+        --soft-purple: #e9d5ff;
+        --soft-pink: #fbcfe8;
+        --text-dark: #1e293b;
+        --text-gray: #475569;
+        --bg-light: #ffffff;
+        --bg-muted: #f8fafc;
+        --card-shadow: rgba(0, 0, 0, 0.05);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Lexend", "Noto Sans", sans-serif;
+      }
+      body {
+        background: var(--bg-light);
+        color: var(--text-dark);
+        line-height: 1.5;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3 {
+        margin-bottom: 0.5rem;
+      }
+      button {
+        cursor: pointer;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 3rem;
+        background: var(--bg-light);
+        border-bottom: 1px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      header .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--text-dark);
+      }
+      header nav a {
+        margin-left: 1.5rem;
+        font-weight: 500;
+        color: var(--text-gray);
+        transition: 0.3s;
+      }
+      header nav a:hover {
+        color: var(--primary-500);
+      }
+      header .buttons button {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        border: none;
+        font-weight: 600;
+      }
+      header .buttons .login {
+        background: #e2e8f0;
+        color: var(--text-dark);
+      }
+      header .buttons .signup {
+        background: var(--primary-500);
+        color: #fff;
+      }
+
+      main {
+        padding: 3rem;
+        max-width: 1200px;
+        margin: auto;
+      }
+      .intro {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .intro h1 {
+        font-size: 2.5rem;
+      }
+      .intro p {
+        color: var(--text-gray);
+        margin-top: 1rem;
+        font-size: 1.1rem;
+      }
+
+      .search-box {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+      .search-box input {
+        width: 100%;
+        max-width: 500px;
+        padding: 0.75rem 1rem;
+        border-radius: 9999px;
+        border: 1px solid #cbd5e1;
+        outline: none;
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 2rem;
+      }
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .grid-4 {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .card {
+        background: var(--bg-light);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px var(--card-shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+      }
+      /* Add cursor pointer to cards with audio */
+      .card:has(.audio-player) {
+          cursor: pointer;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px var(--card-shadow);
+      }
+
+      .card .icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 9999px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .card .title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+      .card .desc {
+        color: var(--text-gray);
+        flex-grow: 1;
+        margin-bottom: 1rem;
+      }
+      .card button {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        background: var(--primary-500);
+        transition: 0.3s;
+        opacity: 0;
+        transform: translateY(10px);
+        align-self: flex-start;
+      }
+      .card:hover button {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .card button:hover {
+        background: var(--primary-600);
+      }
+      
+      /* New style for the audio player */
+      .card .audio-player {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s, transform 0.3s;
+        margin-top: 1rem;
+        height: 40px; /* Give it a fixed height */
+      }
+      .card:hover .audio-player {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .card .audio-player audio {
+        width: 100%;
+        height: 40px;
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .featured {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      .featured .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-gray);
+        font-size: 0.9rem;
+      }
+
+      .region-section {
+        margin-top: 3rem;
+      }
+      .region-section h2 {
+        margin-bottom: 2rem;
+      }
+      
+      /* Video Modal Styles */
+      .video-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+      }
+      .video-modal.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .video-modal-content {
+        position: relative;
+        width: 90%;
+        max-width: 800px;
+        aspect-ratio: 16 / 9;
+        background: #000;
+      }
+      .video-modal-content iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .video-modal-close {
+        position: absolute;
+        top: -30px;
+        right: 0;
+        color: #fff;
+        font-size: 2rem;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: flex-start;
+          padding: 1rem;
+        }
+        main {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <img
+          src="{% static 'core/images/LOHO.jpeg' %}"
+          alt="MannMitra Logo"
+          class="rounded-full"
+          style="width: 40px; height: 40px; object-fit: cover; flex-shrink: 0"
+        />
+        <h2 class="text-gray-900 text-xl font-bold" style="margin: 0">
+          MannMitra
+        </h2>
+      </div>
+      <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'resources' %}">Resources</a>
+        <a href="#">Community</a>
+        <a href="{% url 'aboutus' %}">About Us</a>
+      </nav>
+      <div class="buttons">
+        <button class="login">Login</button>
+        <button class="signup">Sign Up</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="intro">
+        <h1>Your Mental Wellness Journey Starts Here</h1>
+        <p>
+          A calming, user-friendly digital mental health resource hub for
+          students. Discover tools and support to navigate your path to
+          well-being.
+        </p>
+        <div class="search-box">
+          <input type="text" placeholder="Search for resources..." />
+        </div>
+      </div>
+
+      <section>
+        <h2>Explore Resources</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="icon" style="background: var(--soft-blue); color: var(--primary-600)">🧠</div>
+            <div class="title">Self-Care Toolkit</div>
+            <div class="desc">Discover strategies for managing stress and enhancing your well-being.</div>
+            <button>Explore</button>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-green); color: #10b981">⚡</div>
+            <div class="title">Crisis Support</div>
+            <div class="desc">Immediate help and resources for when you need it most.</div>
+            <button>Get Help</button>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-purple); color: #6d28d9">🧘</div>
+            <div class="title">Mindfulness Practices</div>
+            <div class="desc">Find peace and focus with guided meditations and mindfulness exercises.</div>
+            <button>Start Now</button>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 3rem">
+        <h2>Calming Music & Sounds</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="icon" style="background: var(--soft-pink); color: #db2777">🎵</div>
+            <div class="title">Lofi Beats</div>
+            <div class="desc">Relaxing beats for focus, study, or unwinding.</div>
+            <div class="audio-player">
+              <audio controls src="{% static 'core/audio/lofi-beats.mp3' %}">Your browser does not support the audio element.</audio>
+            </div>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-blue); color: var(--primary-600)">🌊</div>
+            <div class="title">Ocean Waves</div>
+            <div class="desc">The soothing sound of ocean waves for calm and sleep.</div>
+            <div class="audio-player">
+                <audio controls src="{% static 'core/audio/ocean-waves.mp3' %}">Your browser does not support the audio element.</audio>
+            </div>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-green); color: #10b981">🐦</div>
+            <div class="title">Nature's Melody</div>
+            <div class="desc">Calming birdsong and gentle nature sounds.</div>
+            <div class="audio-player">
+                <audio controls src="{% static 'core/audio/natures-melody.mp3' %}">Your browser does not support the audio element.</audio>
+            </div>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-pink); color: #db2777">🎹</div>
+            <div class="title">Peaceful Piano</div>
+            <div class="desc">Gentle melodies to help you relax and focus.</div>
+            <div class="audio-player">
+              <audio controls src="{% static 'core/audio/peaceful_piano.mp3' %}">Your browser does not support the audio element.</audio>
+            </div>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-blue); color: var(--primary-600)">🌧️</div>
+            <div class="title">Rain Sounds</div>
+            <div class="desc">Continuous, calming rain to help you drift off to sleep.</div>
+            <div class="audio-player">
+                <audio controls src="{% static 'core/audio/rain_sounds.mp3' %}">Your browser does not support the audio element.</audio>
+            </div>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-green); color: #10b981">🌳</div>
+            <div class="title">Forest Ambience</div>
+            <div class="desc">Immerse yourself in the tranquil sounds of nature.</div>
+            <div class="audio-player">
+                <audio controls src="{% static 'core/audio/forest_ambience.mp3' %}">Your browser does not support the audio element.</audio>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="region-section">
+        <h2>Region-Specific Resources</h2>
+        <div class="grid grid-3">
+            <div class="card">
+            <div class="icon" style="background: var(--soft-blue); color: var(--primary-600)">📍</div>
+            <div class="title">Your Local Support</div>
+            <div class="desc">Resources and helplines available in your region.</div>
+            <button>View</button>
+          </div>
+          <div class="card">
+            <div class="icon" style="background: var(--soft-green); color: #10b981">🌿</div>
+            <div class="title">Local Healing Practices</div>
+            <div class="desc">Region-specific cultural practices like pranayama, chanting, and herbal remedies.</div>
+            <button>Explore</button>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 3rem">
+        <h2>Featured Resources</h2>
+        <div class="featured grid-4">
+          <div class="card">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeYMLgqsdNNgQbprIVo62NqO8a0tc4gWWW5dHmBvtVgjF2z6XUazhMFW57F1JOvhvSB8W2sgMXbXbezbJglMZgjTxS4eZ0PNOAzmszuLt_10oTT6yLS2XV4sKXoVkffBDBDT1zAF5WVHM2P7b096-T23tJdF9FwnGU8HIY08jcTftDJP_tADwwvsz0JaOExeB1uYRNKg8cie0n64rUsCxsvwMW4_caIf4uOqS69rYAUmoLNR5fXUUBZo4ZD6rsDkJju6l6HlLX6imx" alt="Exam Stress Boost Kit" />
+            <div class="title">Exam Stress Boost Kit</div>
+            <div class="desc">Practical tips, breathing exercises, and relaxation routines for exam prep.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-1">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa0ZssMw4SOJ-sU7gylKXcE6B7c0TmMcF9cjROVRkD-WvQbH4bK5Bke-voYydFQYgoJAonsw3cYPyImEHH9vvaJMHNr738EFAIru3VG_OJ1T_4hi3XTzo5Bs_YGJtTJfyBPKxYlsgj2SKK7HkZs6eVDbRWhNki8CoKDqQ5MxkaWoPQmpSApHiTdLKLfBELjtKTx4RRpDN6fZIL-MshIsrXTHt6yfTFBZOKT0SWzxmtzDibVePJ0lnie_RaxGCu_CWsaXFgePUTS9nW" alt="Yoga Kit" />
+            <div class="title">Yoga Kit</div>
+            <div class="desc">Postures and practices for mental calmness, flexibility, and strength.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-2">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/medguides.jpg' %}" alt="Meditation Guides" />
+            <div class="title">Meditation Guides</div>
+            <div class="desc">Guided sessions for focus, sleep, and anxiety relief.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-3">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/somatictherapy.jpg' %}" alt="Somatic Therapy Guide" />
+            <div class="title">Somatic Therapy Guide</div>
+            <div class="desc">Body-based practices to process emotions and release tension.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-4">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/tradheal.jpg' %}" alt="Traditional Healing Practices" />
+            <div class="title">Traditional Healing Practices</div>
+            <div class="desc">Discover traditions like pranayama, chanting, or herbal remedies.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-5">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/parentteachersupport.jpg' %}" alt="Parent & Teacher Awareness Tools" />
+            <div class="title">Parent & Teacher Awareness Tools</div>
+            <div class="desc">Educational PDFs for how to support students' mental health.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-6">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/offlinepacks.jpg' %}" alt="Offline Wellness Packs" />
+            <div class="title">Downloadable content for areas with limited internet access.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-7">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/journaling.jpg' %}" alt="Self-Reflection Journals" />
+            <div class="title">Self-Reflection Journals</div>
+            <div class="desc">Prompts to track emotions and build resilience.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-8">Watch Now</button>
+          </div>
+          <div class="card">
+            <img src="{% static 'core/images/ptopsupport.jpg' %}" alt="Peer Support Initiatives" />
+            <div class="title">Peer Support Initiatives</div>
+            <div class="desc">A safe space to connect and help friends in distress.</div>
+            <button class="watch-btn" data-modal-target="#videoModal-9">Watch Now</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2025 MannMitra. All rights reserved.</footer>
+
+    <div id="videoModal-1" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/6Rg0mBkVAeo?si=Iorr5GCoSvvJiAro" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-2" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/83nueJMvtV8?si=sNFXRhAO3IPu-Mb_" title="YouTube video player" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-3" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/uTN29kj7e-w?si=5eFNFgPTEn6IcNE0" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-4" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/UU7eSxcBhpM?si=kH7IfbvO-MOGWRDo" title="YouTube video player" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-5" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/OwHQ6w_a2zg?si=z1hbWSgtCtlAh0pf" title="YouTube video player" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-6" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/a72npW7DeB4?si=0-SvCmM3Hhz_WCmT" title="YouTube video player" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-7" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/9ne0IGOLdzI?si=E1r0F9WezqI4WIBH" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-8" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/Uyclg4X0ukI?si=xNQdV3IsY1Jy8Zbi" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="videoModal-9" class="video-modal">
+        <div class="video-modal-content">
+            <button class="video-modal-close">×</button>
+            <iframe src="https://www.youtube.com/embed/bd797eF62k8?si=PT7VgWVncs3hbzLM" allow="autoplay" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const watchButtons = document.querySelectorAll('.watch-btn');
+            const modals = document.querySelectorAll('.video-modal');
+            const closeButtons = document.querySelectorAll('.video-modal-close');
+
+            // Open correct modal
+            watchButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal-target');
+                    const modal = document.querySelector(modalId);
+                    if (modal) {
+                        modal.classList.add('active');
+                    }
+                });
+            });
+
+            // Function to close any active modal
+            const closeModal = () => {
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                    // Stop the video by resetting the iframe src
+                    const iframe = modal.querySelector('iframe');
+                    if (iframe) {
+                      const videoSrc = iframe.src;
+                      // Remove autoplay parameter if it exists and reset src to stop video
+                      iframe.src = videoSrc.replace("&autoplay=1", "").replace("?autoplay=1", "");
+                    }
+                });
+            };
+
+            // Add close functionality
+            closeButtons.forEach(button => button.addEventListener('click', closeModal));
+            modals.forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal();
+                    }
+                });
+            });
+
+            // --- New script for clickable music cards ---
+            const allCards = document.querySelectorAll('.card');
+            const allAudioElements = document.querySelectorAll('.audio-player audio');
+
+            allCards.forEach(card => {
+                const audio = card.querySelector('.audio-player audio');
+                if (!audio) return; // Skip cards that are not music cards
+
+                card.addEventListener('click', (event) => {
+                    // If the user clicked directly on the audio controls, let the browser handle it.
+                    if (event.target.closest('.audio-player')) {
+                        return;
+                    }
+
+                    // Pause all other audios
+                    allAudioElements.forEach(otherAudio => {
+                        if (otherAudio !== audio) {
+                            otherAudio.pause();
+                        }
+                    });
+
+                    // Toggle play/pause for the current card's audio
+                    if (audio.paused) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

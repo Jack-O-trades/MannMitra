@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MannMitra - Discussion Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex flex-col h-screen">
+    <nav class="col-span-2 flex items-center justify-between px-6 py-2 border-b border-border-grey bg-white">
+    <div class="text-2xl font-semibold text-green-600">MannMitra</div>
+    <div class="relative w-2/5">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-text-light"></i>
+        <input type="text" placeholder="Search MannMitra" class="w-full py-2.5 pl-10 pr-4 rounded-full border-none bg-light-grey-bg text-sm focus:outline-none focus:ring-1 focus:ring-primary-green">
+    </div>
+    <div class="flex items-center gap-5">
+        <span class="flex items-center gap-2 cursor-pointer font-medium text-text-dark">
+            <i class="fa-solid fa-plus"></i> Create
+        </span>
+        <i class="fa-regular fa-bell text-xl text-text-light cursor-pointer"></i>
+        
+        <!-- This new relative container fixes the overlap issue -->
+        <div class="relative">
+            <button id="profileBtn" class="p-2 rounded-full bg-green-600 text-white hover:bg-green-700">👤</button>
+            <!-- Profile Dropdown (positioned relative to the button's container) -->
+            <div id="profileDropdown" class="absolute right-0 mt-2 w-56 bg-white border rounded shadow-lg divide-y divide-gray-200 hidden z-50">
+                <!-- View Profile -->
+                <a href="#" class="flex items-center px-4 py-2 hover:bg-green-100 space-x-3 group">
+                    <div class="p-2 rounded-full bg-white text-black flex items-center justify-center text-lg group-hover:text-green-600">
+                        <div class="p-2 rounded-full bg-green-600 text-white flex items-center justify-center text-lg group-hover:text-green-600">
+                            👤
+                        </div>
+                    </div>
+                    <span class="font-medium text-black group-hover:text-green-600">View Profile</span>
+                </a>
+                 <!-- Avatar -->
+                <a href="#" class="flex items-center px-4 py-2 hover:bg-green-100 space-x-3 group">
+                    <div class="p-2 rounded-full bg-white text-black flex items-center justify-center text-lg group-hover:text-green-600">
+                        <i class="fa-solid fa-shirt w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-black group-hover:text-green-600">Avatar</span>
+                </a>
+                <!-- Drafts -->
+                <a href="#" class="flex items-center px-4 py-2 hover:bg-green-200 space-x-3 group">
+                    <div class="p-2 rounded-full bg-white text-black flex items-center justify-center text-lg group-hover:text-green-600">
+                        <i class="fa-regular fa-file w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-black group-hover:text-green-600">Drafts</span>
+                </a>
+                <!-- Dark Mode -->
+                <div class="flex items-center justify-between px-4 py-2 hover:bg-green-100 group">
+                    <div class="flex items-center space-x-3 text-black group-hover:text-green-600">
+                        <div class="p-2 rounded-full bg-white text-black flex items-center justify-center text-lg group-hover:text-green-600">
+                            <i class="fa-regular fa-moon w-5 h-5"></i>
+                        </div>
+                        <span class="font-medium">Dark Mode</span>
+                    </div>
+                    <!-- Toggle Switch -->
+                    <label class="inline-flex relative items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer">
+                        <div class="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-green-600 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                    </label>
+                </div>
+                <!-- Log Out -->
+                <a href="#" class="flex items-center px-4 py-2 hover:bg-green-100 space-x-3 group">
+                    <div class="p-2 rounded-full bg-white text-black flex items-center justify-center text-lg group-hover:text-green-600">
+                        <i class="fa-solid fa-right-from-bracket w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-black group-hover:text-green-600">Log Out</span>
+                </a>
+                <!-- Settings -->
+                <a href="#" class="flex items-center px-4 py-2 hover:bg-green-100 space-x-3 group rounded-b-md">
+                    <div class="p-2 rounded-full bg-white text-black flex items-center justify-center text-lg group-hover:text-green-600">
+                        <i class="fa-solid fa-gear w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-black group-hover:text-green-600">Settings</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+       
+
+        <div class="flex flex-1 overflow-hidden">
+            <aside class="w-64 bg-white p-6 border-l border-gray-200">
+            
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Main Menu</h3>
+                        <a href="#" class="flex items-center mt-2 px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                            <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            <span>Home</span>
+                        </a>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</h3>
+                        <nav class="mt-2 space-y-1">
+                            <a href="#" class="flex items-center px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                                <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                <span>Anxiety</span>
+                            </a>
+                            <a href="#" class="flex items-center px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                                <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                <span>Exam Stress</span>
+                            </a>
+                             <a href="#" class="flex items-center px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                                <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                <span>Relationships</span>
+                            </a>
+                            <a href="#" class="flex items-center px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                                <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span>Addiction</span>
+                            </a>
+                            <a href="#" class="flex items-center px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                                <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 15.536c-1.171 1.952-3.07 1.952-4.242 0-1.172-1.953-1.172-5.119 0-7.072 1.171-1.952 3.07-1.952 4.242 0 1.172 1.953 1.172 5.119 0 7.072zM12 12c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v6m0 0h6m-6 0H6"></path></svg>
+                                <span>Wellness</span>
+                            </a>
+                            <a href="#" class="flex items-center px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 hover:shadow-md transition-shadow duration-300">
+                                <svg class="h-6 w-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>
+                                <span>Study Pressure</span>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="flex-1 p-8 overflow-y-auto">
+                <h1 class="text-4xl font-bold text-gray-800">All Discussions</h1>
+                </main>
+
+            
+            <aside class="w-80 bg-white p-4 flex flex-col border-r border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <h2 class="ml-3 font-semibold text-lg">AI Support</h2>
+                    <button class="ml-auto font-bold text-xl">+</button>
+                    <a href="#" class="ml-2 font-semibold text-gray-600 hover:text-black">New Chat</a>
+                </div>
+
+                <div class="flex-1 space-y-4 overflow-y-auto">
+                    <div class="bg-gray-100 p-3 rounded-lg max-w-xs">
+                        <p class="text-sm text-gray-700">Technical difficulties right now, please know that your feelings are valid. If you're in crisis, please reach out to a mental health professional or crisis helpline immediately.</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-lg max-w-xs ml-auto">
+                        <p class="text-sm text-gray-800">I'm here to listen and support you. While I'm having technical difficulties right now, please know that your feelings are valid.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Type your message..." class="w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-green-500">
+                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                             </svg>
+                        </button>
+                    </div>
+                    <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold flex items-center">
+                            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            Resources
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-2">No resources available for this category</p>
+                    </div>
+                </div>
+            </aside>    
+
+            
+
+        </div>
+    </div>
+
+    <script>
+       
+         // Profile dropdown toggle
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        profileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileDropdown.contains(e.target) && e.target !== profileBtn) {
+                profileDropdown.classList.add('hidden');
+            }
+            });
+
+    </script>
+
+</body>
+</html>

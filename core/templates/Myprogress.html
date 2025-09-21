@@ -1,0 +1,516 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link
+      as="style"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+      onload="this.rel='stylesheet'"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <title>Stitch Design</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+      :root {
+        --primary-color: #13c8ec;
+        --secondary-color: #f0f4f4;
+        --text-primary: #111718;
+        --text-secondary: #618389;
+      }
+    </style>
+  </head>
+  <body class="bg-[#fafcff]">
+    <div
+      class="relative flex size-full min-h-screen flex-col group/design-root"
+      style="
+        --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(255,255,255)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
+        --select-button-svg: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(97,131,137)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e');
+        font-family: Manrope, 'Noto Sans', sans-serif;
+      "
+    >
+      <div class="layout-container flex h-full grow flex-col">
+        <header
+          class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f4f4] bg-white px-10 py-3 sticky top-0 z-50 shadow-sm"
+        >
+          <!-- Logo section -->
+          <div class="flex items-center gap-3">
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="MannMitra Logo"
+              class="h-10 w-10 object-cover rounded-full"
+            />
+            <span class="text-2xl font-bold text-[var(--text-primary)]"
+              >MannMitra</span
+            >
+          </div>
+
+          <!-- Navigation and user section -->
+          <div class="flex items-center gap-8">
+            <!-- Main navigation -->
+            <nav class="flex items-center gap-8">
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium leading-normal transition-colors"
+                href="{% url 'stu_dashboard' %}"
+                >Home</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium leading-normal transition-colors"
+                href="{% url 'stu_resource' %}"
+                >Resources</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium leading-normal transition-colors"
+                href="{% url 'community' %}"
+                >Community</a
+              >
+              <a
+                class="text-[var(--text-primary)] text-sm font-bold leading-normal"
+                href="#"
+                >My Progress</a
+              >
+            </nav>
+
+            <!-- Divider -->
+            <div class="h-6 w-px bg-[#dbe4e6]"></div>
+
+            <!-- User actions -->
+            <div class="flex items-center gap-4">
+              <button
+                class="flex size-10 items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--secondary-color)] hover:text-[var(--text-primary)] transition-colors"
+              >
+                <span class="material-symbols-outlined"> notifications </span>
+              </button>
+              <div
+                class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                style="
+                  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD0okdZsyrZ_XzC5u52Ksqyfb6YM91HgJP9d3dYgz0HTAjpa6g1j0Usb97jyCwhUyDP1lEQXAm-d1Qx9sRo2-7dS31sL19Ydo47HK5MMS3d1fCHJpVzHPpyTMzqteFis0tesQo73ZrmH7MUZN9ldINTlhXJaAVRRu5kVRcYMz8S3U75h8HfRMNe1FrBr1LLiupzY1KXhE1lqRrOksDIExefuXd9BWZIuZc-Bvq1t9MwKkW1Tapmo4CIvmHzbagShMg2Ce9YlylPzcc');
+                "
+              ></div>
+            </div>
+          </div>
+        </header>
+        <main class="flex-1 px-10 py-8">
+          <div class="mx-auto max-w-4xl">
+            <div class="mb-10 flex items-center justify-between">
+              <div>
+                <h1
+                  class="text-[var(--text-primary)] tracking-tight text-3xl font-bold leading-tight"
+                >
+                  My Progress
+                </h1>
+                <p
+                  class="text-[var(--text-secondary)] mt-1 text-base font-normal leading-normal"
+                >
+                  Your personal hub for tracking your mental wellness journey.
+                </p>
+              </div>
+              <button
+                class="flex items-center gap-2 rounded-md bg-[var(--primary-color)] px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-opacity-90"
+              >
+                <span class="material-symbols-outlined">download</span>
+                Export Data
+              </button>
+            </div>
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              <div class="space-y-8 lg:col-span-2">
+                <div
+                  class="rounded-lg border border-[#dbe4e6] bg-white p-6 shadow-sm"
+                >
+                  <h2
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em]"
+                  >
+                    Daily Check-in
+                  </h2>
+                  <div class="mt-6 space-y-6">
+                    <div>
+                      <label
+                        class="text-sm font-medium text-[var(--text-primary)]"
+                        >How are you feeling today?</label
+                      >
+                      <div class="mt-2 flex flex-wrap gap-3">
+                        <label
+                          class="flex cursor-pointer items-center justify-center rounded-md border border-[#dbe4e6] px-4 py-2 text-sm font-medium text-[var(--text-primary)] has-[:checked]:border-2 has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[#13c8ec]/10 has-[:checked]:px-[15px] has-[:checked]:py-[7px] transition-all"
+                        >
+                          😊 Happy
+                          <input
+                            class="invisible absolute"
+                            name="mood"
+                            type="radio"
+                          />
+                        </label>
+                        <label
+                          class="flex cursor-pointer items-center justify-center rounded-md border border-[#dbe4e6] px-4 py-2 text-sm font-medium text-[var(--text-primary)] has-[:checked]:border-2 has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[#13c8ec]/10 has-[:checked]:px-[15px] has-[:checked]:py-[7px] transition-all"
+                        >
+                          😌 Content
+                          <input
+                            class="invisible absolute"
+                            name="mood"
+                            type="radio"
+                          />
+                        </label>
+                        <label
+                          class="flex cursor-pointer items-center justify-center rounded-md border border-[#dbe4e6] px-4 py-2 text-sm font-medium text-[var(--text-primary)] has-[:checked]:border-2 has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[#13c8ec]/10 has-[:checked]:px-[15px] has-[:checked]:py-[7px] transition-all"
+                        >
+                          😐 Neutral
+                          <input
+                            class="invisible absolute"
+                            name="mood"
+                            type="radio"
+                          />
+                        </label>
+                        <label
+                          class="flex cursor-pointer items-center justify-center rounded-md border border-[#dbe4e6] px-4 py-2 text-sm font-medium text-[var(--text-primary)] has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[#13c8ec]/10 has-[:checked]:px-[15px] has-[:checked]:py-[7px] transition-all"
+                        >
+                          😔 Sad
+                          <input
+                            class="invisible absolute"
+                            name="mood"
+                            type="radio"
+                          />
+                        </label>
+                        <label
+                          class="flex cursor-pointer items-center justify-center rounded-md border border-[#dbe4e6] px-4 py-2 text-sm font-medium text-[var(--text-primary)] has-[:checked]:border-2 has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[#13c8ec]/10 has-[:checked]:px-[15px] has-[:checked]:py-[7px] transition-all"
+                        >
+                          😟 Anxious
+                          <input
+                            class="invisible absolute"
+                            name="mood"
+                            type="radio"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="text-sm font-medium text-[var(--text-primary)]"
+                        for="energy-level"
+                        >Energy Level</label
+                      >
+                      <input
+                        class="mt-2 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#dbe4e6] accent-[var(--primary-color)]"
+                        id="energy-level"
+                        max="100"
+                        min="0"
+                        type="range"
+                        value="50"
+                      />
+                      <div
+                        class="mt-1 flex justify-between text-xs text-[var(--text-secondary)]"
+                      >
+                        <span>Low</span>
+                        <span>High</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="text-sm font-medium text-[var(--text-primary)]"
+                        >Sleep Quality</label
+                      >
+                      <div
+                        class="mt-2 flex items-center gap-2 text-3xl text-gray-300"
+                      >
+                        <span class="cursor-pointer text-yellow-400">★</span>
+                        <span class="cursor-pointer text-yellow-400">★</span>
+                        <span class="cursor-pointer text-yellow-400">★</span>
+                        <span class="cursor-pointer text-yellow-400">★</span>
+                        <span class="cursor-pointer">☆</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="text-sm font-medium text-[var(--text-primary)]"
+                        for="day-tags"
+                        >Tag Your Day (e.g., exams, social, relaxing)</label
+                      >
+                      <input
+                        class="form-input mt-2 block w-full rounded-md border-[#dbe4e6] bg-white text-base text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
+                        id="day-tags"
+                        placeholder="Add tags..."
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="rounded-lg border border-[#dbe4e6] bg-white shadow-sm"
+                >
+                  <div class="p-6">
+                    <h2
+                      class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em]"
+                    >
+                      My Journal &amp; Reflections
+                    </h2>
+                  </div>
+                  <div class="border-b border-[#dbe4e6]">
+                    <nav class="-mb-px flex gap-6 px-6">
+                      <a
+                        class="shrink-0 border-b-2 border-[var(--primary-color)] px-1 pb-4 text-sm font-semibold text-[var(--primary-color)]"
+                        href="#"
+                        >Guided Prompts</a
+                      >
+                      <a
+                        class="shrink-0 border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-[var(--text-secondary)] hover:border-gray-300 hover:text-[var(--text-primary)]"
+                        href="#"
+                        >Freeform Journaling</a
+                      >
+                      <a
+                        class="shrink-0 border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-[var(--text-secondary)] hover:border-gray-300 hover:text-[var(--text-primary)]"
+                        href="#"
+                        >Cognitive Reframing</a
+                      >
+                    </nav>
+                  </div>
+                  <div class="p-6">
+                    <p class="mb-2 text-sm text-[var(--text-secondary)]">
+                      Today's Prompt:
+                    </p>
+                    <p class="mb-4 font-semibold text-[var(--text-primary)]">
+                      What are you grateful for today?
+                    </p>
+                    <textarea
+                      class="form-textarea w-full min-h-36 resize-y rounded-md border-[#dbe4e6] bg-white text-base text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
+                      placeholder="Write your thoughts here..."
+                    ></textarea>
+                  </div>
+                </div>
+                <div
+                  class="rounded-lg border border-[#dbe4e6] bg-white shadow-sm"
+                >
+                  <div class="p-6">
+                    <h2
+                      class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em]"
+                    >
+                      My Therapy Journey (Optional)
+                    </h2>
+                  </div>
+                  <div class="border-b border-[#dbe4e6]">
+                    <nav class="-mb-px flex gap-6 px-6">
+                      <a
+                        class="shrink-0 border-b-2 border-[var(--primary-color)] px-1 pb-4 text-sm font-semibold text-[var(--primary-color)]"
+                        href="#"
+                        >Session Notes</a
+                      >
+                      <a
+                        class="shrink-0 border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-[var(--text-secondary)] hover:border-gray-300 hover:text-[var(--text-primary)]"
+                        href="#"
+                        >Key Takeaways</a
+                      >
+                      <a
+                        class="shrink-0 border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-[var(--text-secondary)] hover:border-gray-300 hover:text-[var(--text-primary)]"
+                        href="#"
+                        >Goals</a
+                      >
+                    </nav>
+                  </div>
+                  <div class="p-6">
+                    <textarea
+                      class="form-textarea w-full min-h-36 resize-y rounded-md border-[#dbe4e6] bg-white text-base text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
+                      placeholder="Write your session notes here..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-8">
+                <div
+                  class="rounded-lg border border-[#dbe4e6] bg-white p-6 shadow-sm"
+                >
+                  <h2
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em]"
+                  >
+                    My Wellness Toolkit
+                  </h2>
+                  <div class="mt-6 space-y-4">
+                    <label class="flex items-center gap-3">
+                      <input
+                        checked=""
+                        class="h-5 w-5 rounded border-[#dbe4e6] text-[var(--primary-color)] focus:ring-[var(--primary-color)] checked:bg-[image:--checkbox-tick-svg] checked:bg-center"
+                        type="checkbox"
+                      />
+                      <span class="text-base text-[var(--text-primary)]"
+                        >Meditation</span
+                      >
+                    </label>
+                    <label class="flex items-center gap-3">
+                      <input
+                        checked=""
+                        class="h-5 w-5 rounded border-[#dbe4e6] text-[var(--primary-color)] focus:ring-[var(--primary-color)] checked:bg-[image:--checkbox-tick-svg] checked:bg-center"
+                        type="checkbox"
+                      />
+                      <span class="text-base text-[var(--text-primary)]"
+                        >Exercise</span
+                      >
+                    </label>
+                    <label class="flex items-center gap-3">
+                      <input
+                        class="h-5 w-5 rounded border-[#dbe4e6] text-[var(--primary-color)] focus:ring-[var(--primary-color)] checked:bg-[image:--checkbox-tick-svg] checked:bg-center"
+                        type="checkbox"
+                      />
+                      <span class="text-base text-[var(--text-primary)]"
+                        >Social Connection</span
+                      >
+                    </label>
+                    <label class="flex items-center gap-3">
+                      <input
+                        class="h-5 w-5 rounded border-[#dbe4e6] text-[var(--primary-color)] focus:ring-[var(--primary-color)] checked:bg-[image:--checkbox-tick-svg] checked:bg-center"
+                        type="checkbox"
+                      />
+                      <span class="text-base text-[var(--text-primary)]"
+                        >Nature</span
+                      >
+                    </label>
+                    <label class="flex items-center gap-3">
+                      <input
+                        class="h-5 w-5 rounded border-[#dbe4e6] text-[var(--primary-color)] focus:ring-[var(--primary-color)] checked:bg-[image:--checkbox-tick-svg] checked:bg-center"
+                        type="checkbox"
+                      />
+                      <span class="text-base text-[var(--text-primary)]"
+                        >Hobbies</span
+                      >
+                    </label>
+                  </div>
+                  <div class="mt-4 border-t border-[#dbe4e6] pt-4">
+                    <a
+                      class="text-sm font-semibold text-[var(--primary-color)] hover:underline"
+                      href="#"
+                      >Manage My Affirmations</a
+                    >
+                  </div>
+                </div>
+                <div
+                  class="rounded-lg border border-[#dbe4e6] bg-white p-6 shadow-sm"
+                >
+                  <h2
+                    class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em]"
+                  >
+                    Insights &amp; Patterns
+                  </h2>
+                  <div class="mt-6">
+                    <div class="flex items-center justify-between">
+                      <button
+                        class="rounded-md p-1.5 hover:bg-[var(--secondary-color)]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-xl text-[var(--text-secondary)]"
+                          >chevron_left</span
+                        >
+                      </button>
+                      <p class="text-sm font-bold text-[var(--text-primary)]">
+                        October 2024
+                      </p>
+                      <button
+                        class="rounded-md p-1.5 hover:bg-[var(--secondary-color)]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-xl text-[var(--text-secondary)]"
+                          >chevron_right</span
+                        >
+                      </button>
+                    </div>
+                    <div
+                      class="mt-4 grid grid-cols-7 text-center text-xs text-[var(--text-secondary)]"
+                    >
+                      <div class="font-semibold">S</div>
+                      <div class="font-semibold">M</div>
+                      <div class="font-semibold">T</div>
+                      <div class="font-semibold">W</div>
+                      <div class="font-semibold">T</div>
+                      <div class="font-semibold">F</div>
+                      <div class="font-semibold">S</div>
+                    </div>
+                    <div class="mt-2 grid grid-cols-7 text-center text-sm">
+                      <div class="col-start-4 py-1.5">1</div>
+                      <div class="py-1.5">2</div>
+                      <div class="py-1.5">3</div>
+                      <div class="py-1.5">4</div>
+                      <div
+                        class="cursor-pointer rounded-full bg-yellow-200 py-1.5 font-bold text-yellow-800"
+                      >
+                        5
+                      </div>
+                      <div class="py-1.5">6</div>
+                      <div class="py-1.5">7</div>
+                      <div
+                        class="cursor-pointer rounded-full bg-green-200 py-1.5 font-bold text-green-800"
+                      >
+                        8
+                      </div>
+                      <div class="py-1.5">9</div>
+                      <div
+                        class="cursor-pointer rounded-full bg-blue-200 py-1.5 font-bold text-blue-800"
+                      >
+                        10
+                      </div>
+                      <div class="py-1.5">11</div>
+                      <div
+                        class="cursor-pointer rounded-full bg-yellow-200 py-1.5 font-bold text-yellow-800"
+                      >
+                        12
+                      </div>
+                      <div class="py-1.5">13</div>
+                      <div class="py-1.5">14</div>
+                      <div class="py-1.5">15</div>
+                      <div class="py-1.5">16</div>
+                      <div class="py-1.5">17</div>
+                      <div class="py-1.5">18</div>
+                      <div class="py-1.5">19</div>
+                      <div class="py-1.5">20</div>
+                      <div class="py-1.5">21</div>
+                      <div class="py-1.5">22</div>
+                      <div class="py-1.5">23</div>
+                      <div class="py-1.5">24</div>
+                      <div class="py-1.5">25</div>
+                      <div class="py-1.5">26</div>
+                      <div class="py-1.5">27</div>
+                      <div class="py-1.5">28</div>
+                      <div class="py-1.5">29</div>
+                      <div class="py-1.5">30</div>
+                    </div>
+                  </div>
+                  <div
+                    class="mt-4 border-t border-[#dbe4e6] pt-4 space-y-2 text-sm"
+                  >
+                    <a
+                      class="block font-semibold text-[var(--primary-color)] hover:underline"
+                      href="#"
+                      >View Activity-Mood Correlation</a
+                    >
+                    <a
+                      class="block font-semibold text-[var(--primary-color)] hover:underline"
+                      href="#"
+                      >View Tag Cloud</a
+                    >
+                  </div>
+                </div>
+                <div
+                  class="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm"
+                >
+                  <h2
+                    class="text-red-800 text-xl font-bold leading-tight tracking-[-0.015em]"
+                  >
+                    Need Help Now?
+                  </h2>
+                  <p class="mt-2 text-sm text-red-700">
+                    If you are in crisis or need immediate support, please reach
+                    out.
+                  </p>
+                  <button
+                    class="mt-4 w-full rounded-md bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-red-700"
+                  >
+                    Kiran Mental Health Helpline
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

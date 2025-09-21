@@ -1,0 +1,539 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Institution Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .sidebar {
+        background-color: #ffffff;
+      }
+      .main-content {
+        background-color: #f8f9fa;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
+      .text-primary {
+        color: #10b981;
+      }
+      .icon {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="sidebar w-64 flex-shrink-0 border-r border-gray-200 flex flex-col"
+      >
+        <div class="p-6">
+          <button
+            class="flex items-center space-x-2 px-3 py-2 rounded hover:bg-green-100 transition-colors duration-200 bg-transparent"
+          >
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="Wellness Logo"
+              class="h-10 w-10 rounded-full object-cover"
+            />
+            <span class="text-2xl font-bold text-gray-800">MannMitra</span>
+          </button>
+        </div>
+        <nav class="mt-2 px-4 flex-1 space-y-1">
+          <p class="text-xs text-gray-500 uppercase mt-4 mb-2">Main</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_dashboard' %}"
+          >
+            <span class="material-icons icon">home</span>
+            <span class="ml-3">Home</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_analytics' %}"
+          >
+            <span class="material-icons icon">analytics</span>
+            <span class="ml-3">Analytics</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">Management</p>
+          <a
+            class="flex items-center px-4 py-3 text-white bg-green-500 rounded-lg"
+            href="{% url 'inst_student' %}"
+          >
+            <span class="material-icons icon">group</span>
+            <span class="ml-3 font-semibold">Students</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_counselors' %}"
+          >
+            <span class="material-icons icon">school</span>
+            <span class="ml-3">Counselors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'doctor_institution' %}"
+          >
+            <span class="material-icons icon">medical_services</span>
+            <span class="ml-3">Doctors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_content' %}"
+          >
+            <span class="material-icons icon">article</span>
+            <span class="ml-3">Content</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">System</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_alert' %}"
+          >
+            <span class="material-icons icon">notifications</span>
+            <span class="ml-3">Alerts</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="#"
+          >
+            <span class="material-icons icon">settings</span>
+            <span class="ml-3">Settings</span>
+          </a>
+        </nav>
+      </aside>
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center z-10"
+        >
+          <h1 class="text-xl font-bold text-gray-800">Institution Dashboard</h1>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <span
+                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >search</span
+              >
+              <input
+                class="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Search..."
+                type="text"
+              />
+            </div>
+            <div class="flex items-center space-x-3">
+              <img
+                alt="Admin user avatar"
+                class="h-10 w-10 rounded-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpinK27_pShK4QeSp5ZqojMmkaIUXIDhe0B7BxMVQaJJLSi0ozL0xDFCk4oyuf1YEczSWxoqsECfhSR6qm5eYPf5UH9OB7DPC4kOMywQde3aByK2E2T2YKcYsvgITCFBkYLEYVfJLDCqCKxoJKz9KMrYVMjSeXYG6MXZFBd5hUGGXMZXgkJeIw5KyCAQFT3yW9obdYH3IXZqOk6OaQhQy76qo1el_AUFdAsjrTC1SjcWEFF52oDmUjVl-GUASna1mAUYPbcjOxdpc"
+              />
+              <div>
+                <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                <a
+                  class="text-xs text-gray-500 hover:text-primary"
+                  href="{% url 'home' %}"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Students Content -->
+        <main class="flex-1 p-8">
+          <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Student Management</h1>
+            <button
+              class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 flex items-center"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              Add New Student
+            </button>
+          </div>
+
+          <!-- Students Table -->
+          <div
+            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-600">
+                <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Student Name</th>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Department</th>
+                    <th scope="col" class="px-6 py-3">Year</th>
+                    <th scope="col" class="px-6 py-3">Risk Level</th>
+                    <th scope="col" class="px-6 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=AR"
+                        alt="Student avatar"
+                      />
+                      Alex Ray
+                    </td>
+                    <td class="px-6 py-4">S-98765</td>
+                    <td class="px-6 py-4">Computer Science</td>
+                    <td class="px-6 py-4">3rd</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full"
+                        >High</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=BC"
+                        alt="Student avatar"
+                      />
+                      Ben Carter
+                    </td>
+                    <td class="px-6 py-4">S-12345</td>
+                    <td class="px-6 py-4">Mechanical Engineering</td>
+                    <td class="px-6 py-4">2nd</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Low</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=SP"
+                        alt="Student avatar"
+                      />
+                      Sara Parker
+                    </td>
+                    <td class="px-6 py-4">S-54321</td>
+                    <td class="px-6 py-4">Business Administration</td>
+                    <td class="px-6 py-4">4th</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full"
+                        >Medium</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=LD"
+                        alt="Student avatar"
+                      />
+                      Leo Davis
+                    </td>
+                    <td class="px-6 py-4">S-67890</td>
+                    <td class="px-6 py-4">Physics</td>
+                    <td class="px-6 py-4">1st</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Low</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=MR"
+                        alt="Student avatar"
+                      />
+                      Mia Rodriguez
+                    </td>
+                    <td class="px-6 py-4">S-11223</td>
+                    <td class="px-6 py-4">Arts & Humanities</td>
+                    <td class="px-6 py-4">3rd</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full"
+                        >High</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=JW"
+                        alt="Student avatar"
+                      />
+                      Jack White
+                    </td>
+                    <td class="px-6 py-4">S-33445</td>
+                    <td class="px-6 py-4">Civil Engineering</td>
+                    <td class="px-6 py-4">4th</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Low</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=CH"
+                        alt="Student avatar"
+                      />
+                      Chloe Harris
+                    </td>
+                    <td class="px-6 py-4">S-55667</td>
+                    <td class="px-6 py-4">Computer Science</td>
+                    <td class="px-6 py-4">1st</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full"
+                        >Medium</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=ET"
+                        alt="Student avatar"
+                      />
+                      Ethan Turner
+                    </td>
+                    <td class="px-6 py-4">S-77889</td>
+                    <td class="px-6 py-4">Biology</td>
+                    <td class="px-6 py-4">2nd</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Low</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=NS"
+                        alt="Student avatar"
+                      />
+                      Nora Scott
+                    </td>
+                    <td class="px-6 py-4">S-99001</td>
+                    <td class="px-6 py-4">Chemical Engineering</td>
+                    <td class="px-6 py-4">3rd</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full"
+                        >Medium</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=OG"
+                        alt="Student avatar"
+                      />
+                      Owen Green
+                    </td>
+                    <td class="px-6 py-4">S-12121</td>
+                    <td class="px-6 py-4">Mathematics</td>
+                    <td class="px-6 py-4">4th</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full"
+                        >High</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Notify</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

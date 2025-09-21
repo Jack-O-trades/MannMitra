@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redirecting...</title>
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      const supabaseUrl = "https://nrjxvuzhvfvxpvdvrxdf.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yanh2dXpodmZ2eHB2ZHZyeGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjcwMjUsImV4cCI6MjA3MzEwMzAyNX0.hCga9sEp1hLuRFcAzpbz0rePyaQYUNu2DWCpBe2SGxg";
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      async function handleRedirect() {
+        // Get current session
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error("Session error:", error);
+          window.location.href = "login.html";
+          return;
+        }
+
+        if (session) {
+          console.log("✅ Logged in as:", session.user.email);
+          window.location.href = "{% url 'stu_dashboard' %}";
+        } else {
+          console.log("❌ No active session found");
+          window.location.href = "/signup.html";
+        }
+      }
+
+      handleRedirect();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>

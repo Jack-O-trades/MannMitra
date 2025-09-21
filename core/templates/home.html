@@ -1,0 +1,901 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Digital Mental Health Support for Students</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+      :root {
+        --primary-start: #00796b;
+        --primary-end: #004d40;
+        --secondary-color: #e0f2f1;
+        --background-color: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+        --accent-color: #00695c;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-primary);
+      }
+      .calm-shadow {
+        box-shadow: 0 10px 25px -5px rgba(0, 121, 107, 0.1),
+          0 4px 6px -4px rgba(0, 121, 107, 0.1);
+      }
+      .calm-shadow-hover:hover {
+        box-shadow: 0 20px 30px -10px rgba(0, 77, 64, 0.15),
+          0 8px 12px -6px rgba(0, 77, 64, 0.15);
+      }
+      .btn-gradient {
+        background-image: linear-gradient(
+          to right,
+          var(--primary-start) 0%,
+          var(--primary-end) 100%
+        );
+      }
+      .btn-gradient-hover:hover {
+        background-image: linear-gradient(
+          to right,
+          var(--accent-color) 0%,
+          var(--primary-end) 100%
+        );
+      }
+      .text-gradient {
+        background: linear-gradient(
+          to right,
+          var(--primary-start),
+          var(--primary-end)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    </style>
+  </head>
+  <body class="bg-[var(--background-color)] text-[var(--text-primary)]">
+    <div class="flex flex-col min-h-screen">
+      <header
+        class="bg-white/90 backdrop-blur-lg sticky top-0 z-40 border-b border-gray-200"
+      >
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-20">
+            <div class="flex items-center">
+              <a href="#" class="flex-shrink-0 flex items-center gap-3">
+                <img
+                  src="{% static 'core/images/LOHO.jpeg' %}"
+                  alt="MannMitra Logo"
+                  class="h-10 w-10 object-cover rounded-full"
+                />
+                <span class="text-2xl font-bold text-[var(--text-primary)]"
+                  >MannMitra</span
+                >
+              </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-1 lg:space-x-4">
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--primary-start)] px-3 py-2 rounded-md text-sm font-medium"
+                href="{% url 'home' %}"
+                >Home</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--primary-start)] px-3 py-2 rounded-md text-sm font-medium"
+                href="{% url 'chatbot' %}"
+                >Chatbot</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--primary-start)] px-3 py-2 rounded-md text-sm font-medium"
+                href="{% url 'resources' %}"
+                >Resources</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--primary-start)] px-3 py-2 rounded-md text-sm font-medium"
+                href="{% url 'community' %}"
+                >Community</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--primary-start)] px-3 py-2 rounded-md text-sm font-medium"
+                href="{% url 'contact' %}"
+                >Contact</a
+              >
+              <a
+                class="text-[var(--text-secondary)] hover:text-[var(--primary-start)] px-3 py-2 rounded-md text-sm font-medium"
+                href="{% url 'aboutus' %}"
+                >About Us</a
+              >
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+              <a
+                class="text-[var(--primary-start)] px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[var(--secondary-color)]"
+                href="{% url 'alogin' %}"
+                >Admin</a
+              >
+              <a
+                id="loginBtn"
+                class="text-[var(--primary-start)] px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[var(--secondary-color)]"
+                href="{% url 'slogin' %}"
+                >Login</a
+              >
+              <a
+                class="btn-gradient text-white px-5 py-2.5 rounded-full text-sm font-semibold btn-gradient-hover"
+                href="{% url 'signup' %}"
+                >Sign Up</a
+              >
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main class="flex-grow">
+        <section class="py-24 md:py-40">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+              <div class="text-center md:text-left">
+                <h1
+                  class="text-4xl md:text-6xl font-extrabold text-[var(--text-primary)] mb-6 leading-tight"
+                >
+                  Your Mental Wellness,
+                  <span class="text-gradient">Our Priority.</span>
+                </h1>
+                <p class="text-lg text-[var(--text-secondary)] mb-10">
+                  MannMitra offers confidential, 24/7 mental health support
+                  tailored for students.
+                </p>
+                <div
+                  class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+                >
+                  <a
+                    class="btn-gradient text-white px-8 py-4 rounded-full text-base font-semibold btn-gradient-hover calm-shadow"
+                    href="{% url 'chatbot' %}"
+                    >Start Anonymous Chat</a
+                  >
+                  <a
+                    class="bg-white text-[var(--primary-start)] border border-[var(--secondary-color)] px-8 py-4 rounded-full text-base font-semibold hover:bg-[var(--secondary-color)] calm-shadow"
+                    href="{% url 'booking' %}"
+                    >Book a Session</a
+                  >
+                </div>
+              </div>
+              <div class="relative">
+                <div
+                  class="absolute inset-0 bg-gradient-to-br from-teal-100 to-blue-100 rounded-full blur-3xl opacity-50 -z-10"
+                ></div>
+                <img
+                  alt="Welcoming illustration"
+                  class="rounded-3xl w-full h-auto object-cover calm-shadow"
+                  src="{% static 'core/images/home.jpg' %}"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-12">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-3xl font-bold text-gray-800 mb-12">
+              Discover What MannMitra Can Do
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              <div
+                class="flex flex-col text-left bg-white rounded-lg p-6 shadow-md hover:shadow-xl border-t-4 border-blue-400 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <i class="fas fa-robot text-4xl text-blue-400 mb-4"></i>
+                <h4 class="text-lg font-bold mb-2">AI Chat Support</h4>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">
+                  Get instant support and guidance from our AI-powered mental
+                  health assistant.
+                </p>
+                <a
+                  href="{% url 'chatbot' %}"
+                  class="font-semibold text-[var(--primary-start)] hover:text-[var(--accent-color)] self-start"
+                  >Learn More <i class="fas fa-arrow-right text-xs"></i
+                ></a>
+              </div>
+              <div
+                class="flex flex-col text-left bg-white rounded-lg p-6 shadow-md hover:shadow-xl border-t-4 border-green-400 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <i
+                  class="fas fa-headphones-alt text-4xl text-green-400 mb-4"
+                ></i>
+                <h4 class="text-lg font-bold mb-2">Sound Therapy</h4>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">
+                  Relax with curated audio experiences designed for mental
+                  wellness.
+                </p>
+                <a
+                  href="#"
+                  class="font-semibold text-[var(--primary-start)] hover:text-[var(--accent-color)] self-start"
+                  >Learn More <i class="fas fa-arrow-right text-xs"></i
+                ></a>
+              </div>
+              <div
+                class="flex flex-col text-left bg-white rounded-lg p-6 shadow-md hover:shadow-xl border-t-4 border-cyan-400 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <i class="fas fa-wind text-4xl text-cyan-400 mb-4"></i>
+                <h4 class="text-lg font-bold mb-2">Breathing Exercises</h4>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">
+                  Learn breathing techniques for stress relief and emotional
+                  regulation.
+                </p>
+                <a
+                  href="{% url 'resources' %}"
+                  class="font-semibold text-[var(--primary-start)] hover:text-[var(--accent-color)] self-start"
+                  >Learn More <i class="fas fa-arrow-right text-xs"></i
+                ></a>
+              </div>
+              <div
+                class="flex flex-col text-left bg-white rounded-lg p-6 shadow-md hover:shadow-xl border-t-4 border-red-400 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <i class="fas fa-user-md text-4xl text-red-400 mb-4"></i>
+                <h4 class="text-lg font-bold mb-2">Therapy</h4>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">
+                  Connect with licensed mental health professionals for
+                  personalized care.
+                </p>
+                <a
+                  href="{% url 'booking' %}"
+                  class="font-semibold text-[var(--primary-start)] hover:text-[var(--accent-color)] self-start"
+                  >Learn More <i class="fas fa-arrow-right text-xs"></i
+                ></a>
+              </div>
+              <div
+                class="flex flex-col text-left bg-white rounded-lg p-6 shadow-md hover:shadow-xl border-t-4 border-indigo-400 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <i class="fas fa-users text-4xl text-indigo-400 mb-4"></i>
+                <h4 class="text-lg font-bold mb-2">Community Support</h4>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">
+                  Connect with others on similar mental health journeys.
+                </p>
+                <a
+                  href="{% url 'community' %}"
+                  class="font-semibold text-[var(--primary-start)] hover:text-[var(--accent-color)] self-start"
+                  >Learn More <i class="fas fa-arrow-right text-xs"></i
+                ></a>
+              </div>
+              <div
+                class="flex flex-col text-left bg-white rounded-lg p-6 shadow-md hover:shadow-xl border-t-4 border-gray-400 transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <i
+                  class="fas fa-clipboard-check text-4xl text-gray-500 mb-4"
+                ></i>
+                <h4 class="text-lg font-bold mb-2">Mental Health Screening</h4>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">
+                  Take evidence-based assessments to understand your mental
+                  health status.
+                </p>
+                <a
+                  href="{% url 'screening' %}"
+                  class="font-semibold text-[var(--primary-start)] hover:text-[var(--accent-color)] self-start"
+                  >Learn More <i class="fas fa-arrow-right text-xs"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-20 bg-[var(--background-color)]">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+              <h2
+                class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]"
+              >
+                What Our Students Say
+              </h2>
+              <p class="text-lg text-[var(--text-secondary)]">
+                Authentic experiences from our community.
+              </p>
+            </div>
+            <div
+              class="flex flex-col md:flex-row gap-8 justify-center items-center"
+            >
+              <div
+                class="bg-white rounded-2xl p-8 shadow-xl w-full max-w-md calm-shadow-hover transition"
+              >
+                <div class="flex items-center mb-4">
+                  <img
+                    src="https://placehold.co/60x60/00796B/FFFFFF?text=U1"
+                    alt="Student 1"
+                    class="rounded-full mr-4"
+                  />
+                  <div>
+                    <p class="font-bold text-lg">Anjali S.</p>
+                    <p class="text-sm text-gray-500">2nd Year, Engineering</p>
+                  </div>
+                </div>
+                <p class="text-gray-600 italic">
+                  "MannMitra has been a game-changer for my stress levels. The
+                  resources and community have made me feel less alone."
+                </p>
+              </div>
+              <div
+                class="bg-white rounded-2xl p-8 shadow-xl w-full max-w-md calm-shadow-hover transition"
+              >
+                <div class="flex items-center mb-4">
+                  <img
+                    src="https://placehold.co/60x60/00796B/FFFFFF?text=U2"
+                    alt="Student 2"
+                    class="rounded-full mr-4"
+                  />
+                  <div>
+                    <p class="font-bold text-lg">Rohit K.</p>
+                    <p class="text-sm text-gray-500">3rd Year, Business</p>
+                  </div>
+                </div>
+                <p class="text-gray-600 italic">
+                  "The anonymous chat feature is amazing. It gave me the
+                  confidence to talk about my struggles without any fear of
+                  judgment."
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-20 bg-[var(--background-color)]">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+              <h2
+                class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]"
+              >
+                Ready for a Mental Check-in?
+              </h2>
+              <p class="text-lg text-[var(--text-secondary)]">
+                Take our quick, confidential self-assessment to better
+                understand your state of mind.
+              </p>
+            </div>
+            <div class="flex justify-center">
+              <a
+                href="{% url 'screening' %}"
+                class="btn-gradient text-white px-8 py-4 rounded-full text-base font-semibold btn-gradient-hover calm-shadow"
+                >Start the Quiz</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="py-20 bg-white">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+              <h2
+                class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]"
+              >
+                Latest Blogs
+              </h2>
+              <p class="text-lg text-[var(--text-secondary)]">
+                Explore the latest mental health insights from our community
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div
+                class="bg-[var(--background-color)] rounded-xl shadow-md hover:shadow-xl transition"
+              >
+                <img
+                  src="{% static 'core/images/stress.jpg' %}"
+                  class="w-full h-48 object-cover rounded-t-xl"
+                />
+                <div class="p-6">
+                  <h3 class="font-bold text-xl mb-2">
+                    Understanding Student Stress
+                  </h3>
+                  <p class="text-[var(--text-secondary)] mb-4">
+                    How to recognize and manage academic stress effectively.
+                  </p>
+                  <a
+                    href="#"
+                    class="text-[var(--primary-start)] font-semibold hover:underline"
+                    >Read More →</a
+                  >
+                </div>
+              </div>
+              <div
+                class="bg-[var(--background-color)] rounded-xl shadow-md hover:shadow-xl transition"
+              >
+                <img
+                  src="{% static 'core/images/rs.jpg' %}"
+                  class="w-full h-48 object-cover rounded-t-xl"
+                />
+                <div class="p-6">
+                  <h3 class="font-bold text-xl mb-2">Building Resilience</h3>
+                  <p class="text-[var(--text-secondary)] mb-4">
+                    Practical tips to stay strong emotionally during exams.
+                  </p>
+                  <a
+                    href="#"
+                    class="text-[var(--primary-start)] font-semibold hover:underline"
+                    >Read More →</a
+                  >
+                </div>
+              </div>
+              <div
+                class="bg-[var(--background-color)] rounded-xl shadow-md hover:shadow-xl transition"
+              >
+                <img
+                  src="{% static 'core/images/peers.jpg' %}"
+                  class="w-full h-48 object-cover rounded-t-xl"
+                />
+                <div class="p-6">
+                  <h3 class="font-bold text-xl mb-2">
+                    The Role of Peer Support
+                  </h3>
+                  <p class="text-[var(--text-secondary)] mb-4">
+                    Why student communities matter in mental wellness.
+                  </p>
+                  <a
+                    href="#"
+                    class="text-[var(--primary-start)] font-semibold hover:underline"
+                    >Read More →</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-8">
+              <a
+                href="#"
+                class="btn-gradient text-white px-6 py-3 rounded-full font-semibold"
+                >View All Blogs</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="py-20 bg-[var(--background-color)]">
+          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+              <h2
+                class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]"
+              >
+                Frequently Asked Questions
+              </h2>
+              <p class="text-lg text-[var(--text-secondary)]">
+                Find answers to the most common questions about our services.
+              </p>
+            </div>
+            <div class="space-y-4">
+              <div
+                class="bg-white rounded-xl shadow-md overflow-hidden calm-shadow-hover transition"
+              >
+                <button
+                  class="faq-accordion flex items-center justify-between w-full p-6 text-left focus:outline-none"
+                >
+                  <span class="font-semibold text-lg"
+                    >Is MannMitra a replacement for professional therapy?</span
+                  >
+                  <span class="faq-icon text-gray-500">
+                    <svg
+                      class="w-6 h-6 transform transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+                <div
+                  class="faq-panel max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+                >
+                  <div class="p-6 pt-0">
+                    <p class="text-gray-600">
+                      No, MannMitra is a supportive tool and companion. It is
+                      not a crisis service or a replacement for licensed
+                      therapy. We encourage you to seek professional help for
+                      any serious mental health concerns.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-xl shadow-md overflow-hidden calm-shadow-hover transition"
+              >
+                <button
+                  class="faq-accordion flex items-center justify-between w-full p-6 text-left focus:outline-none"
+                >
+                  <span class="font-semibold text-lg"
+                    >Are my conversations with the chatbot private?</span
+                  >
+                  <span class="faq-icon text-gray-500">
+                    <svg
+                      class="w-6 h-6 transform transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+                <div
+                  class="faq-panel max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+                >
+                  <div class="p-6 pt-0">
+                    <p class="text-gray-600">
+                      Yes, all interactions with the chatbot are anonymous and
+                      private. We do not store any personally identifiable
+                      information from your chats.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-xl shadow-md overflow-hidden calm-shadow-hover transition"
+              >
+                <button
+                  class="faq-accordion flex items-center justify-between w-full p-6 text-left focus:outline-none"
+                >
+                  <span class="font-semibold text-lg"
+                    >Who are the counsellors I can book sessions with?</span
+                  >
+                  <span class="faq-icon text-gray-500">
+                    <svg
+                      class="w-6 h-6 transform transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+                <div
+                  class="faq-panel max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+                >
+                  <div class="p-6 pt-0">
+                    <p class="text-gray-600">
+                      We partner with a network of licensed and experienced
+                      mental health professionals who are vetted to ensure they
+                      can provide high-quality support to students.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-20 bg-[var(--secondary-color)]">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+              <div>
+                <img
+                  src="{% static 'core/images/cs.jpg' %}"
+                  alt="Counselling Illustration"
+                  class="rounded-3xl w-full calm-shadow"
+                />
+              </div>
+              <div class="text-center md:text-left">
+                <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6">
+                  Talk with a Mental Health Counsellor
+                </h2>
+                <p class="text-lg text-[var(--text-secondary)] mb-8">
+                  Book confidential sessions with licensed professionals here to
+                  support you.
+                </p>
+                <a
+                  href="{% url 'booking' %}"
+                  class="btn-gradient text-white px-8 py-4 rounded-full text-lg font-semibold"
+                  >Book a Session</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-white py-12 border-t border-gray-200">
+          <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="text-sm text-gray-600">
+              Disclaimer: MannMitra is not a crisis service. If you are in
+              urgent distress, please contact your nearest helpline or emergency
+              services. MannMitra does not provide medical advice but connects
+              you with resources and counsellors.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="bg-gray-900 text-gray-300 py-12">
+        <div
+          class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8"
+        >
+          <div>
+            <h3 class="font-bold text-lg mb-4">Navigation</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="{% url 'home' %}" class="hover:text-white">Home</a>
+              </li>
+              <li>
+                <a href="{% url 'chatbot' %}" class="hover:text-white"
+                  >Chatbot</a
+                >
+              </li>
+              <li>
+                <a href="{% url 'resources' %}" class="hover:text-white"
+                  >Resources</a
+                >
+              </li>
+              <li>
+                <a href="{% url 'community' %}" class="hover:text-white"
+                  >Community</a
+                >
+              </li>
+              <li>
+                <a href="{% url 'contact' %}" class="hover:text-white"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a href="{% url 'aboutus' %}" class="hover:text-white"
+                  >About Us</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+              <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-4">Support</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="hover:text-white">FAQs</a></li>
+              <li><a href="#" class="hover:text-white">Book a Session</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-4">Follow Us</h3>
+            <div class="flex space-x-4">
+              <a href="#"
+                ><img
+                  src="https://placehold.co/24x24/1F2937/FFFFFF?text=FB"
+                  class="h-6 w-6"
+              /></a>
+              <a href="#"
+                ><img
+                  src="https://placehold.co/24x24/1F2937/FFFFFF?text=X"
+                  class="h-6 w-6"
+              /></a>
+              <a href="#"
+                ><img
+                  src="https://placehold.co/24x24/1F2937/FFFFFF?text=IN"
+                  class="h-6 w-6"
+              /></a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 text-center text-gray-500 text-sm">
+          © 2025 MannMitra. All rights reserved.
+        </div>
+      </footer>
+    </div>
+
+    <a
+      href="{% url 'chatbot' %}"
+      class="fixed bottom-6 right-6 z-50 btn-gradient text-white px-6 py-4 rounded-full font-bold shadow-lg transform hover:scale-105 transition-transform"
+    >
+      <i class="fas fa-comment-dots mr-2"></i> Chat Now
+    </a>
+
+    <div
+      id="loginModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl p-8 md:p-10 w-full max-w-md m-4 relative"
+      >
+        <button
+          id="closeLoginModalBtn"
+          class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        <div class="text-center">
+          <h2 class="text-3xl font-bold text-gray-800">Welcome Back</h2>
+          <p class="text-gray-500 mt-2">Sign in to continue to MannMitra.</p>
+        </div>
+
+        <form class="mt-8 space-y-6">
+          <div>
+            <label for="email" class="text-sm font-medium text-gray-700"
+              >Email address</label
+            >
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-[var(--primary-start)] focus:border-[var(--primary-start)]"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="password" class="text-sm font-medium text-gray-700"
+              >Password</label
+            >
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-[var(--primary-start)] focus:border-[var(--primary-start)]"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-medium text-gray-700">Select Role</label>
+            <div class="mt-2 flex items-center justify-center space-x-6">
+              <label class="flex items-center space-x-2 text-gray-600">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  class="form-radio text-[var(--primary-start)] focus:ring-[var(--primary-start)]"
+                />
+                <span>Admin</span>
+              </label>
+              <label class="flex items-center space-x-2 text-gray-600">
+                <input
+                  type="radio"
+                  name="role"
+                  value="institution"
+                  class="form-radio text-[var(--primary-start)] focus:ring-[var(--primary-start)]"
+                />
+                <span>Institution</span>
+              </label>
+              <label class="flex items-center space-x-2 text-gray-600">
+                <input
+                  type="radio"
+                  name="role"
+                  value="student"
+                  class="form-radio text-[var(--primary-start)] focus:ring-[var(--primary-start)]"
+                  checked
+                />
+                <span>Student</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="w-full btn-gradient text-white font-semibold py-3 px-4 rounded-xl btn-gradient-hover transition-transform transform hover:scale-105 calm-shadow"
+            >
+              Sign in
+            </button>
+          </div>
+
+          <div class="flex items-center">
+            <hr class="w-full border-gray-300" />
+            <span class="px-4 text-sm text-gray-500">Or continue with</span>
+            <hr class="w-full border-gray-300" />
+          </div>
+
+          <div>
+            <button
+              type="button"
+              class="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-xl hover:bg-gray-50 transition-transform transform hover:scale-105"
+            >
+              <img
+                src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+                alt="Google logo"
+                class="h-5 mr-3"
+              />
+              Sign in with Google
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Accordion Logic ---
+        const accordions = document.querySelectorAll(".faq-accordion");
+        accordions.forEach((accordion) => {
+          accordion.addEventListener("click", () => {
+            const panel = accordion.nextElementSibling;
+            const icon = accordion.querySelector(".faq-icon svg");
+            const isOpen = panel.style.maxHeight;
+
+            accordions.forEach((otherAccordion) => {
+              otherAccordion.nextElementSibling.style.maxHeight = null;
+              const otherIcon = otherAccordion.querySelector(".faq-icon svg");
+              if (otherIcon) {
+                otherIcon.classList.remove("rotate-180");
+              }
+            });
+
+            if (!isOpen) {
+              panel.style.maxHeight = panel.scrollHeight + "px";
+              if (icon) {
+                icon.classList.add("rotate-180");
+              }
+            }
+          });
+        });
+
+        // --- Login Modal Logic ---
+        const loginModal = document.getElementById("loginModal");
+        const loginBtn = document.getElementById("loginBtn");
+        const closeLoginModalBtn =
+          document.getElementById("closeLoginModalBtn");
+
+        // Function to open the modal
+        const openModal = () => loginModal.classList.remove("hidden");
+
+        // Function to close the modal
+        const closeModal = () => loginModal.classList.add("hidden");
+
+        // Event listeners
+        /*
+        if (loginBtn) {
+            loginBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent the link from navigating
+                openModal();
+            });
+        }
+        */
+
+        if (closeLoginModalBtn) {
+          closeLoginModalBtn.addEventListener("click", closeModal);
+        }
+
+        // Close modal if user clicks on the background overlay
+        if (loginModal) {
+          loginModal.addEventListener("click", (e) => {
+            if (e.target === loginModal) {
+              closeModal();
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

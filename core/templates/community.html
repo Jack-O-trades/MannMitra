@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MannMitra - Community Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .font-poppins {
+        font-family: "Poppins", sans-serif;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+      }
+      .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hidden {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+      }
+      .modal-content {
+        transform: scale(0.95);
+        animation: modal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+          forwards;
+      }
+      @keyframes modal-pop {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex flex-col h-screen">
+      <nav
+        class="flex items-center justify-between px-6 py-2 bg-white text-gray-800 shadow-lg z-50"
+      >
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-3xl font-poppins font-bold text-green-600"
+            >MannMitra</a
+          >
+          <div class="relative w-80">
+            <i
+              class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            ></i>
+            <input
+              type="text"
+              placeholder="Search MannMitra"
+              class="w-full py-2.5 pl-12 pr-4 rounded-full border border-gray-300 bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 transition-all duration-300"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <a
+            href="#"
+            class="text-gray-600 hover:text-green-600 transition-colors duration-300"
+            aria-label="Notifications"
+          >
+            <i class="fa-regular fa-bell text-xl"></i>
+          </a>
+          <button
+            id="createPostBtn"
+            class="bg-green-600 text-white px-4 py-2 rounded-full font-medium border border-green-600 hover:bg-green-500 transition-colors duration-300 text-sm"
+          >
+            <i class="fa-solid fa-plus mr-2"></i>Create Post
+          </button>
+          <div class="relative">
+            <button
+              id="profileBtn"
+              class="w-9 h-9 rounded-full bg-gray-200 text-gray-800 flex items-center justify-center font-bold text-lg border border-gray-300 hover:bg-gray-300 transition-colors duration-300"
+            >
+              👤
+            </button>
+            <div
+              id="profileDropdown"
+              class="absolute right-0 mt-3 w-56 bg-white border border-gray-200 rounded-lg shadow-xl divide-y divide-gray-200 hidden z-50 animate-fade-in"
+            >
+              <a
+                href="#"
+                class="flex items-center px-4 py-3 hover:bg-gray-100 space-x-3 transition-colors duration-200 rounded-t-lg"
+              >
+                <div
+                  class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm"
+                >
+                  👤
+                </div>
+                <span class="font-medium text-gray-800">View Profile</span>
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-4 py-3 hover:bg-gray-100 space-x-3 transition-colors duration-200"
+              >
+                <div
+                  class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm"
+                >
+                  <i class="fa-solid fa-gear"></i>
+                </div>
+                <span class="font-medium text-gray-800">Settings</span>
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-4 py-3 hover:bg-gray-100 space-x-3 transition-colors duration-200 rounded-b-lg"
+              >
+                <div
+                  class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm"
+                >
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
+                <span class="font-medium text-gray-800">Log Out</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="flex flex-1 overflow-hidden p-6 gap-6">
+        <aside
+          class="w-64 flex-shrink-0 bg-white text-gray-800 p-6 rounded-lg overflow-y-auto scrollbar-hidden shadow-md"
+        >
+          <div class="space-y-6">
+            <div class="space-y-2">
+              <a
+                href="#"
+                class="nav-link flex items-center px-4 py-2.5 text-white font-medium rounded-lg bg-green-600 hover:bg-green-500 transition-colors duration-300"
+                data-category="Home"
+              >
+                <i class="fa-solid fa-house mr-4"></i> Home
+              </a>
+              <a
+                href="#"
+                class="nav-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+                data-category="Popular"
+              >
+                <i class="fa-solid fa-fire mr-4"></i> Popular
+              </a>
+              <a
+                href="#"
+                class="nav-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+                data-category="Blogs"
+              >
+                <i class="fa-solid fa-newspaper mr-4"></i> Blogs
+              </a>
+              <a
+                href="resources.html"
+                class="flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-book mr-4"></i> Resources
+              </a>
+            </div>
+            <div class="space-y-2">
+              <h3
+                class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+              >
+                Topics
+              </h3>
+              <a
+                href="#"
+                data-category="All"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-list-ul mr-4 text-gray-500"></i> All
+              </a>
+              <a
+                href="#"
+                data-category="Anxiety"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-heart-pulse mr-4 text-gray-500"></i>
+                Anxiety
+              </a>
+              <a
+                href="#"
+                data-category="Exam Stress"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-book-open mr-4 text-gray-500"></i> Exam
+                Stress
+              </a>
+              <a
+                href="#"
+                data-category="Relationships"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-users-viewfinder mr-4 text-gray-500"></i>
+                Relationships
+              </a>
+              <a
+                href="#"
+                data-category="Addiction"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-handcuffs mr-4 text-gray-500"></i>
+                Addiction
+              </a>
+              <a
+                href="#"
+                data-category="Wellness"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-spa mr-4 text-gray-500"></i> Wellness
+              </a>
+              <a
+                href="#"
+                data-category="Study Pressure"
+                class="nav-link category-link flex items-center px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              >
+                <i class="fa-solid fa-graduation-cap mr-4 text-gray-500"></i>
+                Study Pressure
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto scrollbar-hidden">
+          <div class="w-full max-w-3xl mx-auto">
+            <div
+              id="amaPost"
+              class="bg-green-50 border border-green-200 p-4 rounded-lg shadow-md mb-6 animate-fade-in flex items-center gap-4 cursor-pointer"
+            >
+              <i
+                class="fa-solid fa-thumbtack text-green-500 text-lg flex-shrink-0"
+              ></i>
+              <div class="flex-1">
+                <span class="text-sm font-bold text-green-600">AMA Post</span>
+                <h3 class="text-lg font-semibold text-green-800">
+                  Weekly AMA with a Mental Health Expert!
+                </h3>
+                <p class="text-sm text-green-700">
+                  Ask your questions below. Our expert will be live today at 3
+                  PM.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex space-x-2">
+                <button
+                  data-type="All"
+                  class="post-filter-btn px-4 py-2 text-sm font-medium rounded-full bg-green-600 text-white transition-colors duration-300"
+                >
+                  All Posts
+                </button>
+                <button
+                  data-type="Official"
+                  class="post-filter-btn px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors duration-300"
+                >
+                  🟢 Official
+                </button>
+                <button
+                  data-type="Peer"
+                  class="post-filter-btn px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors duration-300"
+                >
+                  🔵 Peer Posts
+                </button>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm font-medium text-gray-600">Tags:</span>
+                <button
+                  data-tag="StudyHelp"
+                  class="tag-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors duration-300"
+                >
+                  #StudyHelp
+                </button>
+                <button
+                  data-tag="Motivation"
+                  class="tag-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors duration-300"
+                >
+                  #Motivation
+                </button>
+              </div>
+            </div>
+            <div id="postsContainer" class="space-y-4"></div>
+          </div>
+        </main>
+
+        <aside
+          class="w-80 flex-shrink-0 bg-white text-gray-800 p-6 rounded-lg overflow-y-auto scrollbar-hidden shadow-md"
+        >
+          <h2 class="text-lg font-bold mb-4 text-gray-700">
+            Top Helpers of the Week 🏆
+          </h2>
+          <ul id="leaderboardList" class="space-y-3 mb-8"></ul>
+
+          <h2 class="text-lg font-bold mb-4 text-gray-700">
+            Popular Communities
+          </h2>
+          <ul id="trendingList" class="space-y-3 mb-8"></ul>
+
+          <h2 class="text-lg font-bold mb-4 text-gray-700">Resources</h2>
+          <div class="flex flex-col gap-4">
+            <a
+              href="resources.html"
+              class="bg-gray-100 hover:bg-gray-200 p-4 rounded-lg flex items-center gap-4 transition-colors duration-300"
+            >
+              <i
+                class="fa-solid fa-book-open-reader text-green-600 text-xl"
+              ></i>
+              <span class="font-medium text-gray-800"
+                >Mental Health Guides</span
+              >
+            </a>
+            <a
+              href="resources.html"
+              class="bg-gray-100 hover:bg-gray-200 p-4 rounded-lg flex items-center gap-4 transition-colors duration-300"
+            >
+              <i
+                class="fa-solid fa-headphones-simple text-purple-600 text-xl"
+              ></i>
+              <span class="font-medium text-gray-800"
+                >Meditation & Calmness</span
+              >
+            </a>
+            <a
+              href="resources.html"
+              class="bg-gray-100 hover:bg-gray-200 p-4 rounded-lg flex items-center gap-4 transition-colors duration-300"
+            >
+              <i class="fa-solid fa-heart-pulse text-red-600 text-xl"></i>
+              <span class="font-medium text-gray-800">Crisis Helplines</span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div
+      id="createPostModal"
+      class="fixed inset-0 hidden z-[100] flex items-center justify-center p-4 modal-backdrop"
+    >
+      <div
+        class="bg-white w-full max-w-2xl rounded-xl shadow-2xl relative p-6 modal-content"
+      >
+        <div
+          class="flex justify-between items-center pb-4 border-b border-gray-200 mb-4"
+        >
+          <h2 class="text-xl font-bold text-gray-800">Create a New Post</h2>
+          <button
+            id="closeCreateModal"
+            class="text-gray-500 hover:text-gray-700 text-3xl font-bold leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="postForm">
+          <div class="flex items-center gap-4 mb-4">
+            <div
+              class="w-12 h-12 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-xl flex-shrink-0"
+            >
+              👤
+            </div>
+            <div class="flex-1">
+              <span class="font-semibold text-gray-800">Post as demo-user</span>
+              <p class="text-sm text-gray-500">
+                You can choose to post anonymously below.
+              </p>
+            </div>
+          </div>
+          <textarea
+            id="postInput"
+            rows="6"
+            placeholder="What's on your mind? Share your thoughts and be a part of the community."
+            class="w-full border rounded-lg px-4 py-3 text-base resize-none focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300 mb-4"
+          ></textarea>
+
+          <label class="block text-gray-700 font-medium text-sm mb-2 mt-4"
+            >Image (Optional)</label
+          >
+          <input
+            type="file"
+            id="mediaInput"
+            name="media"
+            accept="image/*"
+            class="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-gray-200 file:text-green-600 hover:file:bg-gray-300 mb-4"
+          />
+
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center sm:gap-4 mt-4"
+          >
+            <div class="flex items-center gap-4 mb-4 sm:mb-0">
+              <label class="flex items-center text-gray-700 text-sm">
+                <input
+                  type="checkbox"
+                  id="anonymousCheck"
+                  class="mr-2 h-4 w-4 text-green-600 border-gray-300 rounded bg-gray-100"
+                />
+                Post Anonymously
+              </label>
+              <select
+                id="categorySelect"
+                class="border border-gray-300 rounded-full px-4 py-2 text-sm bg-gray-100 focus:outline-none focus:ring-1 focus:ring-green-500"
+              >
+                <option>Anxiety</option>
+                <option>Exam Stress</option>
+                <option>Relationships</option>
+                <option>Addiction</option>
+                <option>Wellness</option>
+                <option>Study Pressure</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              class="bg-green-600 text-white px-6 py-2 rounded-full font-medium hover:bg-green-500 transition-colors duration-300 text-sm w-full sm:w-auto"
+            >
+              Post
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="postModal"
+      class="fixed inset-0 hidden z-[100] flex items-center justify-center p-4 modal-backdrop"
+    >
+      <div
+        class="bg-white w-full max-w-4xl rounded-xl shadow-2xl relative flex flex-col max-h-[90vh] modal-content"
+      >
+        <button
+          id="closeModal"
+          class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold leading-none"
+        >
+          &times;
+        </button>
+
+        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden p-6">
+          <div
+            class="lg:w-2/3 pr-6 pb-6 lg:pb-0 overflow-y-auto scrollbar-hidden"
+          >
+            <div id="modalContent" class="mb-4 text-gray-800"></div>
+            <div class="mt-4 flex flex-col gap-2">
+              <button
+                class="bg-green-50 text-green-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-green-100 transition-colors"
+              >
+                DM User
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="lg:w-1/3 flex flex-col border-t lg:border-t-0 lg:border-l border-gray-200 pt-6 lg:pt-0 lg:pl-6 overflow-hidden"
+          >
+            <h3 class="font-bold mb-4 text-gray-700 text-xl">Comments</h3>
+            <div
+              id="commentsList"
+              class="space-y-4 flex-1 overflow-y-auto scrollbar-hidden"
+            ></div>
+            <div class="flex gap-2 mt-4">
+              <input
+                type="text"
+                id="commentInput"
+                placeholder="Add a comment..."
+                class="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+              <button
+                id="commentSubmit"
+                class="bg-green-600 text-white px-5 py-2 rounded-full font-medium hover:bg-green-500 transition-colors duration-300 text-sm"
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- 1. CONFIG & DOM ELEMENTS ---
+      const API_BASE_URL = "http://localhost:5000";
+
+      // --- Form & Modal Elements ---
+      const postForm = document.getElementById("postForm");
+      const postInput = document.getElementById("postInput");
+      const categorySelect = document.getElementById("categorySelect");
+      const mediaInput = document.getElementById("mediaInput");
+      const anonymousCheck = document.getElementById("anonymousCheck");
+      const createPostBtn = document.getElementById("createPostBtn");
+      const createPostModal = document.getElementById("createPostModal");
+      const closeCreateModal = document.getElementById("closeCreateModal");
+
+      // --- Post Display & Filtering ---
+      const postsContainer = document.getElementById("postsContainer");
+      const postFilterBtns = document.querySelectorAll(".post-filter-btn");
+      const tagFilterBtns = document.querySelectorAll(".tag-filter-btn");
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      // --- Post Detail Modal Elements ---
+      const postModal = document.getElementById("postModal");
+      const closeModal = document.getElementById("closeModal");
+      const modalContent = document.getElementById("modalContent");
+      const commentsList = document.getElementById("commentsList");
+      const commentInput = document.getElementById("commentInput");
+      const commentSubmit = document.getElementById("commentSubmit");
+
+      // --- Sidebar Elements ---
+      const leaderboardList = document.getElementById("leaderboardList");
+      const trendingList = document.getElementById("trendingList");
+
+      // --- Profile Dropdown Elements ---
+      const profileBtn = document.getElementById("profileBtn");
+      const profileDropdown = document.getElementById("profileDropdown");
+
+      // --- 2. STATE MANAGEMENT ---
+      let currentCategory = "Home";
+      let currentPostId = null;
+      let currentFilterType = "All";
+      let currentFilterTag = null;
+
+      // --- 3. HELPER FUNCTIONS ---
+      function formatDate(dateString) {
+        return new Date(dateString).toLocaleString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      // --- 4. RENDER FUNCTIONS ---
+      function renderPosts(posts) {
+        postsContainer.innerHTML = "";
+        if (!Array.isArray(posts) || posts.length === 0) {
+          postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">No posts found for this category.</p>`;
+          return;
+        }
+        posts.forEach((post) => {
+          const postTypeBadge = post.is_verified
+            ? `<span class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full">🟢 Official</span>`
+            : `<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">🔵 Peer Post</span>`;
+
+          const tagBadges =
+            post.tags && Array.isArray(post.tags)
+              ? post.tags
+                  .map(
+                    (tag) =>
+                      `<span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">#${tag}</span>`
+                  )
+                  .join("")
+              : "";
+
+          const div = document.createElement("div");
+          div.className =
+            "post-card bg-white text-gray-800 p-4 rounded-lg shadow-md border border-gray-200 hover:border-green-500 transition-all duration-300 animate-fade-in cursor-pointer";
+          div.dataset.id = post._id; // Use _id from MongoDB
+
+          div.innerHTML = `
+      <div class="flex items-start gap-4">
+        <div class="vote-buttons flex flex-col items-center mt-2">
+          <button class="vote-up text-gray-400 hover:text-green-600 transition-colors duration-200 text-xl"><i class="fa-solid fa-arrow-up"></i></button>
+          <span class="votes font-semibold text-lg my-1 text-gray-800">${
+            post.upvotes || 0
+          }</span>
+          <button class="vote-down text-gray-400 hover:text-red-600 transition-colors duration-200 text-xl"><i class="fa-solid fa-arrow-down"></i></button>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2 flex-wrap">
+            ${postTypeBadge}
+            <span class="text-xs text-gray-500">• Posted by u/${
+              post.pseudonym || "Anonymous"
+            }</span>
+            <span class="text-xs text-gray-500">• ${formatDate(
+              post.createdAt
+            )}</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 leading-tight text-gray-900">${
+            post.title || "Untitled Post"
+          }</h3>
+          <p class="text-sm text-gray-700 leading-relaxed line-clamp-3">${
+            post.content
+          }</p>
+          ${
+            post.media_url
+              ? `<div class="mt-4"><img src="${post.media_url}" alt="Post image" class="rounded-lg max-h-64 w-full object-cover shadow-md"/></div>`
+              : ""
+          }
+          <div class="flex items-center gap-2 mt-4 flex-wrap">${tagBadges}</div>
+          <div class="flex items-center gap-4 mt-4 text-gray-600 text-sm">
+            <span><i class="fa-solid fa-comment-dots mr-2"></i> ${
+              post.comments_count || 0
+            } Comments</span>
+          </div>
+        </div>
+      </div>`;
+
+          div.addEventListener("click", (e) => {
+            // Prevent modal from opening when clicking vote buttons
+            if (!e.target.closest(".vote-buttons")) {
+              openPostModal(post);
+            }
+          });
+          postsContainer.appendChild(div);
+        });
+      }
+
+      function renderComments(comments) {
+        commentsList.innerHTML = "";
+        if (comments.length === 0) {
+          commentsList.innerHTML = `<p class="text-gray-500 text-sm text-center">No comments yet. Be the first to reply!</p>`;
+          return;
+        }
+        comments.forEach((comment) => {
+          const commentDiv = document.createElement("div");
+          commentDiv.className = "bg-gray-100 p-3 rounded-lg";
+          commentDiv.innerHTML = `
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-semibold text-sm text-gray-800">u/${
+                  comment.pseudonym || "Anonymous"
+                }</span>
+                <span class="text-xs text-gray-500">${formatDate(
+                  comment.createdAt
+                )}</span>
+            </div>
+            <p class="text-sm text-gray-700">${comment.content}</p>
+        `;
+          commentsList.appendChild(commentDiv);
+        });
+      }
+
+      // --- 5. API INTERACTIONS ---
+      async function loadPosts() {
+        postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">Loading posts...</p>`;
+
+        // Build the URL with query parameters for filtering and sorting
+        let url = new URL(`${API_BASE_URL}/posts`);
+        if (
+          currentCategory &&
+          currentCategory !== "Home" &&
+          currentCategory !== "All"
+        ) {
+          url.searchParams.append("category", currentCategory);
+        }
+        if (currentFilterType !== "All") {
+          const isVerified = currentFilterType === "Official";
+          url.searchParams.append("is_verified", isVerified);
+        }
+        if (currentFilterTag) {
+          url.searchParams.append("tag", currentFilterTag);
+        }
+        if (currentCategory === "Popular") {
+          url.searchParams.append("sort", "popular");
+        }
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const posts = await res.json();
+          renderPosts(posts);
+        } catch (err) {
+          console.error("Error fetching posts:", err);
+          postsContainer.innerHTML = `<p class="text-center text-red-500 mt-8">Failed to load posts. Please ensure your backend server is running on ${API_BASE_URL}.</p>`;
+        }
+      }
+
+      async function createPost(e) {
+        e.preventDefault();
+        const content = postInput.value.trim();
+        const mediaFile = mediaInput.files[0];
+        if (!content && !mediaFile) {
+          return alert("Please enter some content or upload an image!");
+        }
+
+        // Use FormData to correctly handle file uploads
+        const formData = new FormData();
+        formData.append("content", content);
+        formData.append("category", categorySelect.value);
+        formData.append("is_anonymous", anonymousCheck.checked);
+        if (mediaFile) {
+          formData.append("media", mediaFile);
+        }
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/posts`, {
+            method: "POST",
+            body: formData, // When using FormData, the browser automatically sets the 'Content-Type' header
+          });
+
+          if (response.ok) {
+            //alert("Post created successfully!");
+            postForm.reset();
+            createPostModal.classList.add("hidden");
+            document.body.style.overflow = "auto";
+            loadPosts(); // Refresh the post list
+          } else {
+            const errorData = await response.json();
+            console.error("Failed to create post:", errorData);
+            alert(
+              `Failed to create post: ${errorData.message || "Unknown error"}`
+            );
+          }
+        } catch (error) {
+          console.error("Error creating post:", error);
+          alert("Network error: Could not connect to the server.");
+        }
+      }
+
+      async function loadComments(postId) {
+        commentsList.innerHTML = `<p class="text-gray-500 text-sm text-center">Loading comments...</p>`;
+        try {
+          const res = await fetch(`${API_BASE_URL}/posts/${postId}/comments`);
+          if (!res.ok) throw new Error("Failed to fetch comments");
+          const comments = await res.json();
+          renderComments(comments);
+        } catch (error) {
+          console.error("Error loading comments:", error);
+          commentsList.innerHTML = `<p class="text-red-500 text-sm text-center">Could not load comments.</p>`;
+        }
+      }
+
+      async function submitComment() {
+        const content = commentInput.value.trim();
+        if (!content || !currentPostId) return;
+
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/posts/${currentPostId}/comments`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ content }),
+            }
+          );
+
+          if (response.ok) {
+            commentInput.value = "";
+            loadComments(currentPostId); // Refresh the comments list
+          } else {
+            alert("Failed to post comment.");
+          }
+        } catch (error) {
+          console.error("Error submitting comment:", error);
+          alert("Could not submit comment.");
+        }
+      }
+
+      async function updateSidebars() {
+        // Fetch and render leaderboard from the API
+        try {
+          const res = await fetch(`${API_BASE_URL}/leaderboard`);
+          const users = await res.json();
+          leaderboardList.innerHTML = users
+            .slice(0, 5)
+            .map(
+              (user, index) => `
+            <li class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-green-600">#${index + 1}</span>
+                    <span class="font-medium text-gray-800">${
+                      user.pseudonym
+                    }</span>
+                </div>
+                <span class="text-sm text-gray-500">${user.points} Points</span>
+            </li>
+        `
+            )
+            .join("");
+        } catch (error) {
+          leaderboardList.innerHTML = `<p class="text-xs text-red-500">Could not load helpers.</p>`;
+          console.error("Failed to fetch leaderboard:", error);
+        }
+
+        // Fetch and render trending communities from the API
+        try {
+          const res = await fetch(`${API_BASE_URL}/trending`);
+          const topics = await res.json();
+          trendingList.innerHTML = topics
+            .slice(0, 4)
+            .map(
+              (topic) => `
+            <li class="trending-item flex items-center justify-between bg-gray-100 p-3 rounded-lg cursor-pointer" data-category="${topic.category}">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-heart-pulse text-green-600"></i>
+                    <span class="font-medium text-gray-800">r/${topic.category}</span>
+                </div>
+                <span class="text-xs text-gray-500">${topic.count} Posts</span>
+            </li>
+        `
+            )
+            .join("");
+        } catch (error) {
+          trendingList.innerHTML = `<p class="text-xs text-red-500">Could not load communities.</p>`;
+          console.error("Failed to fetch trending topics:", error);
+        }
+      }
+
+      // --- 6. MODAL & UI LOGIC ---
+      function openPostModal(post) {
+        currentPostId = post._id; // Set the current post ID for comment submission
+        const postTypeBadge = post.is_verified
+          ? `<span class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full">🟢 Official</span>`
+          : `<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">🔵 Peer Post</span>`;
+
+        modalContent.innerHTML = `
+    <div class="flex items-center gap-4 mb-4">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-2 flex-wrap">
+          ${postTypeBadge}
+          <span class="text-xs font-medium text-gray-600">r/${
+            post.category
+          }</span>
+        </div>
+        <h2 class="text-3xl font-bold mb-1 leading-tight text-gray-900">${
+          post.title || "Untitled Post"
+        }</h2>
+        <span class="text-sm text-gray-500">Posted by u/${
+          post.pseudonym || "Anonymous"
+        } on ${formatDate(post.createdAt)}</span>
+      </div>
+    </div>
+    <p class="text-base text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">${
+      post.content
+    }</p>
+    ${
+      post.media_url
+        ? `<div class="my-4"><img src="${post.media_url}" alt="Post image" class="rounded-lg max-h-[400px] w-full object-contain shadow-sm"/></div>`
+        : ""
+    }
+    <div class="text-sm font-medium text-gray-600 border-t border-gray-200 pt-4">
+      <span class="font-bold">${
+        post.upvotes || 0
+      } peers found this helpful</span>
+    </div>`;
+
+        postModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        loadComments(post._id); // Fetch comments for this specific post
+      }
+
+      function closeModalAndReset() {
+        postModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+        currentPostId = null;
+        commentsList.innerHTML = "";
+        commentInput.value = "";
+      }
+
+      // --- 7. EVENT LISTENERS ---
+      profileBtn.addEventListener("click", () =>
+        profileDropdown.classList.toggle("hidden")
+      );
+      window.addEventListener("click", (e) => {
+        if (
+          !profileBtn.contains(e.target) &&
+          !profileDropdown.contains(e.target)
+        ) {
+          profileDropdown.classList.add("hidden");
+        }
+      });
+
+      createPostBtn.addEventListener("click", () => {
+        createPostModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      });
+      closeCreateModal.addEventListener("click", () => {
+        createPostModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      });
+
+      postFilterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          postFilterBtns.forEach((b) => {
+            b.classList.remove("bg-green-600", "text-white");
+            b.classList.add("bg-gray-200", "text-gray-600");
+          });
+          btn.classList.add("bg-green-600", "text-white");
+          btn.classList.remove("bg-gray-200", "text-gray-600");
+          currentFilterType = btn.dataset.type;
+          loadPosts();
+        });
+      });
+
+      tagFilterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (currentFilterTag === btn.dataset.tag) {
+            btn.classList.remove("bg-green-500", "text-white");
+            currentFilterTag = null;
+          } else {
+            tagFilterBtns.forEach((b) =>
+              b.classList.remove("bg-green-500", "text-white")
+            );
+            btn.classList.add("bg-green-500", "text-white");
+            currentFilterTag = btn.dataset.tag;
+          }
+          loadPosts();
+        });
+      });
+
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          navLinks.forEach((l) => {
+            l.classList.remove("bg-green-600", "text-white");
+            l.classList.add("text-gray-600", "hover:bg-gray-200");
+          });
+          link.classList.add("bg-green-600", "text-white");
+          link.classList.remove("text-gray-600", "hover:bg-gray-200");
+          currentCategory = link.dataset.category;
+          loadPosts();
+        });
+      });
+
+      closeModal.addEventListener("click", closeModalAndReset);
+      commentSubmit.addEventListener("click", submitComment);
+      commentInput.addEventListener("keyup", (e) => {
+        if (e.key === "Enter") submitComment();
+      });
+
+      postForm.addEventListener("submit", createPost);
+
+      // --- 8. INITIALIZATION ---
+      document.addEventListener("DOMContentLoaded", () => {
+        loadPosts();
+        updateSidebars();
+      });
+    </script>
+  </body>
+</html>

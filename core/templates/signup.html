@@ -1,0 +1,337 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      .form-container {
+        background-color: #f0f4f8;
+      }
+      .card {
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        padding: 40px;
+      }
+      .input-field {
+        background-color: #e6ecf2;
+        border: 1px solid #d1d9e6;
+        border-radius: 12px;
+        padding: 12px 16px;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+      .input-field:focus {
+        outline: none;
+        border-color: #63b3ed;
+        box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3);
+      }
+      .btn-primary {
+        background-color: #0d9488;
+        color: white;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 12px 16px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #115e59;
+      }
+      .btn-social {
+        border: 1px solid #d1d9e6;
+        border-radius: 12px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .btn-social:hover {
+        background-color: #f0f4f8;
+        border-color: #a3b1c2;
+      }
+      .password-strength {
+        height: 4px;
+        border-radius: 2px;
+        background-color: #e6ecf2;
+        width: 100%;
+        margin-top: 8px;
+      }
+      .strength-indicator {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.3s ease, background-color 0.3s ease;
+      }
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+      }
+      .custom-checkbox {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #d1d9e6;
+        border-radius: 6px;
+        margin-right: 12px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .custom-checkbox:checked {
+        background-color: #0d9488;
+        border-color: #0d9488;
+      }
+      .custom-checkbox:checked::after {
+        content: "✓";
+        color: white;
+        font-size: 14px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body class="form-container">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl w-full">
+        <div class="text-center mb-8">
+          <a href="/" class="flex items-center gap-3">
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="MannMitra Logo"
+              class="h-10 w-10 object-cover rounded-full"
+            />
+            <span class="text-2xl font-bold text-gray-800">MannMitra</span>
+          </a>
+          <h2 class="mt-4 text-3xl font-bold text-gray-900">Create your account</h2>
+          <p class="mt-2 text-md text-gray-600">
+            Join our community for a better mental wellness journey.
+          </p>
+        </div>
+        <div class="card">
+          <form id="signup-form" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="full-name">Full Name</label>
+                <input class="input-field mt-1" id="full-name" name="full-name" placeholder="John Doe" required type="text"/>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="email-address">Email Address</label>
+                <input autocomplete="email" class="input-field mt-1" id="email-address" name="email-address" placeholder="you@example.com" required type="email"/>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="password">Password</label>
+                <input autocomplete="new-password" class="input-field mt-1" id="password" name="password" required type="password"/>
+                <div class="password-strength">
+                  <div class="strength-indicator" id="strength-bar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="password-confirm">Confirm Password</label>
+                <input autocomplete="new-password" class="input-field mt-1" id="password-confirm" name="password-confirm" required type="password"/>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="phone-number">Phone Number
+                  <span class="text-gray-500">(Optional)</span></label>
+                <input class="input-field mt-1" id="phone-number" name="phone-number" type="tel"/>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="gender">Gender</label>
+                <select class="input-field mt-1" id="gender" name="gender">
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="dob">Date of Birth</label>
+                <input class="input-field mt-1" id="dob" name="dob" required type="date"/>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700" for="institution">College/Institution Name</label>
+                <input class="input-field mt-1" id="institution" name="institution" placeholder="e.g. University of Example" required type="text"/>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700" for="language">Preferred Language</label>
+                <select class="input-field mt-1" id="language" name="language">
+                  <option>English</option>
+                  <option>Spanish</option>
+                  <option>French</option>
+                  <option>Mandarin</option>
+                  <option>Hindi</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Main concerns</label>
+              <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-4">
+                <label class="checkbox-container text-gray-700">
+                  <input class="custom-checkbox" name="concerns" type="checkbox" value="stress"/> Stress
+                </label>
+                <label class="checkbox-container text-gray-700">
+                  <input class="custom-checkbox" name="concerns" type="checkbox" value="anxiety"/> Anxiety
+                </label>
+                <label class="checkbox-container text-gray-700">
+                  <input class="custom-checkbox" name="concerns" type="checkbox" value="depression"/> Depression
+                </label>
+                <label class="checkbox-container text-gray-700">
+                  <input class="custom-checkbox" name="concerns" type="checkbox" value="academic"/> Academic Pressure
+                </label>
+                <label class="checkbox-container text-gray-700">
+                  <input class="custom-checkbox" name="concerns" type="checkbox" value="sleep"/> Sleep Issues
+                </label>
+                <label class="checkbox-container text-gray-700">
+                  <input class="custom-checkbox" name="concerns" type="checkbox" value="other"/> Other
+                </label>
+              </div>
+            </div>
+            <div>
+              <button class="btn-primary" type="submit">Create Account</button>
+            </div>
+              <div class="flex items-center justify-center">
+              <span class="material-icons text-sm text-gray-500 mr-2">lock</span>
+              <p class="text-xs text-gray-500">
+                Your data is safe and confidential.
+              </p>
+            </div>
+          </form>
+          <div class="mt-6">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+            <div class="mt-6 grid grid-cols-2 gap-4">
+              <div>
+                <a class="btn-social" href="#">
+                  <img alt="Google logo" class="h-6 w-6"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuANT93lNa_J2BBD5T0ZdhWxlWNzgsm-NV3KaFGIBRjDfzO3e1NWrGm8bpXioh9ofX8E_Tki96jmj871lelXGRh0ydCk6htgaBevbQjpT1VN5wQlZUwVM5NdhjlyLs6oxq_rI9_5rKmgWNrc69L12aGxZ_Tw9rDy1e4RLIPGZZRJ_I4xDjxeR0kmpg8jVuGtzw_PXfhEOGXbdlAGV9t-B6J9xgrO_3mchirfg2iw00NxdKHmC8njA4OCVTIRIGo5hefbjoFMRjLzUYj-" />
+                  <span class="ml-3 text-sm font-medium text-gray-700">Google</span>
+                </a>
+              </div>
+              <div>
+                <a class="btn-social" href="#">
+                  <img alt="Microsoft logo" class="h-6 w-6"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPKl847uMYHpBCm-fhAFNDw4eFklzKbu-u5-AKkPjAVV_uOQgStz9WrzsbiqOe5pLRuQ-ylEmK9lGa4HXpKguu9mZxdoKE1WGuAxujZY0nrEJBf1JtPai9-5NHdDoERbNUxgQiM46w9s7wwUt3ufK9HD3z2HyaQQ9NSSl094pwKCuPsMnjEbYHM6KuYYd81YVsaT9reQjmhwzeF67ovMeM_0Yi1H5oUwuBQuXIcZOZyZqMdzAVkibS1EsZKST8bLb-832Q1oi6sODV" />
+                  <span class="ml-3 text-sm font-medium text-gray-700">Microsoft</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          </form>
+          <br>
+          <div class="mt-8 text-center">
+            <p class="text-sm text-gray-600">
+              Already have an account?
+              <a href="/#login" class="font-medium text-teal-600 hover:text-teal-500">Log in</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supabase SignUp Script -->
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      const supabaseUrl = "https://nrjxvuzhvfvxpvdvrxdf.supabase.co";
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yanh2dXpodmZ2eHB2ZHZyeGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjcwMjUsImV4cCI6MjA3MzEwMzAyNX0.hCga9sEp1hLuRFcAzpbz0rePyaQYUNu2DWCpBe2SGxg"; 
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const form = document.getElementById("signup-form");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email-address").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("password-confirm").value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({ email, password });
+
+        if (error) {
+          alert("Error: " + error.message);
+          return;
+        }
+
+        // Save profile
+        const fullName = document.getElementById("full-name").value;
+        const phone = document.getElementById("phone-number").value;
+        const gender = document.getElementById("gender").value;
+        const dob = document.getElementById("dob").value;
+        const institution = document.getElementById("institution").value;
+        const language = document.getElementById("language").value;
+        const concerns = Array.from(document.querySelectorAll('input[name="concerns"]:checked')).map((c) => c.value);
+
+        await supabase.from("profiles").insert([{
+          id: data.user.id,
+          full_name: fullName,
+          phone,
+          gender,
+          dob,
+          institution,
+          language,
+          concerns,
+        }]);
+
+        // Step 1: Ask confirmation
+        if (confirm("Please Confirm your Verification")) {
+          alert("Account Created Successfully!");
+          window.location.href = "/login/";
+        }
+      });
+    </script>
+
+    <!-- Password strength checker -->
+    <script>
+      const passwordInput = document.getElementById("password");
+      const strengthBar = document.getElementById("strength-bar");
+
+      passwordInput.addEventListener("input", () => {
+        const password = passwordInput.value;
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+        if (password.match(/\d/)) strength++;
+        if (password.match(/[^a-zA-Z\d]/)) strength++;
+
+        let color = "bg-gray-300";
+        let width = "0%";
+
+        switch (strength) {
+          case 1: width = "25%"; color = "bg-red-500"; break;
+          case 2: width = "50%"; color = "bg-yellow-500"; break;
+          case 3: width = "75%"; color = "bg-blue-500"; break;
+          case 4: width = "100%"; color = "bg-green-500"; break;
+        }
+        strengthBar.style.width = width;
+        strengthBar.className = `strength-indicator ${color}`;
+      });
+    </script>
+  </body>
+</html>

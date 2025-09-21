@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mental Health Screening</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    
+    <style>
+        /* Apply a custom font to the whole page */
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .quiz-modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .modal-content {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .quiz-option {
+            transition: all 0.2s ease-in-out;
+            border-width: 2px;
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .quiz-option-selected {
+            border-color: #4f46e5;
+            background-color: #e0e7ff;
+            font-weight: 600;
+            position: relative;
+        }
+        .quiz-option-selected::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            color: #4f46e5;
+        }
+        .quiz-option-selected span {
+            padding-left: 1.5rem;
+        }
+
+        /* Spinner for AI analysis */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #4f46e5;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #ai-response b, #ai-response strong {
+            font-weight: 700;
+            color: #3730a3;
+        }
+    </style>
+</head>
+<body class="bg-emerald-50/40 text-slate-700">
+
+    <!-- Crisis Banner (Initially Hidden) -->
+    <div id="crisis-banner" class="fixed top-0 left-0 w-full bg-red-600 text-white z-[60] py-3 px-6 text-center shadow-lg transform -translate-y-full transition-transform duration-500 ease-in-out">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between space-y-2 md:space-y-0">
+            <h3 class="text-xl font-bold">Immediate Help Required</h3>
+            <p class="text-sm md:text-base">If you are in distress, please seek help immediately. You are not alone.</p>
+            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                <a href="tel:9152987821" class="bg-white text-red-600 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-gray-100 transition-colors">Call 9152987821</a>
+                <a href="https://www.who.int/mental_health/suicide_prevention" target="_blank" class="bg-red-700 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-red-800 transition-colors">Find a Helpline</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="size-9 flex-shrink-0 bg-emerald-600 text-white rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-xl">psychology</span> 
+                </div>
+                <a href="#" class="text-2xl font-bold text-slate-800 tracking-wide">MannMitra</a>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="#" class="text-sm text-slate-600 hover:text-emerald-600 transition-colors">Home</a>
+                    <a href="#" class="text-sm font-semibold text-emerald-600">Resources</a>
+                    <a href="#" class="text-sm text-slate-600 hover:text-emerald-600 transition-colors">Community</a>
+                    <a href="#" class="text-sm text-slate-600 hover:text-emerald-600 transition-colors">My Progress</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="p-2 rounded-full hover:bg-slate-100 transition-colors">
+                        <span class="material-symbols-outlined text-slate-600">notifications</span>
+                    </button>
+                    <button class="size-9 rounded-full overflow-hidden border-2 border-slate-200">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" alt="Profile picture" class="w-full h-full object-cover">
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="px-6 py-16 lg:py-24">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center">
+                <h1 class="text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">Mental Health Screening</h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
+                    Take evidence-based assessments to understand your mental health status. These tools help identify symptoms and guide you toward appropriate support.
+                </p>
+            </div>
+
+            <!-- Assessment Cards -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-shrink-0 size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                             <span class="material-symbols-outlined">sentiment_very_dissatisfied</span>
+                        </div>
+                        <div class="ml-4 text-right">
+                           <h3 class="text-lg font-bold text-slate-900">PHQ-9 Depression</h3>
+                           <p class="mt-2 text-xs text-slate-500">9 questions • 5-10 min</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600 flex-grow">Patient Health Questionnaire-9 for depression screening over the last 2 weeks.</p>
+                    <button data-quiz-key="phq9" class="assessment-btn mt-6 block w-full text-center rounded-lg py-2.5 px-4 bg-emerald-600 text-white font-semibold text-sm shadow-sm hover:bg-emerald-700 transition-colors">Start Assessment</button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-shrink-0 size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                             <span class="material-symbols-outlined">emergency_heat</span>
+                        </div>
+                        <div class="ml-4 text-right">
+                           <h3 class="text-lg font-bold text-slate-900">GAD-7 Anxiety</h3>
+                           <p class="mt-2 text-xs text-slate-500">7 questions • 3-5 min</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600 flex-grow">Generalized Anxiety Disorder-7 for anxiety symptom screening.</p>
+                    <button data-quiz-key="gad7" class="assessment-btn mt-6 block w-full text-center rounded-lg py-2.5 px-4 bg-emerald-600 text-white font-semibold text-sm shadow-sm hover:bg-emerald-700 transition-colors">Start Assessment</button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-shrink-0 size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                             <span class="material-symbols-outlined">health_and_safety</span>
+                        </div>
+                        <div class="ml-4 text-right">
+                           <h3 class="text-lg font-bold text-slate-900">GHQ-12 General Health</h3>
+                           <p class="mt-2 text-xs text-slate-500">12 questions • 5-8 min</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600 flex-grow">General Health Questionnaire-12 for psychological well-being assessment.</p>
+                    <button data-quiz-key="ghq12" class="assessment-btn mt-6 block w-full text-center rounded-lg py-2.5 px-4 bg-emerald-600 text-white font-semibold text-sm shadow-sm hover:bg-emerald-700 transition-colors">Start Assessment</button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-shrink-0 size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                             <span class="material-symbols-outlined">sos</span>
+                        </div>
+                        <div class="ml-4 text-right">
+                           <h3 class="text-lg font-bold text-slate-900">C-SSRS Suicide Risk</h3>
+                           <p class="mt-2 text-xs text-slate-500">6 questions • 3-5 min</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600 flex-grow">Columbia-Suicide Severity Rating Scale for suicide risk assessment.</p>
+                    <button data-quiz-key="cssrs" class="assessment-btn mt-6 block w-full text-center rounded-lg py-2.5 px-4 bg-emerald-600 text-white font-semibold text-sm shadow-sm hover:bg-emerald-700 transition-colors">Start Assessment</button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-shrink-0 size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                             <span class="material-symbols-outlined">bolt</span>
+                        </div>
+                        <div class="ml-4 text-right">
+                           <h3 class="text-lg font-bold text-slate-900">PSS Stress Scale</h3>
+                           <p class="mt-2 text-xs text-slate-500">10 questions • 5-7 min</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600 flex-grow">Perceived Stress Scale for measuring stress levels over the last month.</p>
+                    <button data-quiz-key="pss" class="assessment-btn mt-6 block w-full text-center rounded-lg py-2.5 px-4 bg-emerald-600 text-white font-semibold text-sm shadow-sm hover:bg-emerald-700 transition-colors">Start Assessment</button>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-shrink-0 size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                             <span class="material-symbols-outlined">spa</span>
+                        </div>
+                        <div class="ml-4 text-right">
+                           <h3 class="text-lg font-bold text-slate-900">WHO-5 Well-Being</h3>
+                           <p class="mt-2 text-xs text-slate-500">5 questions • 2-3 min</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600 flex-grow">WHO-5 Well-Being Index for measuring positive mental health.</p>
+                    <button data-quiz-key="who5" class="assessment-btn mt-6 block w-full text-center rounded-lg py-2.5 px-4 bg-emerald-600 text-white font-semibold text-sm shadow-sm hover:bg-emerald-700 transition-colors">Start Assessment</button>
+                </div>
+
+            </div>
+
+            <!-- Disclaimer Section -->
+            <div class="mt-24 bg-white border border-slate-200 rounded-2xl p-8 lg:p-12">
+                <h2 class="text-3xl font-bold text-slate-900 text-center">About These Assessments</h2>
+                <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 text-emerald-600">
+                            <span class="material-symbols-outlined">verified_user</span>
+                        </div>
+                        <h4 class="mt-4 text-base font-bold text-slate-900">Validated Tools</h4>
+                        <p class="mt-1 text-sm text-slate-600">These assessments are widely used, evidence-based screening tools used by mental health professionals worldwide.</p>
+                    </div>
+                    <div>
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 text-emerald-600">
+                            <span class="material-symbols-outlined">science</span>
+                        </div>
+                        <h4 class="mt-4 text-base font-bold text-slate-900">Screening Only</h4>
+                        <p class="mt-1 text-sm text-slate-600">These assessments are for screening purposes only and should not replace professional diagnosis or treatment.</p>
+                    </div>
+                    <div>
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 text-emerald-600">
+                            <span class="material-symbols-outlined">contact_support</span>
+                        </div>
+                        <h4 class="mt-4 text-base font-bold text-slate-900">Get Help</h4>
+                        <p class="mt-1 text-sm text-slate-600">If you're experiencing severe symptoms or thoughts of self-harm, please contact a mental health professional immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Quiz Modal Container -->
+    <div id="quiz-modal" class="quiz-modal-backdrop hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div class="modal-content bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 md:p-8 relative flex flex-col max-h-[90vh]">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div id="modal-header">
+                 <h2 id="modal-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Quiz Title</h2>
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                 <!-- Custom Alert Message Area -->
+                <div id="alert-message" class="hidden my-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"></div>
+            </div>
+
+            <!-- Quiz Form -->
+            <form id="quiz-form" class="flex-grow overflow-hidden flex flex-col">
+                <div id="quiz-questions-container" class="space-y-6 overflow-y-auto pr-2 flex-grow">
+                    <!-- Questions will be injected here by JavaScript -->
+                </div>
+                <div class="mt-8 flex justify-end pt-4 border-t border-gray-200">
+                    <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-300">Submit Answers</button>
+                </div>
+            </form>
+
+            <!-- Quiz Results Section (Initially hidden) -->
+            <div id="quiz-results" class="hidden flex-grow overflow-hidden flex flex-col">
+                 <div class="overflow-y-auto pr-2 flex-grow">
+                    <div class="text-center p-6 rounded-xl border-t-4">
+                        <h3 class="text-2xl font-bold mb-1" id="results-title">Your Results</h3>
+                        <p class="text-5xl font-extrabold mb-4" id="results-score"></p>
+                        <div id="results-message" class="text-lg mb-4"></div>
+                        <div id="results-resources" class="mt-4 text-left"></div>
+                    </div>
+
+                    <!-- AI Analysis Section -->
+                    <div id="ai-analysis-section" class="mt-6">
+                        <div id="ai-analysis-container" class="hidden p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+                            <h4 class="text-lg font-bold text-indigo-800 mb-2 flex items-center gap-2">
+                               <span class="material-symbols-outlined">psychology</span> MannMitra AI Analysis
+                            </h4>
+                            <div id="ai-response" class="text-indigo-900 text-sm space-y-3"></div>
+                             <div id="ai-loading" class="flex items-center justify-center p-4">
+                                <div class="spinner"></div>
+                                <p class="ml-4 text-indigo-700">Generating your personalized analysis...</p>
+                            </div>
+                            <div id="ai-error" class="hidden text-red-600">Sorry, we couldn't generate an analysis at this time. Please try again later.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200">
+                    <button id="ai-analysis-btn" class="w-full bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-indigo-600 transition-colors duration-300 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">auto_awesome</span> Get AI Analysis
+                    </button>
+                     <button id="retake-quiz-btn" class="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-xl hover:bg-gray-300 transition-colors duration-300">Take Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizzes = {
+            phq9: {
+                title: 'PHQ-9 Depression Screening',
+                questions: [
+                    'Little interest or pleasure in doing things?',
+                    'Feeling down, depressed, or hopeless?',
+                    'Trouble falling or staying asleep, or sleeping too much?',
+                    'Feeling tired or having little energy?',
+                    'Poor appetite or overeating?',
+                    'Feeling bad about yourself—or that you are a failure or have let yourself or your family down?',
+                    'Trouble concentrating on things, such as reading the newspaper or watching television?',
+                    'Moving or speaking so slowly that other people could have noticed? Or the opposite—being so fidgety or restless that you have been moving around a lot more than usual?',
+                    'Thoughts that you would be better off dead or of hurting yourself in some way?'
+                ],
+                options: [
+                    { text: 'Not at all', value: 0 },
+                    { text: 'Several days', value: 1 },
+                    { text: 'More than half the days', value: 2 },
+                    { text: 'Nearly every day', value: 3 }
+                ],
+                getFeedback: (score) => {
+                    if (score >= 20) return { type: 'high', message: 'Severe depression. Please seek professional help immediately.', color: 'red', resources: ['Immediate professional consultation.', 'Crisis helplines.'] };
+                    if (score >= 15) return { type: 'moderate', message: 'Moderately severe depression. Consider professional evaluation.', color: 'orange', resources: ['Explore counseling options.', 'Self-care tips.', 'Understanding depression article.'] };
+                    if (score >= 10) return { type: 'moderate', message: 'Moderate depression. A professional discussion may be beneficial.', color: 'yellow', resources: ['Connect with a therapist.', 'Journaling techniques.', 'Local mental health resources.'] };
+                    if (score >= 5) return { type: 'low', message: 'Mild depression. Pay attention to your feelings.', color: 'green', resources: ['Mindfulness exercises.', 'Social connection tips.', 'Meditation apps.'] };
+                    return { type: 'low', message: 'Minimal depression. Keep up with healthy habits!', color: 'blue', resources: ['Continue self-care.', 'Stay active.', 'Maintain social connections.'] };
+                }
+            },
+            gad7: {
+                title: 'GAD-7 Anxiety Screening',
+                questions: [
+                    'Feeling nervous, anxious, or on edge?',
+                    'Not being able to stop or control worrying?',
+                    'Worrying too much about different things?',
+                    'Trouble relaxing?',
+                    'Being so restless that it is hard to sit still?',
+                    'Becoming easily annoyed or irritable?',
+                    'Feeling afraid as if something awful might happen?'
+                ],
+                options: [
+                    { text: 'Not at all', value: 0 },
+                    { text: 'Several days', value: 1 },
+                    { text: 'More than half the days', value: 2 },
+                    { text: 'Nearly every day', value: 3 }
+                ],
+                getFeedback: (score) => {
+                    if (score >= 15) return { type: 'high', message: 'Severe anxiety. This score suggests a need for immediate professional intervention.', color: 'red', resources: ['Crisis helplines.', 'Professional therapy.'] };
+                    if (score >= 10) return { type: 'moderate', message: 'Moderate anxiety. Consider speaking with a mental health professional.', color: 'orange', resources: ['Cognitive Behavioral Therapy (CBT) resources.', 'Breathing exercises.'] };
+                    if (score >= 5) return { type: 'low', message: 'Mild anxiety. This is a good time to focus on stress management.', color: 'green', resources: ['Stress reduction techniques.', 'Mindfulness and meditation.'] };
+                    return { type: 'low', message: 'Minimal anxiety. Your feelings of worry are manageable.', color: 'blue', resources: ['Continue healthy lifestyle choices.', 'Journaling for stress relief.'] };
+                }
+            },
+            ghq12: {
+                title: 'GHQ-12 General Health Questionnaire',
+                questions: [
+                    'Been able to concentrate on whatever you\'re doing?',
+                    'Lost much sleep over worry?',
+                    'Felt that you were playing a useful part in things?',
+                    'Felt capable of making decisions about things?',
+                    'Felt constantly under strain?',
+                    'Felt you couldn\'t overcome your difficulties?',
+                    'Been able to enjoy your normal day-to-day activities?',
+                    'Been able to face up to your problems?',
+                    'Been feeling unhappy or depressed?',
+                    'Been losing confidence in yourself?',
+                    'Been thinking of yourself as a worthless person?',
+                    'Been feeling reasonably happy, all things considered?'
+                ],
+                options: [
+                    { text: 'Better than usual', value: 0 },
+                    { text: 'Same as usual', value: 0 },
+                    { text: 'Worse than usual', value: 1 },
+                    { text: 'Much worse than usual', value: 1 }
+                ],
+                getFeedback: (score) => {
+                    if (score > 3) return { type: 'moderate', message: 'This score suggests psychological distress. It may be beneficial to explore your feelings with a professional.', color: 'orange', resources: ['Professional counseling.', 'Understanding emotional distress article.'] };
+                    return { type: 'low', message: 'This score suggests you are in good psychological health.', color: 'blue', resources: ['Continue practicing self-care.', 'Maintain a healthy routine.'] };
+                }
+            },
+            cssrs: {
+                title: 'C-SSRS Suicide Risk Assessment',
+                questions: [
+                    'Have you wished you were dead or wished you could go to sleep and not wake up?',
+                    'Have you had any thoughts of killing yourself?',
+                    'Have you been thinking about how you might kill yourself?',
+                    'Have you had any intention of acting on these thoughts?',
+                    'Have you started to work out or worked out the details of how to kill yourself?',
+                    'Have you done anything, started to do anything, or prepared to do anything to end your life?'
+                ],
+                options: [
+                    { text: 'Yes', value: 1 },
+                    { text: 'No', value: 0 }
+                ],
+                getFeedback: (score) => {
+                    if (score > 0) {
+                        document.getElementById('crisis-banner').classList.remove('-translate-y-full');
+                        document.getElementById('crisis-banner').classList.add('translate-y-0');
+                        return { type: 'high', message: 'This score indicates significant risk. If you are having thoughts of suicide, please call a helpline or emergency services immediately. Do not ignore these feelings.', color: 'red', resources: ['Crisis Hotlines.', 'Emergency Services.', 'Counselor Connect.'] };
+                    }
+                    return { type: 'low', message: 'This score indicates no immediate risk. If feelings of distress arise, please seek support.', color: 'blue', resources: ['Mindfulness and meditation.', 'Support groups.'] };
+                }
+            },
+            pss: {
+                title: 'PSS Perceived Stress Scale',
+                questions: [
+                    'In the last month, how often have you been upset because of something that happened unexpectedly?',
+                    'In the last month, how often have you felt that you were unable to control the important things in your life?',
+                    'In the last month, how often have you felt nervous and "stressed"?',
+                    'In the last month, how often have you dealt successfully with irritating life hassles?',
+                    'In the last month, how often have you felt that you were effectively coping with important changes that were occurring in your life?',
+                    'In the last month, how often have you felt confident about your ability to handle your personal problems?',
+                    'In the last month, how often have you felt that things were going your way?',
+                    'In the last month, how often have you found that you could not cope with all the things that you had to do?',
+                    'In the last month, how often have you been able to control irritations in your life?',
+                    'In the last month, how often have you felt that you were on top of things?'
+                ],
+                options: [
+                    { text: 'Never', value: 0 },
+                    { text: 'Almost never', value: 1 },
+                    { text: 'Sometimes', value: 2 },
+                    { text: 'Fairly often', value: 3 },
+                    { text: 'Very often', value: 4 }
+                ],
+                // Questions 4, 5, 6, 7, 9, 10 are positive, so their scores are reversed.
+                reverse_scoring: [4, 5, 6, 7, 9, 10],
+                getFeedback: (score) => {
+                    if (score >= 27) return { type: 'high', message: 'High perceived stress. This score indicates a high level of stress. Please consider speaking with a professional.', color: 'red', resources: ['Stress management techniques.', 'Time management tips.'] };
+                    if (score >= 14) return { type: 'moderate', message: 'Moderate perceived stress. You are experiencing a moderate level of stress.', color: 'orange', resources: ['Mindfulness and meditation.', 'Breathing exercises.'] };
+                    return { type: 'low', message: 'Low perceived stress. You are coping well with your daily stressors.', color: 'blue', resources: ['Maintain a healthy lifestyle.', 'Journaling for stress relief.'] };
+                }
+            },
+            who5: {
+                title: 'WHO-5 Well-Being Index',
+                questions: [
+                    'I have felt cheerful and in good spirits.',
+                    'I have felt calm and relaxed.',
+                    'I have felt active and vigorous.',
+                    'My daily life has been filled with things that interest me.',
+                    'I have woken up feeling fresh and rested.'
+                ],
+                options: [
+                    { text: 'All of the time', value: 5 },
+                    { text: 'Most of the time', value: 4 },
+                    { text: 'More than half of the time', value: 3 },
+                    { text: 'Less than half of the time', value: 2 },
+                    { text: 'Some of the time', value: 1 },
+                    { text: 'At no time', value: 0 }
+                ],
+                getFeedback: (score) => {
+                    const scaledScore = score * 4;
+                    if (scaledScore <= 50) return { type: 'moderate', message: 'This score suggests a possible reduced well-being. A discussion with a healthcare provider may be beneficial.', color: 'orange', resources: ['Professional counseling.', 'Positive psychology resources.'] };
+                    return { type: 'low', message: 'You have a high level of psychological well-being. Keep up the good work!', color: 'blue', resources: ['Continue self-care.', 'Maintain social connections.'] };
+                }
+            }
+        };
+
+        const modal = document.getElementById('quiz-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalTitle = document.getElementById('modal-title');
+        const progressBar = document.getElementById('progress-bar');
+        const alertMessage = document.getElementById('alert-message');
+        const quizForm = document.getElementById('quiz-form');
+        const quizQuestionsContainer = document.getElementById('quiz-questions-container');
+        const quizResults = document.getElementById('quiz-results');
+        const resultsScore = document.getElementById('results-score');
+        const resultsMessage = document.getElementById('results-message');
+        const resultsResources = document.getElementById('results-resources');
+        const crisisBanner = document.getElementById('crisis-banner');
+        const retakeQuizBtn = document.getElementById('retake-quiz-btn');
+        const aiAnalysisBtn = document.getElementById('ai-analysis-btn');
+        const aiAnalysisContainer = document.getElementById('ai-analysis-container');
+        const aiResponse = document.getElementById('ai-response');
+        const aiLoading = document.getElementById('ai-loading');
+        const aiError = document.getElementById('ai-error');
+        
+        let currentQuizKey = null;
+        let lastScore = 0;
+        let lastFeedback = {};
+
+        function updateProgressBar() {
+            const quiz = quizzes[currentQuizKey];
+            const totalQuestions = quiz.questions.length;
+            const answeredQuestions = quizQuestionsContainer.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showAlert(message) {
+            alertMessage.textContent = message;
+            alertMessage.classList.remove('hidden');
+        }
+
+        function hideAlert() {
+            alertMessage.classList.add('hidden');
+        }
+
+        function openQuiz(quizKey) {
+            currentQuizKey = quizKey;
+            const quiz = quizzes[quizKey];
+
+            // Reset UI states
+            modal.querySelector('#modal-header').classList.remove('hidden');
+            modalTitle.textContent = quiz.title;
+            quizResults.classList.add('hidden');
+            aiAnalysisContainer.classList.add('hidden');
+            aiResponse.innerHTML = '';
+            aiAnalysisBtn.disabled = false;
+            aiAnalysisBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            quizForm.classList.remove('hidden');
+            quizForm.reset();
+            quizQuestionsContainer.innerHTML = '';
+            crisisBanner.classList.add('-translate-y-full');
+            crisisBanner.classList.remove('translate-y-0');
+            hideAlert();
+
+            // Populate questions
+            quiz.questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-block';
+                questionDiv.innerHTML = `
+                    <p class="text-lg font-medium text-gray-800 mb-2">${index + 1}. ${question}</p>
+                    <div class="space-y-2">
+                        ${quiz.options.map(option => `
+                            <label class="flex items-center space-x-3 bg-white rounded-lg p-3 cursor-pointer quiz-option border border-gray-300">
+                                <input type="radio" name="q${index}" value="${option.value}" class="sr-only">
+                                <span class="text-base text-gray-700">${option.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                quizQuestionsContainer.appendChild(questionDiv);
+            });
+
+            updateProgressBar();
+
+            // Add event listeners for options
+            quizQuestionsContainer.querySelectorAll('.quiz-option').forEach(label => {
+                label.addEventListener('click', () => {
+                    const questionBlock = label.closest('.question-block');
+                    questionBlock.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('quiz-option-selected');
+                    });
+                    label.classList.add('quiz-option-selected');
+                    label.querySelector('input').checked = true;
+                    updateProgressBar();
+                });
+            });
+
+            modal.classList.remove('hidden');
+        }
+
+        document.querySelectorAll('.assessment-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                openQuiz(e.target.dataset.quizKey);
+            });
+        });
+        
+        retakeQuizBtn.addEventListener('click', () => {
+            openQuiz(currentQuizKey);
+        });
+
+        closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+        modal.addEventListener('click', (e) => {
+            if (e.target.id === 'quiz-modal') {
+                modal.classList.add('hidden');
+            }
+        });
+
+        quizForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const form = new FormData(e.target);
+            let score = 0;
+            const quiz = quizzes[currentQuizKey];
+            const totalQuestions = quiz.questions.length;
+            let answeredCount = 0;
+
+            quiz.questions.forEach((_, index) => {
+                const questionValue = form.get(`q${index}`);
+                if (questionValue !== null) {
+                    answeredCount++;
+                    const numericValue = parseInt(questionValue, 10);
+                    if (currentQuizKey === 'pss' && quiz.reverse_scoring && quiz.reverse_scoring.includes(index + 1)) {
+                        score += (4 - numericValue);
+                    } else {
+                        score += numericValue;
+                    }
+                }
+            });
+
+            if (answeredCount < totalQuestions) {
+                showAlert("Please answer all questions before submitting.");
+                return;
+            }
+            hideAlert();
+            
+            lastScore = score;
+            const feedback = quiz.getFeedback(score);
+            lastFeedback = feedback;
+
+            if (currentQuizKey === 'who5') {
+                 resultsScore.innerHTML = `${score}<span class="text-2xl text-slate-500">/25</span> <span class="block text-lg font-medium">(Scaled: ${score*4}%)</span>`;
+            } else {
+                resultsScore.textContent = score;
+            }
+
+            resultsMessage.textContent = feedback.message;
+            quizResults.querySelector('.border-t-4').style.borderColor = getColor(feedback.color);
+            resultsScore.style.color = getColor(feedback.color);
+
+            resultsResources.innerHTML = `
+                <h4 class="text-xl font-semibold mb-2">Recommended Resources:</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700">
+                    ${feedback.resources.map(res => `<li>${res}</li>`).join('')}
+                </ul>
+            `;
+            
+            modal.querySelector('#modal-header').classList.add('hidden');
+            quizForm.classList.add('hidden');
+            quizResults.classList.remove('hidden');
+        });
+
+        // AI Analysis Logic
+        aiAnalysisBtn.addEventListener('click', async () => {
+            aiAnalysisContainer.classList.remove('hidden');
+            aiLoading.classList.remove('hidden');
+            aiResponse.classList.add('hidden');
+            aiError.classList.add('hidden');
+            aiAnalysisBtn.disabled = true;
+            aiAnalysisBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const quiz = quizzes[currentQuizKey];
+            const systemPrompt = `You are a compassionate and helpful mental health and wellness assistant called MannMitra AI, based in India. Your role is to explain the results of a mental health screening quiz in a supportive, culturally relevant, and easy-to-understand way.
+**Your response MUST adhere to the following strict rules:**
+1.  **DO NOT PROVIDE A DIAGNOSIS:** Under no circumstances should you diagnose any condition. Use phrases like "This score might suggest..." or "It could be helpful to explore...".
+2.  **MANDATORY MEDICAL DISCLAIMER:** You MUST begin your response with the following disclaimer in bold: "<strong>Important Disclaimer: I am an AI assistant and not a medical professional. The information provided here is for informational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Please consult with a qualified healthcare provider before making any decisions about your health or treatment, including trying any remedies or medicines.</strong>"
+3.  **PROVIDE ACTIONABLE, SAFE SUGGESTIONS:**
+    * **General Advice:** Offer general, evidence-based wellness tips (e.g., mindfulness, exercise, sleep hygiene).
+    * **Remedies & Medicine:** You can mention types of treatments or remedies that are commonly used for the user's indicated symptoms (e.g., "Cognitive Behavioral Therapy (CBT) is often effective..."). However, you MUST frame these as topics **to discuss with a doctor**. NEVER prescribe or suggest taking any specific medicine.
+    * **Indian Traditional Help:** Include 2-3 suggestions from traditional Indian wellness systems like Ayurveda or Yoga (e.g., specific yoga asanas, breathing exercises like Pranayama, or simple Ayurvedic dietary tips like drinking warm water with turmeric). Frame these as complementary practices and strongly advise consulting a qualified Ayurvedic practitioner or yoga instructor.
+4.  **TONE & LANGUAGE:** Maintain an encouraging, empathetic, and non-judgmental tone. Use simple, clear language.
+5.  **STRUCTURE & FORMATTING:**
+    * Start with the mandatory disclaimer.
+    * Follow with a warm, encouraging sentence about their score.
+    * Provide a brief analysis of what the score might suggest.
+    * Use clear subheadings in bold for different sections (e.g., "<strong>General Wellness Tips</strong>", "<strong>Traditional Indian Practices to Explore</strong>", "<strong>Topics to Discuss with a Professional</strong>").
+    * Use HTML lists (\`<ul>\`, \`<li>\`) for suggestions.
+    * Conclude by strongly reiterating the importance of professional help and include a link to a resource page like this: "<p>For more support, please visit <a href='#' class='text-indigo-600 font-semibold hover:underline'>our Resources page</a>.</p>"`;
+            
+            const userQuery = `I just took the '${quiz.title}' screening in India. My score was ${lastScore}. The general interpretation is: '${lastFeedback.message}'. 
+Based on this, please provide a detailed analysis following all the rules in your system instructions. 
+Include general wellness tips, some traditional Indian practices (like Yoga or Ayurveda), and potential topics or types of remedies I could discuss with a qualified doctor.`;
+
+            const apiKey = "AIzaSyAjXWgM-JuwIvZRsrT8O739moCb_Fhhyro";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    aiResponse.innerHTML = text;
+                    aiResponse.classList.remove('hidden');
+                } else {
+                    throw new Error('No content in response');
+                }
+
+            } catch (error) {
+                console.error("AI Analysis Error:", error);
+                aiError.classList.remove('hidden');
+            } finally {
+                aiLoading.classList.add('hidden');
+            }
+        });
+
+        function getColor(colorName) {
+            const colors = {
+                red: '#ef4444',
+                orange: '#f97316',
+                yellow: '#eab308',
+                green: '#22c55e',
+                blue: '#3b82f6'
+            };
+            return colors[colorName] || '#3b82f6';
+        }
+    </script>
+</body>
+</html>
+

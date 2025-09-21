@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Institution Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .sidebar {
+        background-color: #ffffff;
+      }
+      .main-content {
+        background-color: #f8f9fa;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
+      .text-primary {
+        color: #10b981;
+      }
+      .icon {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="sidebar w-64 flex-shrink-0 border-r border-gray-200 flex flex-col"
+      >
+        <div class="p-6">
+          <button
+            class="flex items-center space-x-2 px-3 py-2 rounded hover:bg-green-100 transition-colors duration-200 bg-transparent"
+          >
+            <span class="material-icons text-primary text-3xl">psychology</span>
+            <span class="text-2xl font-bold text-gray-800">MannMitra</span>
+          </button>
+        </div>
+        <nav class="mt-2 px-4 flex-1 space-y-1">
+          <p class="text-xs text-gray-500 uppercase mt-4 mb-2">Main</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_dashboard' %}"
+          >
+            <span class="material-icons icon">home</span>
+            <span class="ml-3">Home</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_analytics' %}"
+          >
+            <span class="material-icons icon">analytics</span>
+            <span class="ml-3">Analytics</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">Management</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_student' %}"
+          >
+            <span class="material-icons icon">group</span>
+            <span class="ml-3">Students</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-white bg-green-500 rounded-lg"
+            href="{% url 'inst_counselors' %}"
+          >
+            <span class="material-icons icon">school</span>
+            <span class="ml-3 font-semibold">Counselors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'doctor_institution' %}"
+          >
+            <span class="material-icons icon">medical_services</span>
+            <span class="ml-3">Doctors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_content' %}"
+          >
+            <span class="material-icons icon">article</span>
+            <span class="ml-3">Content</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">System</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_alert' %}"
+          >
+            <span class="material-icons icon">notifications</span>
+            <span class="ml-3">Alerts</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="#"
+          >
+            <span class="material-icons icon">settings</span>
+            <span class="ml-3">Settings</span>
+          </a>
+        </nav>
+      </aside>
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header class="bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-800">
+              Institution Dashboard
+            </h2>
+            <div class="flex items-center space-x-6">
+              <svg
+                class="w-6 h-6 text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+                />
+              </svg>
+              <div class="relative">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  class="pl-10 pr-4 py-2 rounded-lg border w-64 focus:outline-none focus:ring-2 focus:ring-green-400"
+                />
+                <svg
+                  class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div
+                  class="h-12 w-12 rounded-full bg-green-200 flex items-center justify-center"
+                >
+                  <svg
+                    class="w-8 h-8 text-green-700"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold">Admin User</p>
+                  <a
+                    href="{% url 'home' %}"
+                    class="text-sm text-gray-500 hover:underline"
+                    >Logout</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Counselors Content -->
+        <main class="flex-1 p-8">
+          <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">
+              Counselor Management
+            </h1>
+            <button
+              class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 flex items-center"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              Add New Counselor
+            </button>
+          </div>
+
+          <!-- Counselors Table -->
+          <div
+            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-600">
+                <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Counselor Name</th>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Specialization</th>
+                    <th scope="col" class="px-6 py-3">Active Cases</th>
+                    <th scope="col" class="px-6 py-3">Status</th>
+                    <th scope="col" class="px-6 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=EC"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Emily Carter
+                    </td>
+                    <td class="px-6 py-4">C-1024</td>
+                    <td class="px-6 py-4">Anxiety & Stress Management</td>
+                    <td class="px-6 py-4 text-center">12</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=BL"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Benjamin Lee
+                    </td>
+                    <td class="px-6 py-4">C-1025</td>
+                    <td class="px-6 py-4">
+                      Cognitive Behavioral Therapy (CBT)
+                    </td>
+                    <td class="px-6 py-4 text-center">8</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=SW"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Sophia Williams
+                    </td>
+                    <td class="px-6 py-4">C-1026</td>
+                    <td class="px-6 py-4">Academic Pressure</td>
+                    <td class="px-6 py-4 text-center">15</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-gray-600 bg-gray-200 rounded-full"
+                        >On Leave</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-400 cursor-not-allowed"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=MJ"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Michael Johnson
+                    </td>
+                    <td class="px-6 py-4">C-1027</td>
+                    <td class="px-6 py-4">Relationship Issues</td>
+                    <td class="px-6 py-4 text-center">11</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=AG"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Ava Green
+                    </td>
+                    <td class="px-6 py-4">C-1028</td>
+                    <td class="px-6 py-4">Depression & Mood Disorders</td>
+                    <td class="px-6 py-4 text-center">9</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=DT"
+                        alt="Counselor avatar"
+                      />
+                      Dr. David Thomas
+                    </td>
+                    <td class="px-6 py-4">C-1029</td>
+                    <td class="px-6 py-4">Family Conflict</td>
+                    <td class="px-6 py-4 text-center">7</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full"
+                        >Available</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=OR"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Olivia Rodriguez
+                    </td>
+                    <td class="px-6 py-4">C-1030</td>
+                    <td class="px-6 py-4">Trauma & PTSD</td>
+                    <td class="px-6 py-4 text-center">5</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=JC"
+                        alt="Counselor avatar"
+                      />
+                      Dr. James Clark
+                    </td>
+                    <td class="px-6 py-4">C-1031</td>
+                    <td class="px-6 py-4">Substance Abuse</td>
+                    <td class="px-6 py-4 text-center">10</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=HZ"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Hannah Zane
+                    </td>
+                    <td class="px-6 py-4">C-1032</td>
+                    <td class="px-6 py-4">Anxiety & Stress Management</td>
+                    <td class="px-6 py-4 text-center">14</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full"
+                        >Available</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                  <tr class="bg-white hover:bg-gray-50">
+                    <td
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
+                    >
+                      <img
+                        class="w-10 h-10 rounded-full mr-3"
+                        src="https://placehold.co/40x40/E2E8F0/4A5568?text=LK"
+                        alt="Counselor avatar"
+                      />
+                      Dr. Liam King
+                    </td>
+                    <td class="px-6 py-4">C-1033</td>
+                    <td class="px-6 py-4">Academic Pressure</td>
+                    <td class="px-6 py-4 text-center">18</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-6 py-4 flex items-center space-x-3">
+                      <a
+                        href="#"
+                        class="font-medium text-blue-600 hover:underline"
+                        >View Profile</a
+                      >
+                      <a
+                        href="#"
+                        class="font-medium text-gray-600 hover:underline"
+                        >Assign Student</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

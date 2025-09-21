@@ -1,0 +1,323 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Institution Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .sidebar {
+        background-color: #ffffff;
+      }
+      .main-content {
+        background-color: #f8f9fa;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
+      .text-primary {
+        color: #10b981;
+      }
+      .icon {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="sidebar w-64 flex-shrink-0 border-r border-gray-200 flex flex-col"
+      >
+        <div class="p-6">
+          <button
+            class="flex items-center space-x-2 px-3 py-2 rounded hover:bg-green-100 transition-colors duration-200 bg-transparent"
+          >
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="Wellness Logo"
+              class="h-10 w-10 rounded-full object-cover"
+            />
+            <span class="text-2xl font-bold text-gray-800">MannMitra</span>
+          </button>
+        </div>
+        <nav class="mt-2 px-4 flex-1 space-y-1">
+          <p class="text-xs text-gray-500 uppercase mt-4 mb-2">Main</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_dashboard' %}"
+          >
+            <span class="material-icons icon">home</span>
+            <span class="ml-3">Home</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-white bg-green-500 rounded-lg"
+            href="{% url 'inst_analytics' %}"
+          >
+            <span class="material-icons icon">analytics</span>
+            <span class="ml-3 font-semibold">Analytics</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">Management</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_student' %}"
+          >
+            <span class="material-icons icon">group</span>
+            <span class="ml-3">Students</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_counselors' %}"
+          >
+            <span class="material-icons icon">school</span>
+            <span class="ml-3">Counselors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'doctor_institution' %}"
+          >
+            <span class="material-icons icon">medical_services</span>
+            <span class="ml-3">Doctors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_content' %}"
+          >
+            <span class="material-icons icon">article</span>
+            <span class="ml-3">Content</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">System</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_alert' %}"
+          >
+            <span class="material-icons icon">notifications</span>
+            <span class="ml-3">Alerts</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="#"
+          >
+            <span class="material-icons icon">settings</span>
+            <span class="ml-3">Settings</span>
+          </a>
+        </nav>
+      </aside>
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center z-10"
+        >
+          <h1 class="text-xl font-bold text-gray-800">Institution Dashboard</h1>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <span
+                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >search</span
+              >
+              <input
+                class="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Search..."
+                type="text"
+              />
+            </div>
+            <div class="flex items-center space-x-3">
+              <img
+                alt="Admin user avatar"
+                class="h-10 w-10 rounded-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpinK27_pShK4QeSp5ZqojMmkaIUXIDhe0B7BxMVQaJJLSi0ozL0xDFCk4oyuf1YEczSWxoqsECfhSR6qm5eYPf5UH9OB7DPC4kOMywQde3aByK2E2T2YKcYsvgITCFBkYLEYVfJLDCqCKxoJKz9KMrYVMjSeXYG6MXZFBd5hUGGXMZXgkJeIw5KyCAQFT3yW9obdYH3IXZqOk6OaQhQy76qo1el_AUFdAsjrTC1SjcWEFF52oDmUjVl-GUASna1mAUYPbcjOxdpc"
+              />
+              <div>
+                <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                <a
+                  class="text-xs text-gray-500 hover:text-primary"
+                  href="{% url 'home' %}"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Analytics Content -->
+        <main class="flex-1 p-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-8">
+            Mental Health & Wellbeing Analytics
+          </h1>
+
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+              <h3 class="text-sm font-medium text-gray-500">
+                Service Utilization
+              </h3>
+              <p class="text-3xl font-bold mt-2">75%</p>
+              <p class="text-sm text-green-500 mt-1">+10% from last month</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+              <h3 class="text-sm font-medium text-gray-500">
+                Average Wait Time
+              </h3>
+              <p class="text-3xl font-bold mt-2">2 days</p>
+              <p class="text-sm text-red-500 mt-1">-5% from last month</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+              <h3 class="text-sm font-medium text-gray-500">
+                Average Wellbeing Score
+              </h3>
+              <p class="text-3xl font-bold mt-2">7.2/10</p>
+              <p class="text-sm text-green-500 mt-1">+2% from last month</p>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Utilization Rate Chart -->
+            <div
+              class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200"
+            >
+              <h3 class="text-lg font-semibold mb-4">
+                Utilization Rate (24 Months)
+              </h3>
+              <div class="h-80">
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 500 250"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M0,150 C30,100 50,80 100,120 S 150,180 200,150 S 250,50 300,100 S 350,200 400,160 S 450,100 500,130"
+                    stroke="#22C55E"
+                    fill="rgba(34, 197, 94, 0.1)"
+                    stroke-width="2"
+                  />
+                  <line
+                    x1="0"
+                    y1="230"
+                    x2="500"
+                    y2="230"
+                    stroke="#E5E7EB"
+                    stroke-width="1"
+                  />
+                  <line
+                    x1="0"
+                    y1="170"
+                    x2="500"
+                    y2="170"
+                    stroke="#E5E7EB"
+                    stroke-width="1"
+                    stroke-dasharray="2,2"
+                  />
+                  <line
+                    x1="0"
+                    y1="110"
+                    x2="500"
+                    y2="110"
+                    stroke="#E5E7EB"
+                    stroke-width="1"
+                    stroke-dasharray="2,2"
+                  />
+                  <line
+                    x1="0"
+                    y1="50"
+                    x2="500"
+                    y2="50"
+                    stroke="#E5E7EB"
+                    stroke-width="1"
+                    stroke-dasharray="2,2"
+                  />
+                </svg>
+              </div>
+            </div>
+            <!-- Presenting Issues Chart -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+              <h3 class="text-lg font-semibold mb-4">
+                Top 5 Presenting Issues
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium">Anxiety</span>
+                    <span class="text-sm font-medium">45%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      class="bg-green-500 h-2.5 rounded-full"
+                      style="width: 45%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium">Depression</span>
+                    <span class="text-sm font-medium">25%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      class="bg-green-500 h-2.5 rounded-full"
+                      style="width: 25%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium">Stress</span>
+                    <span class="text-sm font-medium">15%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      class="bg-green-500 h-2.5 rounded-full"
+                      style="width: 15%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium">Relationship Issues</span>
+                    <span class="text-sm font-medium">10%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      class="bg-green-500 h-2.5 rounded-full"
+                      style="width: 10%"
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium">Academic Pressure</span>
+                    <span class="text-sm font-medium">5%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      class="bg-green-500 h-2.5 rounded-full"
+                      style="width: 5%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

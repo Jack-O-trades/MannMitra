@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MannMitra - Find Your Counsellor</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1f2937;
+            background-color: #f8f9fa;
+        }
+        .hero-gradient {
+            background: linear-gradient(45deg, #e0f2f1, #d1f7f6, #c2f9e4, #e0f2f1);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .text-shadow-sm {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .counsellor-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .counsellor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .rating-stars {
+            color: #ffc107;
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal {
+            max-width: 500px;
+        }
+        .overflow-x-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .overflow-x-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        .overflow-x-scroll::-webkit-scrollbar-track {
+            background-color: #e2e8f0;
+        }
+        .time-slot:hover {
+            background-color: #e2e8f0;
+        }
+        .time-slot.selected {
+            background-color: #d1d5db;
+            border-color: #6b7280;
+            font-weight: 600;
+        }
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .confetti {
+            width: 10px;
+            height: 10px;
+            background-color: #64dd17;
+            position: absolute;
+            animation: confetti-fall 3s linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #10b981;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #emergency-message.show {
+            bottom: 2rem;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #emergency-message {
+            transition: all 0.5s ease-in-out;
+            transform: translateY(100px);
+            opacity: 0;
+        }
+        /* New and updated styles for the dynamic flow */
+        .step, #action-buttons, #quick-book-flow, #counsellor-flow, #testimonials-section {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateY(20px);
+        }
+        .hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm2 2a1 1 0 100-2 1 1 0 000 2zm3-1a1 1 0 100-2 1 1 0 000 2zm3-1a1 1 0 100-2 1 1 0 000 2zm2-2a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-xl font-bold text-green-800">MannMitra</span>
+            </div>
+            <ul class="hidden md:flex space-x-6">
+                <li><a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">Home</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">Resources</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">Community</a></li>
+                <li><a href="#" class="text-green-600 font-semibold border border-green-600 px-4 py-2 rounded-full hover:bg-green-600 hover:text-white transition-all duration-200">Sign Up</a></li>
+                <li><a href="#" class="text-white bg-green-600 px-4 py-2 rounded-full hover:bg-green-700 transition-all duration-200">Login</a></li>
+            </ul>
+            <button class="md:hidden text-gray-600 hover:text-green-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient py-20 px-8 flex flex-col items-center justify-center text-center">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4 text-shadow-sm">
+                Book a Confidential Session
+            </h1>
+            <p class="text-lg text-gray-700 mb-8">
+                Connect with a certified counselor in a safe and private space. Your well-being is our priority.
+            </p>
+            <div class="text-center">
+                <button id="emergency-btn" class="px-6 py-3 bg-red-500 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:bg-red-600 hover:scale-105">
+                    Need Help Now?
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Section -->
+    <section class="py-20 px-8 lg:px-16 bg-white">
+        <div class="container mx-auto">
+            <!-- Mood Check-in Section (Initial view) -->
+            <div id="mood-checkin-section" class="visible">
+                <h3 class="text-2xl font-semibold text-center text-gray-800 mb-6">How are you feeling today?</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
+                    <button class="emotion-btn flex flex-col items-center p-4 rounded-xl bg-gray-100 transition-all duration-200 hover:scale-105 hover:bg-green-100" data-emotion="happy">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile-plus text-gray-600 mb-2"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M9.5 15.5c.6.9 1.6 1.5 2.5 1.5s1.9-.6 2.5-1.5"/><path d="M16 19h6"/><path d="M19 16v6"/></svg>
+                        <span class="text-sm font-medium text-gray-800">Happy</span>
+                    </button>
+                    <button class="emotion-btn flex flex-col items-center p-4 rounded-xl bg-gray-100 transition-all duration-200 hover:scale-105 hover:bg-green-100" data-emotion="sad">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-frown text-gray-600 mb-2"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+                        <span class="text-sm font-medium text-gray-800">Sad</span>
+                    </button>
+                    <button class="emotion-btn flex flex-col items-center p-4 rounded-xl bg-gray-100 transition-all duration-200 hover:scale-105 hover:bg-green-100" data-emotion="anxious">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-laugh text-gray-600 mb-2"><circle cx="12" cy="12" r="10"/><path d="M12 18a4 4 0 0 1-4-4h8a4 4 0 0 1-4 4z"/><line x1="16" x2="16" y1="8" y2="8"/><line x1="8" x2="8" y1="8" y2="8"/></svg>
+                        <span class="text-sm font-medium text-gray-800">Anxious</span>
+                    </button>
+                    <button class="emotion-btn flex flex-col items-center p-4 rounded-xl bg-gray-100 transition-all duration-200 hover:scale-105 hover:bg-green-100" data-emotion="stressed">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap text-gray-600 mb-2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <span class="text-sm font-medium text-gray-800">Stressed</span>
+                    </button>
+                    <button class="emotion-btn flex flex-col items-center p-4 rounded-xl bg-gray-100 transition-all duration-200 hover:scale-105 hover:bg-green-100 col-span-2 md:col-span-1" data-emotion="confused">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-help-circle text-gray-600 mb-2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        <span class="text-sm font-medium text-gray-800">I'm Not Sure</span>
+                    </button>
+                </div>
+                <p class="text-center text-gray-600 max-w-xl mx-auto">Selecting your current mood can help your counselor understand you better. This is completely optional and confidential.</p>
+            </div>
+
+            <!-- Action Buttons (Hidden initially) -->
+            <div id="action-buttons" class="hidden text-center">
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <button id="quickBookBtn" class="bg-green-500 text-white font-medium py-3 px-8 rounded-full shadow-md hover:bg-green-600 transition-colors duration-300">Quick Book</button>
+                    <button id="seeCounsellorsBtn" class="bg-gray-200 text-gray-800 font-medium py-3 px-8 rounded-full shadow-md hover:bg-gray-300 transition-colors duration-300">See Counsellors</button>
+                </div>
+            </div>
+
+            <!-- Quick Book Form Section (Hidden initially) -->
+            <div id="quick-book-flow" class="hidden">
+                 <!-- About Quick Book Section -->
+                <div class="bg-green-50 p-6 rounded-xl shadow-inner mb-8 text-center">
+                    <h4 class="text-xl font-semibold text-green-800 mb-2 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap text-green-600 mr-2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Why Quick Book?
+                    </h4>
+                    <p class="text-green-700 max-w-lg mx-auto">Quick Book is our fastest way to get connected. We'll instantly match you with the best available counselor based on your preferences and reason for seeking support. It's confidential, secure, and gets you help when you need it most.</p>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+                    <div id="progressBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" style="width: 0%"></div>
+                </div>
+                <h3 class="text-2xl font-semibold text-center text-gray-800 mb-6">Session Details</h3>
+                <div class="flex items-center justify-end mb-6">
+                    <span class="text-sm font-medium text-gray-700 mr-3">Identified</span>
+                    <label for="anonymous-toggle" class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="anonymous-toggle" class="sr-only peer" />
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    </label>
+                    <span class="text-sm font-medium text-gray-700 ml-3">Anonymous</span>
+                </div>
+                <form class="space-y-6" id="quickBookingForm">
+                    <div id="anonymous-alias" class="text-center bg-green-100 p-4 rounded-lg mb-6 hidden">
+                        <p class="text-lg font-semibold text-green-800">Your anonymous alias is: <span id="alias-name" class="font-bold"></span></p>
+                    </div>
+                    <div id="identified-fields">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your full name" required />
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="your.email@example.com" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">Reason for Session</label>
+                        <textarea id="reason" name="reason" rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Briefly describe what you would like to discuss..."></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="specialization" class="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
+                            <select id="specialization" name="specialization" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                <option value="">Select an area of expertise</option>
+                                <option value="stress">Stress Management</option>
+                                <option value="anxiety">Exam Anxiety</option>
+                                <option value="depression">Depression</option>
+                                <option value="career">Career Confusion</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                            <select id="language" name="language" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                <option value="">Select a preferred language</option>
+                                <option value="english">English</option>
+                                <option value="hindi">Hindi</option>
+                                <option value="odia">Odia</option>
+                                <option value="bengali">Bengali</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Preferred Date</label>
+                            <input type="date" id="date" name="date" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+                        </div>
+                        <div>
+                            <label for="time" class="block text-sm font-medium text-gray-700 mb-2">Preferred Time</label>
+                            <input type="time" id="time" name="time" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full px-8 py-4 text-lg font-semibold rounded-full bg-green-600 text-white shadow-lg transition-all duration-300 hover:bg-green-700 hover:scale-105">Book My Safe Space</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Counsellor Grid Section (Hidden initially) -->
+            <div id="counsellor-flow" class="hidden">
+                <!-- Search & Filter Section -->
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-2xl shadow-inner mb-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
+                        <div class="flex-grow">
+                            <label for="searchInput" class="sr-only">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                </div>
+                                <input type="text" id="searchInput" placeholder="Search by name or keyword..." class="w-full pl-10 p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                            <select id="specializationFilter" class="w-full sm:w-auto p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+                                <option value="">Specialization</option>
+                                <option value="Anxiety">Anxiety</option>
+                                <option value="Depression">Depression</option>
+                                <option value="Couples Counselling">Couples Counselling</option>
+                                <option value="Stress Management">Stress Management</option>
+                            </select>
+                            <select id="genderFilter" class="w-full sm:w-auto p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+                                <option value="">Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-binary">Non-binary</option>
+                            </select>
+                            <select id="languageFilter" class="w-full sm:w-auto p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+                                <option value="">Language</option>
+                                <option value="English">English</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                            </select>
+                            <select id="sortFilter" class="w-full sm:w-auto p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+                                <option value="">Sort By</option>
+                                <option value="rating">Rating</option>
+                                <option value="experience">Experience</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended for You Section -->
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-handshake text-red-500 mr-2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5C8.5 5 5 8.5 5 8.5L2 12c2.4 2.1 5 3.5 8.5 4l1.5 1.5c1.5 1.5 3 2 5.5 2A5.5 5.5 0 0 0 22 13.5c0-2.3-1.5-4.05-3-5.5l-7-7Z"/></svg>
+                    Recommended for You
+                </h3>
+                <p class="text-gray-600 mb-6">Our system recommends these counsellors based on your mood and common preferences.</p>
+                <div id="recommendedContainer" class="flex overflow-x-scroll space-x-6 pb-6 mb-8 -mx-6 px-6">
+                    <!-- Recommended counsellor cards will be injected here by JS -->
+                </div>
+
+                <!-- Counsellor Grid Section -->
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">All Counsellors</h3>
+                <div id="counsellorsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Counsellor cards will be injected here by JS -->
+                </div>
+                <div id="noResults" class="hidden text-center mt-8 p-8 bg-gray-100 rounded-lg shadow-inner">
+                    <p class="text-lg text-gray-600 font-semibold mb-2">No counsellors match your search.</p>
+                    <p class="text-sm text-gray-500">Please try adjusting your filters or search terms.</p>
+                </div>
+            </div>
+
+            <!-- Testimonials Section -->
+            <div id="testimonials-section" class="py-16">
+                <h2 class="text-3xl font-bold text-center mb-10">What Our Users Are Saying</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200">
+                        <p class="italic text-gray-700 mb-4">"MannMitra helped me find the right support at a time when I felt most alone. The quick book feature was a lifesaver."</p>
+                        <p class="font-semibold text-green-700">- Priya S.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200">
+                        <p class="italic text-gray-700 mb-4">"I appreciate the level of privacy and the ability to find a counselor who speaks my language. It made a huge difference."</p>
+                        <p class="font-semibold text-green-700">- Rahul K.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200">
+                        <p class="italic text-gray-700 mb-4">"The platform is so easy to use, and the counselors are top-notch. I highly recommend it to anyone feeling overwhelmed."</p>
+                        <p class="font-semibold text-green-700">- Ayesha M.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Disclaimer Section -->
+    <section class="py-12 px-8 lg:px-16 bg-gray-100 border-t border-gray-200 text-center text-gray-600">
+        <div class="container mx-auto">
+            <h3 class="font-bold text-lg mb-2">Important Disclaimer</h3>
+            <p class="text-sm max-w-2xl mx-auto">
+                MannMitra is a platform for scheduling counselling sessions and is not a substitute for medical diagnosis, treatment, or advice. In case of a medical or psychiatric emergency, please contact your local emergency services or a national helpline immediately.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8 px-8 lg:px-16 border-t border-gray-200">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <p class="text-sm text-gray-500 mb-4 md:mb-0">© 2025 MannMitra. All rights reserved.</p>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">About Us</a>
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">Contact</a>
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">Terms of Service</a>
+            </div>
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c-.9 9.4-9 11.5-11.5 11.5-.7 0-.7 0-1 0 0 0-.4 0-1 0m-2.4-.2 1.3-1.6c.7-1.1 1.7-2.3 2.8-3.4 1.1-1.1 2.3-2.3 3.4-2.8l1.6-1.3c1-1.1 2.2-2.3 3.3-2.8.9-.4 2-.7 3.3-.7s2.4.3 3.3.7c1 .4 2.2 1.6 3.3 2.8s2.3 2.4 2.8 3.3c.4.9.7 2 .7 3.3s-.3 2.4-.7 3.3c-1.1.9-2.3 1.7-3.4 2.8-1.1 1.1-2.3 2.3-2.8 3.4l-1.3 1.6z"/></svg>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-green-600 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Booking Modal (hidden by default) -->
+    <div id="bookingModal" class="fixed inset-0 z-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl modal relative">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h3 class="text-2xl font-bold mb-4">Book Your Session</h3>
+            <div id="modalCounsellorInfo" class="flex items-center space-x-4 mb-6 p-4 bg-gray-50 rounded-xl">
+                <!-- Counsellor info will be injected here -->
+            </div>
+            
+            <div class="mb-6">
+                <label for="datePicker" class="block text-gray-700 font-medium mb-2">Select a Date</label>
+                <input type="date" id="datePicker" class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-2">Available Time Slots</label>
+                <div id="timeSlotsContainer" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    <!-- Time slots will be injected here by JS -->
+                </div>
+            </div>
+            
+            <button id="confirmBookingBtn" class="w-full bg-green-500 text-white font-medium py-3 rounded-xl shadow-md hover:bg-green-600 transition-colors duration-300">Confirm Booking</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal (hidden by default) -->
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-lg mx-auto">
+            <svg id="checkmark-animation-small" class="w-24 h-24 text-green-500 mb-4 mx-auto" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" stroke="#4CAF50" stroke-width="2" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="#4CAF50" stroke-width="2" />
+            </svg>
+            <h3 class="text-3xl font-bold text-green-700 mb-4">
+                Booking Confirmed!
+            </h3>
+
+            <!-- ✅ Added booking summary placeholders -->
+            <p class="text-lg text-gray-700 mb-2">
+                Booking for: <span id="summary-counselor">---</span>
+            </p>
+            <p class="text-lg text-gray-700 mb-2">
+                Alias: <span id="summary-alias">---</span>
+            </p>
+            <p class="text-lg text-gray-700 mb-2">
+                Scheduled: <span id="summary-datetime">---</span>
+            </p>
+            <p class="text-lg font-semibold text-green-600 mb-6">
+                Booking Code: <span id="summary-code">---</span>
+            </p>
+            <!-- ✅ End additions -->
+
+            <p class="text-xl font-semibold text-green-600 mb-8">
+                You are not alone 💙
+            </p>
+            <button id="close-success-modal-btn" class="px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors">
+                Done
+            </button>
+        </div>
+    </div>
+
+    <div id="loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-900 bg-opacity-50">
+        <div class="spinner"></div>
+    </div>
+    <div id="confetti-container" class="confetti-container"></div>
+    <div id="emergency-message" class="fixed bottom-8 right-8 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50 transition-all duration-500">
+        <p class="font-bold">Emergency Helplines:</p>
+        <p>1800-123-4567, 1800-234-5678</p>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Sample data for counsellors
+            const counsellors = [
+                {
+                    id: 1,
+                    name: "Dr. Ananya Sharma",
+                    specialization: "Anxiety",
+                    tagline: "A compassionate and empathetic listener.",
+                    experience: "10+ Years",
+                    languages: ["English", "Hindi"],
+                    rating: 4.8,
+                    gender: "Female",
+                    photo: "https://placehold.co/400x400/D1C4E9/FFFFFF?text=AS",
+                    recommended: true
+                },
+                {
+                    id: 2,
+                    name: "Mr. Rohan Gupta",
+                    specialization: "Depression",
+                    tagline: "Helping you find hope and a path forward.",
+                    experience: "7 Years",
+                    languages: ["English", "Hindi"],
+                    rating: 4.5,
+                    gender: "Male",
+                    photo: "https://placehold.co/400x400/B2EBF2/FFFFFF?text=RG",
+                    recommended: false
+                },
+                {
+                    id: 3,
+                    name: "Ms. Leena Singh",
+                    specialization: "Couples Counselling",
+                    tagline: "Strengthening communication and connection.",
+                    experience: "12+ Years",
+                    languages: ["English", "Spanish"],
+                    rating: 4.9,
+                    gender: "Female",
+                    photo: "https://placehold.co/400x400/C5E1A5/FFFFFF?text=LS",
+                    recommended: true
+                },
+                {
+                    id: 4,
+                    name: "Mr. Kevin Fernandez",
+                    specialization: "Stress Management",
+                    tagline: "Building resilience in a busy world.",
+                    experience: "5 Years",
+                    languages: ["English", "French"],
+                    rating: 4.2,
+                    gender: "Male",
+                    photo: "https://placehold.co/400x400/FFCCBC/FFFFFF?text=KF",
+                    recommended: false
+                },
+                {
+                    id: 5,
+                    name: "Dr. Maya Patil",
+                    specialization: "Anxiety",
+                    tagline: "Your journey to inner calm starts here.",
+                    experience: "15+ Years",
+                    languages: ["Hindi", "English"],
+                    rating: 5.0,
+                    gender: "Female",
+                    photo: "https://placehold.co/400x400/FFAB91/FFFFFF?text=MP",
+                    recommended: true
+                },
+                {
+                    id: 6,
+                    name: "Mr. Aakash Verma",
+                    specialization: "Couples Counselling",
+                    tagline: "Navigating relationships with grace.",
+                    experience: "8 Years",
+                    languages: ["English", "Hindi"],
+                    rating: 4.7,
+                    gender: "Male",
+                    photo: "https://placehold.co/400x400/90CAF9/FFFFFF?text=AV",
+                    recommended: false
+                }
+            ];
+
+            const counsellorsGrid = document.getElementById('counsellorsGrid');
+            const recommendedContainer = document.getElementById('recommendedContainer');
+            const searchInput = document.getElementById('searchInput');
+            const specializationFilter = document.getElementById('specializationFilter');
+            const genderFilter = document.getElementById('genderFilter');
+            const languageFilter = document.getElementById('languageFilter');
+            const sortFilter = document.getElementById('sortFilter');
+            const noResultsMessage = document.getElementById('noResults');
+
+            // "Choose Your Counsellor" Modal elements
+            const bookingModal = document.getElementById('bookingModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const datePicker = document.getElementById('datePicker');
+            const timeSlotsContainer = document.getElementById('timeSlotsContainer');
+            const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+            const loadingOverlay = document.getElementById('loading-overlay');
+
+            // "Quick Book" Flow Elements
+            const quickBookBtn = document.getElementById('quickBookBtn');
+            const seeCounsellorsBtn = document.getElementById('seeCounsellorsBtn');
+            const quickBookingForm = document.getElementById("quickBookingForm");
+            const emotionButtons = document.querySelectorAll(".emotion-btn");
+            const anonymousToggle = document.getElementById("anonymous-toggle");
+            const identifiedFields = document.getElementById("identified-fields");
+            const anonymousAliasSection = document.getElementById("anonymous-alias");
+            const aliasNameSpan = document.getElementById("alias-name");
+            const progressBar = document.getElementById("progressBar");
+            const summaryAlias = document.getElementById("summary-alias");
+            const summaryCounselor = document.getElementById("summary-counselor");
+            const summaryDatetime = document.getElementById("summary-datetime");
+            const summaryCode = document.getElementById("summary-code");
+            
+            const aliases = ["Calm River", "Blue Lotus", "Silent Stream", "Forest Whisper", "Wise Owl", "Gentle Rain"];
+            const emergencyBtn = document.getElementById('emergency-btn');
+            const emergencyMessage = document.getElementById('emergency-message');
+            const successModal = document.getElementById('success-modal');
+            const closeSuccessModalBtn = document.getElementById('close-success-modal-btn');
+            const confettiContainer = document.getElementById("confetti-container");
+
+
+            // Function to generate star rating HTML
+            const getRatingStars = (rating) => {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  let starsHtml = '';
+
+  for (let i = 0; i < fullStars; i++) {
+    starsHtml += `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star text-yellow-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+  }
+
+  if (halfStar) {
+    const gradId = `halfGrad-${Math.random().toString(36).substr(2,5)}`;
+    starsHtml += `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+      viewBox="0 0 24 24" class="text-yellow-400">
+      <defs>
+        <linearGradient id="${gradId}">
+          <stop offset="50%" stop-color="currentColor"/>
+          <stop offset="50%" stop-color="transparent"/>
+        </linearGradient>
+      </defs>
+      <polygon points="12 2 15.09 8.26 22 9.27 
+                      17 14.14 18.18 21.02 12 17.77 
+                      5.82 21.02 7 14.14 2 9.27 
+                      8.91 8.26 12 2"
+        fill="url(#${gradId})" stroke="currentColor"/>
+    </svg>`;
+  }
+
+  for (let i = 0; i < emptyStars; i++) {
+    starsHtml += `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+  }
+  return `<div class="flex">${starsHtml}</div>`;
+};
+
+
+            // Function to render a single counsellor card
+            const renderCounsellorCard = (counsellor, isRecommended = false) => {
+                const card = document.createElement('div');
+                card.className = `counsellor-card bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center ${isRecommended ? 'min-w-[280px]' : ''}`;
+                card.innerHTML = `
+                    <div class="w-24 h-24 rounded-full overflow-hidden mb-4 shadow-inner">
+                        <img src="${counsellor.photo}" alt="${counsellor.name}" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">${counsellor.name}</h3>
+                    <p class="text-green-500 font-medium">${counsellor.specialization}</p>
+                    <p class="text-sm text-gray-600 italic mt-1 mb-2">"${counsellor.tagline}"</p>
+                    <div class="my-3 text-gray-600 text-sm">
+                        <p><strong>Exp:</strong> ${counsellor.experience}</p>
+                        <p><strong>Languages:</strong> ${counsellor.languages.join(', ')}</p>
+                    </div>
+                    <div class="flex items-center justify-center mb-4">
+                        ${getRatingStars(counsellor.rating)}
+                        <span class="text-gray-600 ml-2">${counsellor.rating.toFixed(1)}</span>
+                    </div>
+                    <button class="book-now-btn w-full bg-green-500 text-white font-medium py-2 rounded-xl shadow-sm hover:bg-green-600 transition-colors duration-300" data-id="${counsellor.id}">Book Now</button>
+                `;
+                return card;
+            };
+
+            // Function to render all counsellors
+            const renderCounsellors = (data) => {
+                counsellorsGrid.innerHTML = '';
+                if (data.length === 0) {
+                    noResultsMessage.classList.remove('hidden');
+                } else {
+                    noResultsMessage.classList.add('hidden');
+                    data.forEach(counsellor => {
+                        counsellorsGrid.appendChild(renderCounsellorCard(counsellor));
+                    });
+                }
+            };
+
+            // Function to render recommended counsellors
+            const renderRecommendedCounsellors = (data) => {
+                recommendedContainer.innerHTML = '';
+                const recommended = data.filter(c => c.recommended);
+                recommended.forEach(counsellor => {
+                    recommendedContainer.appendChild(renderCounsellorCard(counsellor, true));
+                });
+            };
+
+            // Function to filter and sort counsellors
+            const filterAndSortCounsellors = () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const specialization = specializationFilter.value;
+    const gender = genderFilter.value;
+    const language = languageFilter.value;
+    const sortOption = sortFilter.value;
+
+    let filteredCounsellors = counsellors.filter(c => {
+        const matchesSearch = c.name.toLowerCase().includes(searchTerm) || c.specialization.toLowerCase().includes(searchTerm);
+        const matchesSpecialization = !specialization || c.specialization === specialization;
+        const matchesGender = !gender || (c.gender && c.gender === gender);
+        const matchesLanguage = !language || c.languages.includes(language);
+        return matchesSearch && matchesSpecialization && matchesGender && matchesLanguage;
+    });
+
+    if (sortOption === 'rating') {
+        filteredCounsellors.sort((a, b) => b.rating - a.rating);
+    } else if (sortOption === 'experience') {
+        filteredCounsellors.sort((a, b) => {
+            const yearsA = parseInt(a.experience.replace(/\D/g, "")) || 0;
+const yearsB = parseInt(b.experience.replace(/\D/g, "")) || 0;
+return yearsB - yearsA;
+
+        });
+    }
+
+    renderCounsellors(filteredCounsellors);
+};
+
+            // Set up event listeners for filters
+            searchInput.addEventListener('input', filterAndSortCounsellors);
+            specializationFilter.addEventListener('change', filterAndSortCounsellors);
+            genderFilter.addEventListener('change', filterAndSortCounsellors);
+            languageFilter.addEventListener('change', filterAndSortCounsellors);
+            sortFilter.addEventListener('change', filterAndSortCounsellors);
+
+            // Initial render
+            renderCounsellors(counsellors);
+            renderRecommendedCounsellors(counsellors);
+            
+            // "Choose Your Counsellor" Modal functionality
+            const openModal = (counsellorId) => {
+                const counsellor = counsellors.find(c => c.id === parseInt(counsellorId));
+                if (!counsellor) return;
+
+                const modalCounsellorInfo = document.getElementById('modalCounsellorInfo');
+                modalCounsellorInfo.innerHTML = `
+                    <img src="${counsellor.photo}" alt="${counsellor.name}" class="w-16 h-16 rounded-full object-cover">
+                    <div>
+                        <h4 class="text-lg font-semibold">${counsellor.name}</h4>
+                        <p class="text-sm text-gray-600">${counsellor.specialization}</p>
+                    </div>
+                `;
+                
+                // Populate time slots (dummy data)
+                timeSlotsContainer.innerHTML = '';
+                const timeSlots = ["09:00 AM", "10:30 AM", "02:00 PM", "03:30 PM", "05:00 PM", "06:30 PM", "08:00 PM"];
+                timeSlots.forEach(time => {
+                    const slot = document.createElement('button');
+                    slot.className = 'time-slot bg-gray-100 text-gray-700 py-2 px-3 rounded-lg border border-gray-200 hover:bg-gray-200 transition-colors duration-200';
+                    slot.textContent = time;
+                    slot.addEventListener('click', () => {
+                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                    });
+                    timeSlotsContainer.appendChild(slot);
+                });
+                
+                // Show the modal
+                bookingModal.classList.remove('hidden');
+            };
+
+            const closeModal = () => {
+                bookingModal.classList.add('hidden');
+            };
+
+            const openSuccessModal = () => {
+                successModal.classList.remove('hidden');
+                confettiContainer.innerHTML = '';
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement("div");
+                    confetti.classList.add("confetti");
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.animationDelay = `${Math.random() * 2}s`;
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    confettiContainer.appendChild(confetti);
+                }
+            };
+
+            const closeSuccessModal = () => {
+                successModal.classList.add('hidden');
+                confettiContainer.innerHTML = '';
+            };
+
+            closeSuccessModalBtn.addEventListener("click", closeSuccessModal);
+
+
+
+            // Event listener delegation for Book Now buttons
+            document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('.book-now-btn');
+    if (btn) {
+        const counsellorId = btn.getAttribute('data-id');
+        openModal(counsellorId);
+    }
+});
+
+            closeModalBtn.addEventListener('click', closeModal);
+            bookingModal.addEventListener('click', (e) => {
+                if (e.target.id === 'bookingModal') {
+                    closeModal();
+                }
+            });
+
+            confirmBookingBtn.addEventListener('click', () => {
+                closeModal();
+                loadingOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    loadingOverlay.classList.add('hidden');
+                    openSuccessModal();
+                }, 1500);
+            });
+
+
+            // Set min date for date picker to today
+            const today = new Date().toISOString().split('T')[0];
+            datePicker.setAttribute('min', today);
+
+
+            //
+            // All event handlers and initial state setup
+            //
+            const moodCheckinSection = document.getElementById('mood-checkin-section');
+            const actionButtonsSection = document.getElementById('action-buttons');
+            const quickBookFlow = document.getElementById('quick-book-flow');
+            const counsellorFlow = document.getElementById('counsellor-flow');
+            
+            
+            
+
+
+            seeCounsellorsBtn.addEventListener('click', () => {
+                moodCheckinSection.classList.add('hidden');
+                actionButtonsSection.classList.add('hidden');
+                quickBookFlow.classList.add('hidden');
+                counsellorFlow.classList.remove('hidden');
+            });
+
+            // "Quick Book" Modal functionality
+            quickBookBtn.addEventListener('click', () => {
+                moodCheckinSection.classList.add('hidden');
+                actionButtonsSection.classList.add('hidden');
+                quickBookFlow.classList.remove('hidden');
+                counsellorFlow.classList.add('hidden');
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('quickBookingForm').reset();
+            });
+            
+            // Mood buttons listener
+            emotionButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    moodCheckinSection.classList.add('hidden');
+                    actionButtonsSection.classList.remove('hidden');
+                    quickBookFlow.classList.add('hidden');
+                    counsellorFlow.classList.add('hidden');
+                });
+            });
+
+            // Anonymous toggle logic
+            anonymousToggle.addEventListener("change", () => {
+                if (anonymousToggle.checked) {
+                    identifiedFields.classList.add("hidden");
+                    anonymousAliasSection.classList.remove("hidden");
+                    identifiedFields.querySelectorAll("input").forEach((input) => input.removeAttribute("required"));
+                    const randomAlias = aliases[Math.floor(Math.random() * aliases.length)];
+                    aliasNameSpan.textContent = randomAlias;
+                } else {
+                    identifiedFields.classList.remove("hidden");
+                    anonymousAliasSection.classList.add("hidden");
+                    identifiedFields.querySelectorAll("input").forEach((input) => input.setAttribute("required", "true"));
+                }
+            });
+
+            // Quick Booking form submission logic
+            quickBookingForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const specialization = document.getElementById("specialization").value;
+                const language = document.getElementById("language").value;
+                const date = document.getElementById("date").value;
+                const time = document.getElementById("time").value;
+
+                loadingOverlay.classList.remove('hidden');
+
+                setTimeout(() => {
+                    loadingOverlay.classList.add('hidden');
+                    const counselor = "Sarah K.";
+                    summaryAlias.textContent = anonymousToggle.checked ? aliasNameSpan.textContent : document.getElementById("name").value;
+                    summaryCounselor.textContent = counselor;
+                    summaryDatetime.textContent = `${date} at ${time}`;
+                    summaryCode.textContent = Math.random().toString(36).substring(2, 8).toUpperCase();
+                    successModal.classList.remove('hidden');
+                    
+                    confettiContainer.innerHTML = '';
+                    for (let i = 0; i < 50; i++) {
+                        const confetti = document.createElement("div");
+                        confetti.classList.add("confetti");
+                        confetti.style.left = `${Math.random() * 100}vw`;
+                        confetti.style.animationDelay = `${Math.random() * 2}s`;
+                        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                        confettiContainer.appendChild(confetti);
+                    }
+                }, 2000);
+            });
+
+            // Emergency button logic
+            emergencyBtn.addEventListener("click", () => {
+                emergencyMessage.classList.add('show');
+                setTimeout(() => {
+                    emergencyMessage.classList.remove('show');
+                }, 10000);
+            });
+            
+        
+
+            // Set up initial state of the UI
+            moodCheckinSection.classList.remove('hidden');
+            actionButtonsSection.classList.add('hidden');
+            quickBookFlow.classList.add('hidden');
+            counsellorFlow.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

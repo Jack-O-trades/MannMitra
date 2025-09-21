@@ -1,0 +1,653 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MannMitra - Resource Hub</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?display=swap&family=Manrope%3Awght%40400%3B500%3B700%3B800"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <style>
+      :root {
+        --primary-500: #0ea5e9;
+        --primary-600: #0284c7;
+        --primary-50: #f0f9ff;
+        --soft-blue: #bfdbfe;
+        --soft-green: #dcfce7;
+        --soft-purple: #e9d5ff;
+        --soft-pink: #fbcfe8;
+        --text-dark: #1e293b;
+        --text-gray: #475569;
+        --bg-light: #ffffff;
+        --bg-muted: #f8fafc;
+        --card-shadow: rgba(0, 0, 0, 0.05);
+        --primary-color: #13c8ec; /* Added for hover effect from new header */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Lexend", "Noto Sans", sans-serif;
+      }
+      body {
+        background: var(--bg-light);
+        color: var(--text-dark);
+        line-height: 1.5;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3 {
+        margin-bottom: 0.5rem;
+      }
+      button {
+        cursor: pointer;
+      }
+
+      /* Kept old header styles in case they are used elsewhere, but they no longer apply to the new header */
+      header .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--text-dark);
+      }
+      header nav a {
+        margin-left: 1.5rem;
+        font-weight: 500;
+        color: var(--text-gray);
+        transition: 0.3s;
+      }
+      header nav a:hover {
+        color: var(--primary-500);
+      }
+      header .buttons button {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        border: none;
+        font-weight: 600;
+      }
+      header .buttons .login {
+        background: #e2e8f0;
+        color: var(--text-dark);
+      }
+      header .buttons .signup {
+        background: var(--primary-500);
+        color: #fff;
+      }
+
+      main {
+        padding: 3rem;
+        max-width: 1200px;
+        margin: auto;
+      }
+      .intro {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .intro h1 {
+        font-size: 2.5rem;
+      }
+      .intro p {
+        color: var(--text-gray);
+        margin-top: 1rem;
+        font-size: 1.1rem;
+      }
+
+      .search-box {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+      .search-box input {
+        width: 100%;
+        max-width: 500px;
+        padding: 0.75rem 1rem;
+        border-radius: 9999px;
+        border: 1px solid #cbd5e1;
+        outline: none;
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 2rem;
+      }
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .grid-4 {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .card {
+        background: var(--bg-light);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px var(--card-shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px var(--card-shadow);
+      }
+
+      .card .icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 9999px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .card .title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+      .card .desc {
+        color: var(--text-gray);
+        flex: 1;
+        margin-bottom: 1rem;
+      }
+      .card button {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        background: var(--primary-500);
+        transition: 0.3s;
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      .card:hover button {
+        opacity: 1;
+        transform: translateY(0);
+        background: var(--primary-600);
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .featured {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .featured .card img {
+        width: 100%;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-gray);
+        font-size: 0.9rem;
+      }
+
+      /* Region-specific */
+      .region-section {
+        margin-top: 3rem;
+      }
+      .region-section h2 {
+        margin-bottom: 2rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr;
+        }
+        /* The media query for the old header is no longer needed for the new responsive header */
+      }
+
+      /* Icon overlay for featured */
+      .featured .card .file-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #fff;
+        border-radius: 50%;
+        padding: 0.3rem;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 px-10 py-4 bg-white shadow-sm z-20"
+    >
+      <div class="flex items-center gap-3 text-gray-800">
+        <div class="size-10 flex-shrink-0">
+          <img
+            src="{% static 'core/images/LOHO.jpeg' %}"
+            alt="MannMitra Logo"
+            class="h-10 w-10 object-cover rounded-full"
+          />
+        </div>
+        <h2 class="text-gray-900 text-xl font-bold" style="margin: 0">
+          MannMitra
+        </h2>
+      </div>
+      <div class="flex flex-1 justify-end items-center gap-6">
+        <nav class="flex items-center gap-6">
+          <a
+            class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium transition-colors"
+            href="{% url 'stu_dashboard' %}"
+            >Home</a
+          >
+          <a
+            class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium transition-colors"
+            href="{% url 'stu_resource' %}"
+            >Resources</a
+          >
+          <a
+            class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium transition-colors"
+            href="{% url 'community' %}"
+            >Community</a
+          >
+          <a
+            class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium transition-colors"
+            href="{% url 'stu_progress' %}"
+            >My Progress</a
+          >
+        </nav>
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <button
+              id="notification-button"
+              class="flex cursor-pointer items-center justify-center rounded-full h-10 w-10 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+            >
+              <span class="material-symbols-outlined text-xl"
+                >notifications</span
+              >
+            </button>
+            <div
+              id="notification-popup"
+              class="hidden absolute top-full right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-30"
+            >
+              <div class="p-4 border-b">
+                <h3 class="text-lg font-bold text-gray-800">Notifications</h3>
+              </div>
+              <div class="p-8 text-center text-gray-500">
+                <span class="material-symbols-outlined text-5xl text-gray-400"
+                  >notifications_off</span
+                >
+                <p class="mt-4 font-semibold text-gray-700">
+                  No new notifications
+                </p>
+                <p class="text-sm mt-1">You're all caught up!</p>
+              </div>
+            </div>
+          </div>
+          <div class="relative">
+            <div
+              id="profile-button"
+              class="cursor-pointer bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+              style="
+                background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCmBv1ylXjC1pZN_pOVHp6qDyAu6lmFu2s3t0V0ncI1AW6F0C2XJ9q_eKEaEKzYKxI8ox7xsRYjBJEnEb-3oMLoRqQQhrEyUjF7r_dd8MgibVFGaaXOP3cIXT5mT3cyxIiTC9l2WlLqlLvJm9BrRqxieVuM8ZECuX3eeEE_8tI7FAE-drvv5cHFUCnogYHsHEQTpdFtEDXsOSr5yPwmQSA-u7XrOKzVYLgOnAgFGgejXVfuh7gOnhbCMovItL2tNxRmGvDGLUKoD4Y');
+              "
+            ></div>
+            <div
+              id="profile-popup"
+              class="hidden absolute top-full right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-30"
+            >
+              <div class="p-4 border-b flex items-center gap-4">
+                <div
+                  class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 flex-shrink-0"
+                  style="
+                    background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+                  "
+                ></div>
+                <div>
+                  <p class="font-bold text-gray-800">Username</p>
+                  <p class="text-sm text-gray-500">Username.c@email.com</p>
+                </div>
+              </div>
+              <div class="p-2">
+                <a
+                  href="#"
+                  class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                >
+                  <span class="material-symbols-outlined text-xl">person</span>
+                  My Profile
+                </a>
+                <a
+                  href="{% url 'chatbot' %}"
+                  class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >chat_bubble</span
+                  >
+                  Anonymous Chat
+                </a>
+                <a
+                  href="#"
+                  class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >settings</span
+                  >
+                  Settings
+                </a>
+              </div>
+              <div class="p-2 border-t">
+                <a
+                  href="{% url 'home' %}"
+                  class="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors text-sm"
+                >
+                  <span class="material-symbols-outlined text-xl">logout</span>
+                  Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="intro">
+        <h1>Your Mental Wellness Journey Starts Here</h1>
+        <p>
+          A calming, user-friendly digital mental health resource hub for
+          students. Discover tools and support to navigate your path to
+          well-being.
+        </p>
+        <div class="search-box">
+          <input type="text" placeholder="Search for resources..." />
+        </div>
+      </div>
+
+      <section>
+        <h2>Explore Resources</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-blue); color: var(--primary-600)"
+            >
+              🧠
+            </div>
+            <div class="title">Self-Care Toolkit</div>
+            <div class="desc">
+              Discover strategies for managing stress and enhancing your
+              well-being.
+            </div>
+            <button>Explore</button>
+          </div>
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-green); color: #10b981"
+            >
+              ⚡
+            </div>
+            <div class="title">Crisis Support</div>
+            <div class="desc">
+              Immediate help and resources for when you need it most.
+            </div>
+            <button>Get Help</button>
+          </div>
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-purple); color: #6d28d9"
+            >
+              🧘
+            </div>
+            <div class="title">Mindfulness Practices</div>
+            <div class="desc">
+              Find peace and focus with guided meditations and mindfulness
+              exercises.
+            </div>
+            <button>Start Now</button>
+          </div>
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-pink); color: #be185d"
+            >
+              📖
+            </div>
+            <div class="title">Learn & Reflect</div>
+            <div class="desc">
+              Understand your mental health and develop coping mechanisms.
+            </div>
+            <button>Learn More</button>
+          </div>
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-blue); color: var(--primary-600)"
+            >
+              🤝
+            </div>
+            <div class="title">Help a Friend</div>
+            <div class="desc">
+              Learn safe ways to support friends in distress with a video guide.
+            </div>
+            <button>Read Guide</button>
+          </div>
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-green); color: #10b981"
+            >
+              🌿
+            </div>
+            <div class="title">Cultural Healing</div>
+            <div class="desc">
+              Discover traditions and practices for holistic well-being.
+            </div>
+            <button>Explore</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="region-section">
+        <h2>Region-Specific Resources</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-blue); color: var(--primary-600)"
+            >
+              📍
+            </div>
+            <div class="title">Your Local Support</div>
+            <div class="desc">
+              Resources and helplines available in your region.
+            </div>
+            <button>View</button>
+          </div>
+          <div class="card">
+            <div
+              class="icon"
+              style="background: var(--soft-green); color: #10b981"
+            >
+              🌿
+            </div>
+            <div class="title">Local Healing Practices</div>
+            <div class="desc">
+              Region-specific cultural practices like pranayama, chanting, and
+              herbal remedies.
+            </div>
+            <button>Explore</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Featured Resources</h2>
+        <div class="featured grid-4">
+          <div class="card">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeYMLgqsdNNgQbprIVo62NqO8a0tc4gWWW5dHmBvtVgjF2z6XUazhMFW57F1JOvhvSB8W2sgMXbXbezbJglMZgjTxS4eZ0PNOAzmszuLt_10oTT6yLS2XV4sKXoVkffBDBDT1zAF5WVHM2P7b096-T23tJdF9FwnGU8HIY08jcTftDJP_tADwwvsz0JaOExeB1uYRNKg8cie0n64rUsCxsvwMW4_caIf4uOqS69rYAUmoLNR5fXUUBZo4ZD6rsDkJju6l6HlLX6imx"
+              alt="Exam Stress Boost Kit"
+            />
+            <div class="title">Exam Stress Boost Kit</div>
+            <div class="desc">
+              Practical tips, breathing exercises, and relaxation routines for
+              exam prep.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa0ZssMw4SOJ-sU7gylKXcE6B7c0TmMcF9cjROVRkD-WvQbH4bK5Bke-voYydFQYgoJAonsw3cYPyImEHH9vvaJMHNr738EFAIru3VG_OJ1T_4hi3XTzo5Bs_YGJtTJfyBPKxYlsgj2SKK7HkZs6eVDbRWhNki8CoKDqQ5MxkaWoPQmpSApHiTdLKLfBELjtKTx4RRpDN6fZIL-MshIsrXTHt6yfTFBZOKT0SWzxmtzDibVePJ0lnie_RaxGCu_CWsaXFgePUTS9nW"
+              alt="Yoga Kit"
+            />
+            <div class="title">Yoga Kit</div>
+            <div class="desc">
+              Postures and practices for mental calmness, flexibility, and
+              strength.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/medguides.jpg' %}"
+              alt="Meditation Guides"
+            />
+            <div class="title">Meditation Guides</div>
+            <div class="desc">
+              Guided sessions for focus, sleep, and anxiety relief.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/somatictherapy.jpg' %}"
+              alt="Somatic Therapy Guide"
+            />
+            <div class="title">Somatic Therapy Guide</div>
+            <div class="desc">
+              Body-based practices to process emotions and release tension.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/tradheal.jpg' %}"
+              alt="Traditional Healing Practices"
+            />
+            <div class="title">Traditional Healing Practices</div>
+            <div class="desc">
+              Discover traditions like pranayama, chanting, or herbal remedies.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/parentteachersupport.jpg' %}"
+              alt="Parent & Teacher Awareness Tools"
+            />
+            <div class="title">Parent & Teacher Awareness Tools</div>
+            <div class="desc">
+              Educational PDFs for how to support students' mental health.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/offlinepacks.jpg' %}"
+              alt="Offline Wellness Packs"
+            />
+            <div class="title">Offline Wellness Packs</div>
+            <div class="desc">
+              Downloadable content for areas with limited internet access.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/journaling.jpg' %}"
+              alt="Self-Reflection Journals"
+            />
+            <div class="title">Self-Reflection Journals</div>
+            <div class="desc">
+              Prompts to track emotions and build resilience.
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="{% static 'core/images/ptopsupport.jpg' %}"
+              alt="Peer Support Initiatives"
+            />
+            <div class="title">Peer Support Initiatives</div>
+            <div class="desc">
+              A safe space to connect and help friends in distress.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2025 MannMitra. All rights reserved.</footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const notificationButton = document.getElementById(
+          "notification-button"
+        );
+        const notificationPopup = document.getElementById("notification-popup");
+        const profileButton = document.getElementById("profile-button");
+        const profilePopup = document.getElementById("profile-popup");
+
+        notificationButton.addEventListener("click", function (event) {
+          event.stopPropagation();
+          notificationPopup.classList.toggle("hidden");
+          profilePopup.classList.add("hidden"); // Close other popup
+        });
+
+        profileButton.addEventListener("click", function (event) {
+          event.stopPropagation();
+          profilePopup.classList.toggle("hidden");
+          notificationPopup.classList.add("hidden"); // Close other popup
+        });
+
+        document.addEventListener("click", function () {
+          notificationPopup.classList.add("hidden");
+          profilePopup.classList.add("hidden");
+        });
+
+        notificationPopup.addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+
+        profilePopup.addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+      });
+    </script>
+  </body>
+</html>

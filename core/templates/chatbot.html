@@ -1,0 +1,634 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Mental Health Chatbot</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      @keyframes wave {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+      .bg-wave {
+        background-color: #e6f4f1;
+        background-image: radial-gradient(ellipse at top, #bde0da, transparent),
+          radial-gradient(ellipse at bottom, #bde0da, transparent);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+      .bg-wave::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 200%;
+        height: 100px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,133.3C672,117,768,139,864,165.3C960,192,1056,224,1152,218.7C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: repeat-x;
+        animation: wave 10s linear infinite;
+      }
+      @keyframes pop-in {
+        0% {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .chat-message {
+        animation: pop-in 0.3s ease-out;
+      }
+      .loading-dots span {
+        animation: dot-pulse 1.5s infinite ease-in-out;
+      }
+      .loading-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .loading-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes dot-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.5;
+        }
+      }
+      .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .quiz-options button {
+        width: 100%;
+        background-color: #f8fafc;
+        border: 1px solid #cbd5e1;
+        padding: 0.75rem;
+        border-radius: 9999px;
+        text-align: left;
+        transition: background-color 0.2s;
+        color: #475569;
+      }
+      .quiz-options button:hover {
+        background-color: #e2e8f0;
+      }
+      .crisis-card {
+        background-color: #f87171;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        max-width: 400px;
+        display: none;
+      }
+      .crisis-card h4 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .crisis-card p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .crisis-card ul {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+        margin-bottom: 1.5rem;
+      }
+      .crisis-card li {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+      .crisis-card a {
+        color: white;
+        text-decoration: underline;
+      }
+      .crisis-card button {
+        background-color: #fff;
+        color: #f87171;
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body class="bg-wave flex items-center justify-center min-h-screen">
+    <div
+      class="w-full max-w-3xl bg-white/70 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden border border-white/30"
+    >
+      <header
+        class="p-5 flex items-center justify-between border-b border-gray-200/50"
+      >
+        <div class="flex items-center space-x-4">
+          <div
+            class="w-12 h-12 from-cyan-200 to-teal-300 rounded-full flex items-center justify-center shadow-inner"
+          >
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="Wellness Logo"
+              class="h-10 w-10 rounded-full object-cover"
+            />
+          </div>
+          <h1 class="text-2xl font-bold text-gray-800">Mannmitra</h1>
+        </div>
+        <button id="back-button" class="text-gray-500 hover:text-gray-800">
+          <span class="material-icons">arrow_back</span>
+        </button>
+      </header>
+      <main
+        id="chat-window"
+        class="p-6 space-y-6 max-h-[60vh] overflow-y-auto"
+      ></main>
+      <footer
+        class="p-5 border-t border-gray-200/50 bg-white/50 backdrop-blur-md"
+      >
+        <div class="text-center text-sm text-teal-600 mb-3">
+          <p>✨ Remember to be kind to yourself ✨</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <input
+            id="message-input"
+            class="flex-1 px-5 py-3 bg-gray-100/80 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-50 transition placeholder-gray-500 text-gray-800"
+            placeholder="Type a message..."
+            type="text"
+          />
+          <button
+            id="send-button"
+            class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-cyan-400 to-teal-500 text-white rounded-full hover:from-cyan-500 hover:to-teal-600 transition-all duration-300 shadow-lg transform hover:scale-105"
+          >
+            <span class="material-icons transform -rotate-45">send</span>
+          </button>
+          <button
+            id="mic-button"
+            class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-500 text-white rounded-full hover:from-pink-500 hover:to-red-600 transition-all duration-300 shadow-lg transform hover:scale-105"
+          >
+            <span class="material-icons">mic</span>
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <div id="crisis-card" class="crisis-card">
+      <h4>🚨 Immediate Help Needed 🚨</h4>
+      <p>
+        Your responses suggest you may be in distress. Please reach out to a
+        professional or a helpline immediately. You are not alone.
+      </p>
+      <ul>
+        <li>
+          <strong>Suicide & Crisis Lifeline:</strong> <a href="tel:988">988</a>
+        </li>
+        <li>
+          <strong>Crisis Text Line:</strong>
+          <a href="sms:741741">Text HOME to 741741</a>
+        </li>
+        <li>
+          <strong>National Helpline:</strong>
+          <a href="tel:18006624357">1-800-662-4357</a>
+        </li>
+      </ul>
+      <button id="close-crisis-btn">I Understand</button>
+    </div>
+
+    <script>
+      const chatWindow = document.getElementById("chat-window");
+      const messageInput = document.getElementById("message-input");
+      const sendButton = document.getElementById("send-button");
+      const backButton = document.getElementById("back-button");
+      const crisisCard = document.getElementById("crisis-card");
+      const closeCrisisBtn = document.getElementById("close-crisis-btn");
+      const API_KEY = "AIzaSyAIEQWa6B4k30J5FV35uAw7Elzs2hCZEVU"; // replace with your key
+
+      let chatState = "language";
+      let phq9Score = 0,
+        gad7Score = 0,
+        questionIndex = 0,
+        userLang = "en";
+      let translatedQuestions = [],
+        translatedOptions = [];
+
+      const phq9Questions = [
+        "Little interest or pleasure in doing things?",
+        "Feeling down, depressed, or hopeless?",
+        "Trouble falling or staying asleep, or sleeping too much?",
+        "Feeling tired or having little energy?",
+        "Poor appetite or overeating?",
+        "Feeling bad about yourself — or that you are a failure or have let yourself or your family down?",
+        "Trouble concentrating on things, such as reading the newspaper or watching television?",
+        "Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving a lot more than usual?",
+        "Thoughts that you would be better off dead or of hurting yourself in some way?",
+      ];
+
+      const gad7Questions = [
+        "Feeling nervous, anxious, or on edge?",
+        "Not being able to stop or control worrying?",
+        "Worrying too much about different things?",
+        "Trouble relaxing?",
+        "Being so restless that it’s hard to sit still?",
+        "Becoming easily annoyed or irritable?",
+        "Feeling afraid as if something awful might happen?",
+      ];
+
+      const quizOptions = [
+        "Not at all",
+        "Several days",
+        "More than half the days",
+        "Nearly every day",
+      ];
+
+      function addBotMessage(message) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("chat-message", "text-left");
+        msgDiv.innerHTML = `<div class="inline-block bg-cyan-100 text-gray-800 px-4 py-2 rounded-2xl shadow">${message}</div>`;
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      function addUserMessage(message) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("chat-message", "text-right");
+        msgDiv.innerHTML = `<div class="inline-block bg-teal-500 text-white px-4 py-2 rounded-2xl shadow">${message}</div>`;
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      function showLoading() {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("chat-message", "text-left");
+        msgDiv.innerHTML = `<div class="inline-flex items-center bg-cyan-100 text-gray-800 px-4 py-2 rounded-2xl shadow loading-dots"><span>.</span><span>.</span><span>.</span></div>`;
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        return msgDiv;
+      }
+
+      function hideLoading(div) {
+        if (div) chatWindow.removeChild(div);
+      }
+     function checkForCrisis(text) {
+  text = text.toLowerCase();
+  const crisisWords = ["suicide","kill myself","end my life","can't go on","hurt myself"];
+  const contextSafeWords = ["movie","film","scene","character","story"];
+
+  const hasCrisis = crisisWords.some((word) => text.includes(word));
+  const hasSafeContext = contextSafeWords.some((word) => text.includes(word));
+
+  return hasCrisis && !hasSafeContext;
+}
+
+      function showCrisisCard() {
+        crisisCard.style.display = "block";
+      }
+
+      // Translation
+      async function translateText(text, targetLang, sourceLang = "auto") {
+        if (!text || text.trim() === "") return text;
+        if (
+          targetLang === sourceLang ||
+          (targetLang === "en" && sourceLang === "en")
+        )
+          return text;
+        try {
+          const res = await fetch(
+            `https://translation.googleapis.com/language/translate/v2?key=${API_KEY}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                q: text,
+                target: targetLang,
+                source: sourceLang,
+              }),
+            }
+          );
+          const data = await res.json();
+          return data.data.translations[0].translatedText;
+        } catch (e) {
+          console.error("Translation Error:", e);
+          return text;
+        }
+      }
+
+      async function translateArray(arr, targetLang) {
+        if (!arr || arr.length === 0) return arr;
+        if (targetLang === "en") return arr;
+        try {
+          const res = await fetch(
+            `https://translation.googleapis.com/language/translate/v2?key=${API_KEY}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ q: arr, target: targetLang }),
+            }
+          );
+          const data = await res.json();
+          return data.data.translations.map((t) => t.translatedText);
+        } catch (e) {
+          console.error("Translation Array Error:", e);
+          return arr;
+        }
+      }
+
+      // Language selection
+      function showLanguageSelection() {
+        const langDiv = document.createElement("div");
+        langDiv.classList.add("quiz-options");
+        ["English", "Hindi", "Odia"].forEach((lang) => {
+          const btn = document.createElement("button");
+          btn.textContent = lang;
+          btn.onclick = async () => {
+            userLang =
+              lang === "English" ? "en" : lang === "Hindi" ? "hi" : "or";
+            addUserMessage(lang);
+            addBotMessage(
+              await translateText(
+                "✅ Language set to " + lang + ". You can start chatting now!",
+                userLang
+              )
+            );
+            chatState = "initial";
+          };
+          langDiv.appendChild(btn);
+        });
+        chatWindow.appendChild(langDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      // Quiz
+      async function startQuiz(type) {
+        questionIndex = 0;
+        phq9Score = 0;
+        gad7Score = 0;
+        chatState = type;
+        const intro =
+          type === "phq9"
+            ? "Starting PHQ-9 Questionnaire. Answer based on how you've felt over the past 2 weeks."
+            : "Starting GAD-7 Questionnaire. Answer based on how you've felt over the past 2 weeks.";
+        const originalQuestions =
+          type === "phq9" ? phq9Questions : gad7Questions;
+
+        const [translatedIntro, tQuestions, tOptions] = await Promise.all([
+          translateText(intro, userLang),
+          translateArray(originalQuestions, userLang),
+          translateArray(quizOptions, userLang),
+        ]);
+
+        translatedQuestions = tQuestions;
+        translatedOptions = tOptions;
+
+        addBotMessage(translatedIntro);
+        showQuestion();
+      }
+
+      function showQuestion() {
+        if (questionIndex >= translatedQuestions.length) return endQuiz();
+
+        addBotMessage(translatedQuestions[questionIndex]);
+
+        const div = document.createElement("div");
+        div.classList.add("quiz-options");
+
+        translatedOptions.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.textContent = opt;
+          btn.onclick = () => {
+            addUserMessage(opt);
+            if (chatState === "phq9") phq9Score += i;
+            else gad7Score += i;
+            questionIndex++;
+            showQuestion();
+          };
+          div.appendChild(btn);
+        });
+
+        chatWindow.appendChild(div);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      async function endQuiz() {
+        let scoreMsg = "",
+          showCrisis = false;
+        if (chatState === "phq9") {
+          scoreMsg = `Your PHQ-9 score is ${phq9Score}. Higher scores indicate more severe depression.`;
+          if (phq9Score >= 15) showCrisis = true;
+        } else {
+          scoreMsg = `Your GAD-7 score is ${gad7Score}. Higher scores indicate more severe anxiety.`;
+          if (gad7Score >= 15) showCrisis = true;
+        }
+
+        chatState = "complete";
+        addBotMessage(await translateText(scoreMsg, userLang));
+
+        if (showCrisis) {
+          crisisCard.innerHTML = `
+      <h4>🚨 Immediate Help Recommended 🚨</h4>
+      <p>Your responses suggest high levels of distress. Please consider speaking to a professional immediately.</p>
+
+<a href="{% url 'booking' %}">
+  <button id="book-counsellor-btn">Book a Counsellor</button>
+</a>
+
+<button id="close-crisis-btn">I Understand</button>
+    `;
+          crisisCard.style.display = "block";
+          document
+            .getElementById("book-counsellor-btn")
+            .addEventListener(
+              "click",
+              () => (window.location.href = "/book-counsellor.html")
+            );
+          document
+            .getElementById("close-crisis-btn")
+            .addEventListener(
+              "click",
+              () => (crisisCard.style.display = "none")
+            );
+        }
+      }
+
+      // Gemini AI
+      async function fetchGeminiResponse(text) {
+        const loading = showLoading();
+        try {
+          const tUser = await translateText(text, "en", userLang);
+          const payload = {
+            contents: [{ parts: [{ text: tUser }] }],
+            systemInstruction: {
+              parts: [
+                {
+                  text: `
+      You are MannMitra, an empathetic mental health assistant.  
+Always respond briefly, in a calm, supportive, and non-judgmental tone.  
+Keep answers short and actionable — avoid long paragraphs.  
+
+Your role:
+- Summarize the user’s concern in very few words, showing empathy.  
+- Provide up to 3 clear, practical coping steps or self-help tips.  
+- When appropriate, give a button for quick mental health screening tools like PHQ-9 or GAD-7.  
+- Recommend professional consultation if the issue seems serious, but never give medical prescriptions.  
+- If the user expresses thoughts of self-harm, immediately suggest urgent help and provide crisis helpline resources.  
+- Enrich responses with links to guided breathing, meditation, mantra chanting, or short video resources.  
+- Encourage small positive actions (hydration, walking, journaling, mindful breaks) only when needed.  
+- a caring Indian mental health friend.  
+- Replies must be ** short (3–4 lines max) point wise**.  
+- Use a warm, supportive tone like a friend.  
+- Give **only 2–3 quick tips**, rooted in daily life and Indian traditions.  
+- Suggest PHQ-9 or GAD-7 screening only when appropriate if stress seems high. 
+-Focus more in traditional indian ways of solving the problems doesnt mean to ask to do breathing excericise in every problem.
+Examples: pranayama, mantra chanting, sipping chai, taking a short walk, gratitude journaling, or listening to bhajans/soft music.  
+- If distress is serious, suggest talking to a counsellor or helpline (keep it short).  
+- Use emojis sparingly (💙, 🌸, 🙏) for comfort.  
+-give astrological references 
+-Understand them if they talk abt movie scene and how was a movie or some incident not about them then no need of crisis banner.
+-dont write long paragraphs answer in points
+Never give medical prescriptions. Keep it simple, local, and human-like.
+
+Be concise, supportive, and human-like. Do not overwhelm with information — focus on clarity, care, and next steps.
+      `,
+                },
+              ],
+            },
+          };
+
+          const res = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            }
+          );
+          const result = await res.json();
+          hideLoading(loading);
+          if (
+            result.candidates &&
+            result.candidates[0]?.content?.parts?.length > 0
+          ) {
+            let reply = result.candidates[0].content.parts[0].text;
+            addBotMessage(await translateText(reply, userLang, "en"));
+          } else addBotMessage("Sorry, I'm having trouble right now.");
+        } catch (e) {
+          hideLoading(loading);
+          console.error("Gemini API error:", e);
+          addBotMessage("Connection issue. Please try again later.");
+        }
+      }
+
+      // Handle input
+      async function handleUserInput() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+        addUserMessage(text);
+        messageInput.value = "";
+        if (chatState === "language") {
+          addBotMessage("Please choose a language first.");
+          return;
+        }
+        if (checkForCrisis(text)) {
+          showCrisisCard();
+          return;
+        }
+        if (text.toLowerCase() === "phq9" && chatState !== "phq9") {
+          startQuiz("phq9");
+        } else if (text.toLowerCase() === "gad7" && chatState !== "gad7") {
+          startQuiz("gad7");
+        } else if (text.toLowerCase() === "exit") {
+          addBotMessage("You've exited the quiz. How else can I help you?");
+          chatState = "chatting";
+          questionIndex = 0;
+        } else if (chatState === "initial") {
+          chatState = "chatting";
+          fetchGeminiResponse(text);
+        } else if (chatState === "chatting" || chatState === "complete") {
+          fetchGeminiResponse(text);
+        }
+      }
+
+      sendButton.addEventListener("click", handleUserInput);
+      messageInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleUserInput();
+      });
+      backButton.addEventListener("click", () => window.history.back());
+      closeCrisisBtn.addEventListener(
+        "click",
+        () => (crisisCard.style.display = "none")
+      );
+
+      // On load
+      window.addEventListener("load", () => {
+        addBotMessage("🌐 Choose your language: English / Hindi / Odia");
+        showLanguageSelection();
+      });
+      const micButton = document.getElementById("mic-button");
+      let recognition;
+
+      if (
+        "SpeechRecognition" in window ||
+        "webkitSpeechRecognition" in window
+      ) {
+        const SpeechRecognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = "en-IN"; // set default language (can match userLang)
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+          micButton.classList.add("bg-red-600"); // show recording
+        };
+
+        recognition.onend = () => {
+          micButton.classList.remove("bg-green-500");
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          messageInput.value = transcript; // put text in input
+          handleUserInput(); // auto send
+        };
+
+        micButton.addEventListener("click", () => {
+          recognition.start();
+        });
+      } else {
+        console.log("Speech Recognition not supported in this browser.");
+        micButton.disabled = true;
+      }
+    </script>
+  </body>
+</html>

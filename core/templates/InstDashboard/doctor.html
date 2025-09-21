@@ -1,0 +1,408 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Institution Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .sidebar {
+        background-color: #ffffff;
+      }
+      .main-content {
+        background-color: #f8f9fa;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
+      .text-primary {
+        color: #10b981;
+      }
+      .icon {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="sidebar w-64 flex-shrink-0 border-r border-gray-200 flex flex-col"
+      >
+        <div class="p-6">
+          <button
+            class="flex items-center space-x-2 px-3 py-2 rounded hover:bg-green-100 transition-colors duration-200 bg-transparent"
+          >
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="Wellness Logo"
+              class="h-10 w-10 rounded-full object-cover"
+            />
+            <span class="text-2xl font-bold text-gray-800">MannMitra</span>
+          </button>
+        </div>
+        <nav class="mt-2 px-4 flex-1 space-y-1">
+          <p class="text-xs text-gray-500 uppercase mt-4 mb-2">Main</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_dashboard' %}"
+          >
+            <span class="material-icons icon">home</span>
+            <span class="ml-3">Home</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_analytics' %}"
+          >
+            <span class="material-icons icon">analytics</span>
+            <span class="ml-3">Analytics</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">Management</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_student' %}"
+          >
+            <span class="material-icons icon">group</span>
+            <span class="ml-3">Students</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_counselors' %}"
+          >
+            <span class="material-icons icon">school</span>
+            <span class="ml-3">Counselors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-white bg-green-500 rounded-lg"
+            href="{% url 'doctor_institution' %}"
+          >
+            <span class="material-icons icon">medical_services</span>
+            <span class="ml-3 font-semibold">Doctors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_content' %}"
+          >
+            <span class="material-icons icon">article</span>
+            <span class="ml-3">Content</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">System</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_alert' %}"
+          >
+            <span class="material-icons icon">notifications</span>
+            <span class="ml-3">Alerts</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="#"
+          >
+            <span class="material-icons icon">settings</span>
+            <span class="ml-3">Settings</span>
+          </a>
+        </nav>
+      </aside>
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center z-10"
+        >
+          <h1 class="text-xl font-bold text-gray-800">Institution Dashboard</h1>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <span
+                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >search</span
+              >
+              <input
+                class="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Search..."
+                type="text"
+              />
+            </div>
+            <div class="flex items-center space-x-3">
+              <img
+                alt="Admin user avatar"
+                class="h-10 w-10 rounded-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpinK27_pShK4QeSp5ZqojMmkaIUXIDhe0B7BxMVQaJJLSi0ozL0xDFCk4oyuf1YEczSWxoqsECfhSR6qm5eYPf5UH9OB7DPC4kOMywQde3aByK2E2T2YKcYsvgITCFBkYLEYVfJLDCqCKxoJKz9KMrYVMjSeXYG6MXZFBd5hUGGXMZXgkJeIw5KyCAQFT3yW9obdYH3IXZqOk6OaQhQy76qo1el_AUFdAsjrTC1SjcWEFF52oDmUjVl-GUASna1mAUYPbcjOxdpc"
+              />
+              <div>
+                <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                <a
+                  class="text-xs text-gray-500 hover:text-primary"
+                  href="{% url 'home' %}"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="main-content flex-1 p-8 overflow-y-auto">
+          <!-- Analytics Widgets -->
+          <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="card p-6 flex items-center">
+              <div class="p-3 bg-blue-100 rounded-full">
+                <span class="material-icons icon text-blue-600"
+                  >calendar_today</span
+                >
+              </div>
+              <div class="ml-4">
+                <p class="text-gray-500 text-sm">Total Appointments</p>
+                <p class="text-2xl font-bold text-gray-800">125</p>
+              </div>
+            </div>
+            <div class="card p-6 flex items-center">
+              <div class="p-3 bg-green-100 rounded-full">
+                <span class="material-icons icon text-green-600"
+                  >check_circle</span
+                >
+              </div>
+              <div class="ml-4">
+                <p class="text-gray-500 text-sm">Completed</p>
+                <p class="text-2xl font-bold text-gray-800">90</p>
+              </div>
+            </div>
+            <div class="card p-6 flex items-center">
+              <div class="p-3 bg-yellow-100 rounded-full">
+                <span class="material-icons icon text-yellow-600"
+                  >schedule</span
+                >
+              </div>
+              <div class="ml-4">
+                <p class="text-gray-500 text-sm">Pending</p>
+                <p class="text-2xl font-bold text-gray-800">25</p>
+              </div>
+            </div>
+            <div class="card p-6 flex items-center">
+              <div class="p-3 bg-red-100 rounded-full">
+                <span class="material-icons icon text-red-600">cancel</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-gray-500 text-sm">Missed</p>
+                <p class="text-2xl font-bold text-gray-800">10</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Charts Section -->
+          <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="card p-6">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Appointments per Doctor
+              </h3>
+              <canvas id="doctorChart" class="w-full h-64"></canvas>
+            </div>
+            <div class="card p-6">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Appointment Status Distribution
+              </h3>
+              <canvas id="statusChart" class="w-full h-64"></canvas>
+            </div>
+          </section>
+
+          <!-- Appointments Table -->
+          <section class="card p-6">
+            <div class="flex justify-between items-center mb-4 relative">
+              <h3 class="text-lg font-semibold text-gray-800">
+                Student-Doctor Appointments
+              </h3>
+              <!-- Export Dropdown Button -->
+              <div class="relative inline-block text-left">
+                <button
+                  id="exportButton"
+                  type="button"
+                  class="inline-flex justify-center w-full rounded-lg bg-green-500 px-4 py-2 text-white font-medium hover:bg-green-600 focus:outline-none"
+                >
+                  Export
+                  <span class="material-icons ml-2">arrow_drop_down</span>
+                </button>
+                <div
+                  id="exportDropdown"
+                  class="hidden origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                >
+                  <div class="py-1">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >CSV</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >Excel</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-4 mb-4">
+              <select
+                class="border border-gray-300 rounded-lg px-3 py-2 appearance-none pr-8 bg-white"
+              >
+                <option>Filter by Doctor</option>
+                <option>Dr. John Doe</option>
+                <option>Dr. Jane Smith</option>
+              </select>
+              <select
+                class="border border-gray-300 rounded-lg px-3 py-2 appearance-none pr-8 bg-white"
+              >
+                <option>Filter by Status</option>
+                <option>Completed</option>
+                <option>Pending</option>
+                <option>Missed</option>
+              </select>
+              <select
+                class="border border-gray-300 rounded-lg px-3 py-2 appearance-none pr-8 bg-white"
+              >
+                <option>Filter by Student</option>
+                <option>Student A</option>
+                <option>Student B</option>
+              </select>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+              <table class="min-w-full border border-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 border text-left">Student Name</th>
+                    <th class="px-4 py-2 border text-left">Doctor Name</th>
+                    <th class="px-4 py-2 border text-left">Date</th>
+                    <th class="px-4 py-2 border text-left">Time</th>
+                    <th class="px-4 py-2 border text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white">
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 border whitespace-nowrap">
+                      Student A
+                    </td>
+                    <td class="px-4 py-2 border whitespace-nowrap">
+                      Dr. John Doe
+                    </td>
+                    <td class="px-4 py-2 border">2025-09-12</td>
+                    <td class="px-4 py-2 border">10:00 AM</td>
+                    <td class="px-4 py-2 border text-green-600 font-semibold">
+                      Completed
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 border whitespace-nowrap">
+                      Student B
+                    </td>
+                    <td class="px-4 py-2 border whitespace-nowrap">
+                      Dr. Jane Smith
+                    </td>
+                    <td class="px-4 py-2 border">2025-09-13</td>
+                    <td class="px-4 py-2 border">2:00 PM</td>
+                    <td class="px-4 py-2 border text-yellow-600 font-semibold">
+                      Pending
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 border whitespace-nowrap">
+                      Student C
+                    </td>
+                    <td class="px-4 py-2 border whitespace-nowrap">
+                      Dr. John Doe
+                    </td>
+                    <td class="px-4 py-2 border">2025-09-14</td>
+                    <td class="px-4 py-2 border">11:30 AM</td>
+                    <td class="px-4 py-2 border text-red-600 font-semibold">
+                      Missed
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Export Dropdown Script -->
+    <script>
+      const exportBtn = document.getElementById("exportButton");
+      const exportDropdown = document.getElementById("exportDropdown");
+
+      exportBtn.addEventListener("click", () => {
+        exportDropdown.classList.toggle("hidden");
+      });
+
+      window.addEventListener("click", (e) => {
+        if (
+          !exportBtn.contains(e.target) &&
+          !exportDropdown.contains(e.target)
+        ) {
+          exportDropdown.classList.add("hidden");
+        }
+      });
+    </script>
+
+    <!-- Chart.js Scripts -->
+    <script>
+      const ctxDoctor = document.getElementById("doctorChart").getContext("2d");
+      const doctorChart = new Chart(ctxDoctor, {
+        type: "bar",
+        data: {
+          labels: ["Dr. John Doe", "Dr. Jane Smith"],
+          datasets: [
+            {
+              label: "Appointments",
+              data: [15, 12],
+              backgroundColor: ["#10B981", "#3B82F6"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } },
+        },
+      });
+
+      const ctxStatus = document.getElementById("statusChart").getContext("2d");
+      const statusChart = new Chart(ctxStatus, {
+        type: "doughnut",
+        data: {
+          labels: ["Completed", "Pending", "Missed"],
+          datasets: [
+            {
+              label: "Status",
+              data: [90, 25, 10], // Updated data to match widgets
+              backgroundColor: ["#10B981", "#FBBF24", "#EF4444"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: "bottom" } },
+        },
+      });
+    </script>
+  </body>
+</html>

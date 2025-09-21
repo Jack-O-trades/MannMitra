@@ -1,0 +1,374 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MannMitra - Institution Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .sidebar {
+        background-color: #ffffff;
+      }
+      .main-content {
+        background-color: #f8f9fa;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
+      .text-primary {
+        color: #10b981;
+      }
+      .icon {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen">
+      <aside
+        class="sidebar w-64 flex-shrink-0 border-r border-gray-200 flex flex-col"
+      >
+        <div class="p-6">
+          <button
+            class="flex items-center space-x-2 px-3 py-2 rounded hover:bg-green-100 transition-colors duration-200 bg-transparent"
+          >
+            <img
+              src="{% static 'core/images/LOHO.jpeg' %}"
+              alt="Wellness Logo"
+              class="h-10 w-10 rounded-full object-cover"
+            />
+            <span class="text-2xl font-bold text-gray-800">MannMitra</span>
+          </button>
+        </div>
+        <nav class="mt-2 px-4 flex-1 space-y-1">
+          <p class="text-xs text-gray-500 uppercase mt-4 mb-2">Main</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_dashboard' %}"
+          >
+            <span class="material-icons icon">home</span>
+            <span class="ml-3 font-semibold">Home</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_analytics' %}"
+          >
+            <span class="material-icons icon">analytics</span>
+            <span class="ml-3">Analytics</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">Management</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_student' %}"
+          >
+            <span class="material-icons icon">group</span>
+            <span class="ml-3">Students</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_counselors' %}"
+          >
+            <span class="material-icons icon">school</span>
+            <span class="ml-3">Counselors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'doctor_institution' %}"
+          >
+            <span class="material-icons icon">medical_services</span>
+            <span class="ml-3">Doctors</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-white bg-green-500 rounded-lg"
+            href="{% url 'inst_content' %}"
+          >
+            <span class="material-icons icon">article</span>
+
+            <span class="ml-3">Content</span>
+          </a>
+          <p class="text-xs text-gray-500 uppercase mt-6 mb-2">System</p>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="{% url 'inst_alert' %}"
+          >
+            <span class="material-icons icon">notifications</span>
+            <span class="ml-3">Alerts</span>
+          </a>
+          <a
+            class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+            href="#"
+          >
+            <span class="material-icons icon">settings</span>
+            <span class="ml-3">Settings</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col">
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center z-10"
+        >
+          <h1 class="text-xl font-bold text-gray-800">Institution Dashboard</h1>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <span
+                class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >search</span
+              >
+              <input
+                class="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Search..."
+                type="text"
+              />
+            </div>
+            <div class="flex items-center space-x-3">
+              <img
+                alt="Admin user avatar"
+                class="h-10 w-10 rounded-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpinK27_pShK4QeSp5ZqojMmkaIUXIDhe0B7BxMVQaJJLSi0ozL0xDFCk4oyuf1YEczSWxoqsECfhSR6qm5eYPf5UH9OB7DPC4kOMywQde3aByK2E2T2YKcYsvgITCFBkYLEYVfJLDCqCKxoJKz9KMrYVMjSeXYG6MXZFBd5hUGGXMZXgkJeIw5KyCAQFT3yW9obdYH3IXZqOk6OaQhQy76qo1el_AUFdAsjrTC1SjcWEFF52oDmUjVl-GUASna1mAUYPbcjOxdpc"
+              />
+              <div>
+                <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                <a
+                  class="text-xs text-gray-500 hover:text-primary"
+                  href="{% url 'home' %}"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="main-content flex-1 p-6 overflow-y-auto">
+          <!-- Stats Cards -->
+          <section>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <!-- Placeholder for stats -->
+            </div>
+          </section>
+
+          <!-- Charts Section -->
+          <section class="mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              <!-- Placeholder for charts -->
+            </div>
+          </section>
+
+          <!-- Alerts Section -->
+          <section class="mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Placeholder for alerts -->
+            </div>
+          </section>
+
+          <!-- Feedback and Progress Section -->
+          <section class="mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <!-- Feedback from Doctors -->
+              <div class="card p-4">
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-3 text-center"
+                >
+                  Feedback from Doctors
+                </h3>
+                <div id="feedbackList" class="space-y-3"></div>
+              </div>
+
+              <!-- Users' Progress Reports -->
+              <div class="card p-4">
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-3 text-center"
+                >
+                  Users' Progress Reports
+                </h3>
+                <div id="progressList" class="space-y-4"></div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Feedback Detail Modal -->
+    <div
+      id="feedbackModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50"
+    >
+      <div class="bg-white rounded-lg p-6 w-11/12 max-w-lg">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-800">Feedback Details</h2>
+          <button
+            onclick="closeModal()"
+            class="text-gray-500 hover:text-gray-700"
+          >
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="flex space-x-4 mb-4">
+          <div class="flex flex-col items-center text-center w-32">
+            <img
+              id="modalDoctorImage"
+              src=""
+              alt="Doctor"
+              class="rounded-full w-20 h-20 object-cover mb-2"
+            />
+            <p id="modalDoctorName" class="font-semibold"></p>
+            <p class="text-sm text-gray-500">Doctor</p>
+          </div>
+          <div class="flex flex-col items-center text-center w-32">
+            <img
+              id="modalStudentImage"
+              src=""
+              alt="Student"
+              class="rounded-full w-20 h-20 object-cover mb-2"
+            />
+            <p id="modalStudentName" class="font-semibold"></p>
+            <p class="text-sm text-gray-500">Student</p>
+          </div>
+        </div>
+        <div>
+          <p id="modalFeedbackText" class="text-gray-700 mb-2"></p>
+          <p id="modalFeedbackDate" class="text-sm text-gray-500"></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let feedbacks = JSON.parse(localStorage.getItem("feedbacks")) || [];
+      let progressReports =
+        JSON.parse(localStorage.getItem("progressReports")) || [];
+
+      function saveFeedbacks() {
+        localStorage.setItem("feedbacks", JSON.stringify(feedbacks));
+      }
+      function saveProgressReports() {
+        localStorage.setItem(
+          "progressReports",
+          JSON.stringify(progressReports)
+        );
+      }
+
+      function renderFeedbacks() {
+        const container = document.getElementById("feedbackList");
+        if (feedbacks.length === 0) {
+          container.innerHTML =
+            '<p class="text-gray-500 text-center">No feedback available.</p>';
+          return;
+        }
+        container.innerHTML = "";
+        feedbacks.forEach((fb, index) => {
+          const div = document.createElement("div");
+          div.className =
+            "border p-3 rounded bg-gray-50 flex justify-between items-center";
+          div.innerHTML = `
+                <div>
+                    <p class="font-semibold">${fb.doctor}</p>
+                    <p class="text-sm text-gray-500">${fb.student}</p>
+                </div>
+                <button class="px-3 py-1 text-sm text-white bg-green-500 rounded hover:bg-green-600" onclick="openModal(${index})">View Details</button>
+            `;
+          container.appendChild(div);
+        });
+      }
+
+      function renderProgressReports() {
+        const container = document.getElementById("progressList");
+        if (progressReports.length === 0) {
+          container.innerHTML =
+            '<p class="text-gray-500 text-center">No progress reports available.</p>';
+          return;
+        }
+        container.innerHTML = "";
+        progressReports.forEach((report) => {
+          const div = document.createElement("div");
+          div.className = "border p-3 rounded bg-gray-50";
+          div.innerHTML = `
+                <p><strong>User:</strong> ${report.user}</p>
+                <p><strong>Completed Tasks:</strong> ${report.completed}</p>
+                <p><strong>Pending Tasks:</strong> ${report.pending}</p>
+                <p class="text-sm text-gray-500">Last updated: ${report.lastUpdated}</p>
+            `;
+          container.appendChild(div);
+        });
+      }
+
+      function openModal(index) {
+        const fb = feedbacks[index];
+        document.getElementById("modalDoctorImage").src =
+          "https://randomuser.me/api/portraits/men/32.jpg";
+        document.getElementById("modalStudentImage").src =
+          "https://randomuser.me/api/portraits/lego/1.jpg";
+        document.getElementById("modalDoctorName").textContent = fb.doctor;
+        document.getElementById("modalStudentName").textContent = fb.student;
+        document.getElementById("modalFeedbackText").textContent =
+          fb.feedbackText;
+        document.getElementById("modalFeedbackDate").textContent = fb.date;
+        document.getElementById("feedbackModal").classList.remove("hidden");
+        document.getElementById("feedbackModal").classList.add("flex");
+      }
+
+      function closeModal() {
+        document.getElementById("feedbackModal").classList.add("hidden");
+        document.getElementById("feedbackModal").classList.remove("flex");
+      }
+
+      if (feedbacks.length === 0) {
+        feedbacks = [
+          {
+            doctor: "Dr. John Smith",
+            student: "Student A",
+            feedbackText:
+              "The student is progressing well and shows great enthusiasm.",
+            date: new Date().toLocaleString(),
+          },
+          {
+            doctor: "Dr. Emily Lee",
+            student: "Student B",
+            feedbackText:
+              "Needs improvement in attention to detail and consistency.",
+            date: new Date().toLocaleString(),
+          },
+        ];
+        saveFeedbacks();
+      }
+
+      if (progressReports.length === 0) {
+        progressReports = [
+          {
+            user: "Student A",
+            completed: 5,
+            pending: 2,
+            lastUpdated: new Date().toLocaleString(),
+          },
+          {
+            user: "Student B",
+            completed: 3,
+            pending: 4,
+            lastUpdated: new Date().toLocaleString(),
+          },
+        ];
+        saveProgressReports();
+      }
+
+      renderFeedbacks();
+      renderProgressReports();
+    </script>
+  </body>
+</html>
