@@ -202,7 +202,9 @@
               </div>
             </div>
             <div>
-              <button class="btn-primary" type="submit">Create Account</button>
+              <a href="/login/" class="btn-primary inline-block text-center">
+                Create Account
+              </a>
             </div>
               <div class="flex items-center justify-center">
               <span class="material-icons text-sm text-gray-500 mr-2">lock</span>
@@ -211,6 +213,8 @@
               </p>
             </div>
           </form>
+
+          <form>
           <div class="mt-6">
             <div class="relative">
               <div class="absolute inset-0 flex items-center">
@@ -243,7 +247,7 @@
           <div class="mt-8 text-center">
             <p class="text-sm text-gray-600">
               Already have an account?
-              <a href="/#login" class="font-medium text-teal-600 hover:text-teal-500">Log in</a>
+              <a href="/login/" class="font-medium text-teal-600 hover:text-teal-500">Log in</a>
             </p>
           </div>
         </div>
@@ -251,7 +255,7 @@
     </div>
 
     <!-- Supabase SignUp Script -->
-    <script type="module">
+    <!--<script type="module">
       import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
       const supabaseUrl = "https://nrjxvuzhvfvxpvdvrxdf.supabase.co";
@@ -272,42 +276,47 @@
           return;
         }
 
-        const { data, error } = await supabase.auth.signUp({ email, password });
+      // Get all form fields
+      const fullName = document.getElementById("full-name").value;
+      const phone = document.getElementById("phone-number").value;
+      const gender = document.getElementById("gender").value;
+      const dob = document.getElementById("dob").value;
+      const institution = document.getElementById("institution").value;
+      const language = document.getElementById("language").value;
+      const concerns = Array.from(document.querySelectorAll('input[name="concerns"]:checked')).map(c => c.value);
 
-        if (error) {
-          alert("Error: " + error.message);
-          return;
-        }
-
-        // Save profile
-        const fullName = document.getElementById("full-name").value;
-        const phone = document.getElementById("phone-number").value;
-        const gender = document.getElementById("gender").value;
-        const dob = document.getElementById("dob").value;
-        const institution = document.getElementById("institution").value;
-        const language = document.getElementById("language").value;
-        const concerns = Array.from(document.querySelectorAll('input[name="concerns"]:checked')).map((c) => c.value);
-
-        await supabase.from("profiles").insert([{
-          id: data.user.id,
-          full_name: fullName,
-          phone,
-          gender,
-          dob,
-          institution,
-          language,
-          concerns,
-        }]);
-
-        // Step 1: Ask confirmation
-        if (confirm("Please Confirm your Verification")) {
-          alert("Account Created Successfully!");
-          window.location.href = "/login/";
+      // Insert profile into Supabase
+        const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            phone: phone,
+            gender: gender,
+            dob: dob,
+            institution: institution,
+            language: language,
+            concerns: concerns.join(",")
+          }
         }
       });
+
+      if (error) {
+        console.error("Profile insert error:", error);
+        alert("Database Error: " + error.message);
+        return;
+      }
+      console.log("Signup data:", data);      
+      alert("Account Created Successfully!");
+      window.location.href = "/login/";
+      }
+    );
+
     </script>
 
-    <!-- Password strength checker -->
+
+     Password strength checker 
     <script>
       const passwordInput = document.getElementById("password");
       const strengthBar = document.getElementById("strength-bar");
@@ -334,4 +343,4 @@
       });
     </script>
   </body>
-</html>
+</html> 

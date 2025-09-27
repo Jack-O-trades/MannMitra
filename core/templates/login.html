@@ -135,7 +135,7 @@
             required
           />
         </div>
-        <button type="submit" class="btn">Sign in</button>
+        <a href="{% url 'stu_dashboard' %}">Sign in</a>
       </form>
 
       <div class="divider">Or continue with</div>
@@ -197,7 +197,7 @@
               const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: "https://mannmitraprivate.onrender.com/",
+          redirectTo: "https://mannmitraprivate.onrender.com/auth/callback",
         },
       });
 
