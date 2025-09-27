@@ -32,6 +32,9 @@ def aboutus(request):
 
 def signup(request):
     return render(request, 'signup.html')
+
+def login_view(request):
+    return render(request, "login.html")
     
 def booking(request):
     return render(request, 'booking.html')
