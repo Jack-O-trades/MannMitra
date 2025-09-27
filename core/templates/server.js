@@ -6,7 +6,7 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const PORT = 5000;
+const PORT = 8000;
 const API_BASE_URL = `http://localhost:${PORT}`;
 
 // --- 2. MIDDLEWARE ---

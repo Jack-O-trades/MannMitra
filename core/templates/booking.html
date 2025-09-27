@@ -295,7 +295,7 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                                 </div>
-                                <input type="text" id="searchInput" placeholder="Search by name or keyword..." class="w-full pl-10 p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
+                                <input type="text" id="counsellorSearch" placeholder="Search by name or keyword..." class="w-full pl-10 p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors duration-200">
                             </div>
                         </div>
                         <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
@@ -477,441 +477,286 @@
         <p>1800-123-4567, 1800-234-5678</p>
     </div>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
+    document.addEventListener('DOMContentLoaded', async () => {
+        lucide.createIcons();
 
-            // Sample data for counsellors
-            const counsellors = [
-                {
-                    id: 1,
-                    name: "Dr. Ananya Sharma",
-                    specialization: "Anxiety",
-                    tagline: "A compassionate and empathetic listener.",
-                    experience: "10+ Years",
-                    languages: ["English", "Hindi"],
-                    rating: 4.8,
-                    gender: "Female",
-                    photo: "https://placehold.co/400x400/D1C4E9/FFFFFF?text=AS",
-                    recommended: true
-                },
-                {
-                    id: 2,
-                    name: "Mr. Rohan Gupta",
-                    specialization: "Depression",
-                    tagline: "Helping you find hope and a path forward.",
-                    experience: "7 Years",
-                    languages: ["English", "Hindi"],
-                    rating: 4.5,
-                    gender: "Male",
-                    photo: "https://placehold.co/400x400/B2EBF2/FFFFFF?text=RG",
-                    recommended: false
-                },
-                {
-                    id: 3,
-                    name: "Ms. Leena Singh",
-                    specialization: "Couples Counselling",
-                    tagline: "Strengthening communication and connection.",
-                    experience: "12+ Years",
-                    languages: ["English", "Spanish"],
-                    rating: 4.9,
-                    gender: "Female",
-                    photo: "https://placehold.co/400x400/C5E1A5/FFFFFF?text=LS",
-                    recommended: true
-                },
-                {
-                    id: 4,
-                    name: "Mr. Kevin Fernandez",
-                    specialization: "Stress Management",
-                    tagline: "Building resilience in a busy world.",
-                    experience: "5 Years",
-                    languages: ["English", "French"],
-                    rating: 4.2,
-                    gender: "Male",
-                    photo: "https://placehold.co/400x400/FFCCBC/FFFFFF?text=KF",
-                    recommended: false
-                },
-                {
-                    id: 5,
-                    name: "Dr. Maya Patil",
-                    specialization: "Anxiety",
-                    tagline: "Your journey to inner calm starts here.",
-                    experience: "15+ Years",
-                    languages: ["Hindi", "English"],
-                    rating: 5.0,
-                    gender: "Female",
-                    photo: "https://placehold.co/400x400/FFAB91/FFFFFF?text=MP",
-                    recommended: true
-                },
-                {
-                    id: 6,
-                    name: "Mr. Aakash Verma",
-                    specialization: "Couples Counselling",
-                    tagline: "Navigating relationships with grace.",
-                    experience: "8 Years",
-                    languages: ["English", "Hindi"],
-                    rating: 4.7,
-                    gender: "Male",
-                    photo: "https://placehold.co/400x400/90CAF9/FFFFFF?text=AV",
-                    recommended: false
-                }
-            ];
+        // --- SUPABASE SETUP (Corrected) ---
+        const supabaseUrl = 'https://nrjxvuzhvfvxpvdvrxdf.supabase.co';
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yanh2dXpodmZ2eHB2ZHZyeGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjcwMjUsImV4cCI6MjA3MzEwMzAyNX0.hCga9sEp1hLuRFcAzpbz0rePyaQYUNu2DWCpBe2SGxg";
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-            const counsellorsGrid = document.getElementById('counsellorsGrid');
-            const recommendedContainer = document.getElementById('recommendedContainer');
-            const searchInput = document.getElementById('searchInput');
-            const specializationFilter = document.getElementById('specializationFilter');
-            const genderFilter = document.getElementById('genderFilter');
-            const languageFilter = document.getElementById('languageFilter');
-            const sortFilter = document.getElementById('sortFilter');
-            const noResultsMessage = document.getElementById('noResults');
+        let allCounsellors = [];
+        let selectedCounsellorId = null;
 
-            // "Choose Your Counsellor" Modal elements
-            const bookingModal = document.getElementById('bookingModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const datePicker = document.getElementById('datePicker');
-            const timeSlotsContainer = document.getElementById('timeSlotsContainer');
-            const confirmBookingBtn = document.getElementById('confirmBookingBtn');
-            const loadingOverlay = document.getElementById('loading-overlay');
+        // --- ELEMENT SELECTORS ---
+        const counsellorsGrid = document.getElementById('counsellorsGrid');
+        const recommendedContainer = document.getElementById('recommendedContainer');
+        const searchInput = document.getElementById('counsellorSearch'); 
+        const specializationFilter = document.getElementById('specializationFilter');
+        const genderFilter = document.getElementById('genderFilter');
+        const languageFilter = document.getElementById('languageFilter');
+        const sortFilter = document.getElementById('sortFilter');
+        const noResultsMessage = document.getElementById('noResults');
+        const bookingModal = document.getElementById('bookingModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const datePicker = document.getElementById('datePicker');
+        const timeSlotsContainer = document.getElementById('timeSlotsContainer');
+        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const quickBookBtn = document.getElementById('quickBookBtn');
+        const seeCounsellorsBtn = document.getElementById('seeCounsellorsBtn');
+        const quickBookingForm = document.getElementById("quickBookingForm");
+        const emotionButtons = document.querySelectorAll(".emotion-btn");
+        const anonymousToggle = document.getElementById("anonymous-toggle");
+        const identifiedFields = document.getElementById("identified-fields");
+        const anonymousAliasSection = document.getElementById("anonymous-alias");
+        const aliasNameSpan = document.getElementById("alias-name");
+        const progressBar = document.getElementById("progressBar");
+        const summaryAlias = document.getElementById("summary-alias");
+        const summaryCounselor = document.getElementById("summary-counselor");
+        const summaryDatetime = document.getElementById("summary-datetime");
+        const summaryCode = document.getElementById("summary-code");
+        const emergencyBtn = document.getElementById('emergency-btn');
+        const emergencyMessage = document.getElementById('emergency-message');
+        const successModal = document.getElementById('success-modal');
+        const closeSuccessModalBtn = document.getElementById('close-success-modal-btn');
+        const confettiContainer = document.getElementById("confetti-container");
+        const moodCheckinSection = document.getElementById('mood-checkin-section');
+        const actionButtonsSection = document.getElementById('action-buttons');
+        const quickBookFlow = document.getElementById('quick-book-flow');
+        const counsellorFlow = document.getElementById('counsellor-flow');
+        const aliases = ["Calm River", "Blue Lotus", "Silent Stream", "Forest Whisper", "Wise Owl", "Gentle Rain"];
 
-            // "Quick Book" Flow Elements
-            const quickBookBtn = document.getElementById('quickBookBtn');
-            const seeCounsellorsBtn = document.getElementById('seeCounsellorsBtn');
-            const quickBookingForm = document.getElementById("quickBookingForm");
-            const emotionButtons = document.querySelectorAll(".emotion-btn");
-            const anonymousToggle = document.getElementById("anonymous-toggle");
-            const identifiedFields = document.getElementById("identified-fields");
-            const anonymousAliasSection = document.getElementById("anonymous-alias");
-            const aliasNameSpan = document.getElementById("alias-name");
-            const progressBar = document.getElementById("progressBar");
-            const summaryAlias = document.getElementById("summary-alias");
-            const summaryCounselor = document.getElementById("summary-counselor");
-            const summaryDatetime = document.getElementById("summary-datetime");
-            const summaryCode = document.getElementById("summary-code");
-            
-            const aliases = ["Calm River", "Blue Lotus", "Silent Stream", "Forest Whisper", "Wise Owl", "Gentle Rain"];
-            const emergencyBtn = document.getElementById('emergency-btn');
-            const emergencyMessage = document.getElementById('emergency-message');
-            const successModal = document.getElementById('success-modal');
-            const closeSuccessModalBtn = document.getElementById('close-success-modal-btn');
-            const confettiContainer = document.getElementById("confetti-container");
+        // --- DATA FETCHING ---
+        async function fetchCounsellors() {
+            loadingOverlay.classList.remove('hidden');
+            try {
+                const { data, error } = await supabaseClient.from('counsellors').select('*');
+                if (error) throw error;
+                allCounsellors = data;
+                filterAndSortCounsellors(); // Render based on default filters
+                renderRecommendedCounsellors(allCounsellors);
+            } catch (error) {
+                console.error("Error fetching counsellors:", error);
+                counsellorsGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Could not load counsellors.</p>`;
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
+        }
 
+        // --- RENDER FUNCTIONS ---
+        const getRatingStars = (rating) => {
+            if (!rating) return '';
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            let starsHtml = Array(fullStars).fill('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-yellow-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('');
+            if (halfStar) starsHtml += `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="text-yellow-400"><defs><linearGradient id="half"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="transparent" stop-opacity="0.3"/></linearGradient></defs><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="url(#half)" stroke="currentColor" stroke-width="1.5"/></svg>`;
+            starsHtml += Array(emptyStars).fill('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>').join('');
+            return `<div class="flex">${starsHtml}</div>`;
+        };
 
-            // Function to generate star rating HTML
-            const getRatingStars = (rating) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating % 1 >= 0.5;
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  let starsHtml = '';
+        const renderCounsellorCard = (counsellor, isRecommended = false) => {
+            const card = document.createElement('div');
+            card.className = `counsellor-card bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center ${isRecommended ? 'min-w-[280px]' : ''}`;
+            card.innerHTML = `<div class="w-24 h-24 rounded-full overflow-hidden mb-4 shadow-inner"><img src="${counsellor.photo}" alt="${counsellor.name}" class="w-full h-full object-cover"></div><h3 class="text-xl font-semibold text-gray-800">${counsellor.name}</h3><p class="text-green-500 font-medium">${counsellor.specialization}</p><p class="text-sm text-gray-600 italic mt-1 mb-2">"${counsellor.tagline}"</p><div class="my-3 text-gray-600 text-sm"><p><strong>Exp:</strong> ${counsellor.experience}</p><p><strong>Languages:</strong> ${counsellor.languages.join(', ')}</p></div><div class="flex items-center justify-center mb-4">${getRatingStars(counsellor.rating)}<span class="text-gray-600 ml-2">${counsellor.rating.toFixed(1)}</span></div><button class="book-now-btn w-full bg-green-500 text-white font-medium py-2 rounded-xl shadow-sm hover:bg-green-600" data-id="${counsellor.id}">Book Now</button>`;
+            return card;
+        };
 
-  for (let i = 0; i < fullStars; i++) {
-    starsHtml += `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star text-yellow-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
-  }
+        const renderCounsellors = (data) => {
+            counsellorsGrid.innerHTML = '';
+            noResultsMessage.classList.toggle('hidden', data.length === 0);
+            data.forEach(c => counsellorsGrid.appendChild(renderCounsellorCard(c)));
+        };
 
-  if (halfStar) {
-    const gradId = `halfGrad-${Math.random().toString(36).substr(2,5)}`;
-    starsHtml += `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-      viewBox="0 0 24 24" class="text-yellow-400">
-      <defs>
-        <linearGradient id="${gradId}">
-          <stop offset="50%" stop-color="currentColor"/>
-          <stop offset="50%" stop-color="transparent"/>
-        </linearGradient>
-      </defs>
-      <polygon points="12 2 15.09 8.26 22 9.27 
-                      17 14.14 18.18 21.02 12 17.77 
-                      5.82 21.02 7 14.14 2 9.27 
-                      8.91 8.26 12 2"
-        fill="url(#${gradId})" stroke="currentColor"/>
-    </svg>`;
-  }
+        const renderRecommendedCounsellors = (data) => {
+            recommendedContainer.innerHTML = '';
+            data.filter(c => c.recommended).forEach(c => recommendedContainer.appendChild(renderCounsellorCard(c, true)));
+        };
 
-  for (let i = 0; i < emptyStars; i++) {
-    starsHtml += `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star text-gray-300"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-  }
-  return `<div class="flex">${starsHtml}</div>`;
-};
+        const filterAndSortCounsellors = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const specialization = specializationFilter.value;
+            const gender = genderFilter.value;
+            const language = languageFilter.value;
+            const sortOption = sortFilter.value;
 
+            let filtered = allCounsellors.filter(c =>
+                (c.name.toLowerCase().includes(searchTerm) || c.specialization.toLowerCase().includes(searchTerm)) &&
+                (!specialization || c.specialization === specialization) &&
+                (!gender || c.gender === gender) &&
+                (!language || c.languages.includes(language))
+            );
 
-            // Function to render a single counsellor card
-            const renderCounsellorCard = (counsellor, isRecommended = false) => {
-                const card = document.createElement('div');
-                card.className = `counsellor-card bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center ${isRecommended ? 'min-w-[280px]' : ''}`;
-                card.innerHTML = `
-                    <div class="w-24 h-24 rounded-full overflow-hidden mb-4 shadow-inner">
-                        <img src="${counsellor.photo}" alt="${counsellor.name}" class="w-full h-full object-cover">
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-800">${counsellor.name}</h3>
-                    <p class="text-green-500 font-medium">${counsellor.specialization}</p>
-                    <p class="text-sm text-gray-600 italic mt-1 mb-2">"${counsellor.tagline}"</p>
-                    <div class="my-3 text-gray-600 text-sm">
-                        <p><strong>Exp:</strong> ${counsellor.experience}</p>
-                        <p><strong>Languages:</strong> ${counsellor.languages.join(', ')}</p>
-                    </div>
-                    <div class="flex items-center justify-center mb-4">
-                        ${getRatingStars(counsellor.rating)}
-                        <span class="text-gray-600 ml-2">${counsellor.rating.toFixed(1)}</span>
-                    </div>
-                    <button class="book-now-btn w-full bg-green-500 text-white font-medium py-2 rounded-xl shadow-sm hover:bg-green-600 transition-colors duration-300" data-id="${counsellor.id}">Book Now</button>
-                `;
-                return card;
-            };
+            if (sortOption === 'rating') {
+                filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            } else if (sortOption === 'experience') {
+                filtered.sort((a, b) => (parseInt(b.experience) || 0) - (parseInt(a.experience) || 0));
+            }
+            renderCounsellors(filtered);
+        };
 
-            // Function to render all counsellors
-            const renderCounsellors = (data) => {
-                counsellorsGrid.innerHTML = '';
-                if (data.length === 0) {
-                    noResultsMessage.classList.remove('hidden');
-                } else {
-                    noResultsMessage.classList.add('hidden');
-                    data.forEach(counsellor => {
-                        counsellorsGrid.appendChild(renderCounsellorCard(counsellor));
-                    });
-                }
-            };
-
-            // Function to render recommended counsellors
-            const renderRecommendedCounsellors = (data) => {
-                recommendedContainer.innerHTML = '';
-                const recommended = data.filter(c => c.recommended);
-                recommended.forEach(counsellor => {
-                    recommendedContainer.appendChild(renderCounsellorCard(counsellor, true));
-                });
-            };
-
-            // Function to filter and sort counsellors
-            const filterAndSortCounsellors = () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const specialization = specializationFilter.value;
-    const gender = genderFilter.value;
-    const language = languageFilter.value;
-    const sortOption = sortFilter.value;
-
-    let filteredCounsellors = counsellors.filter(c => {
-        const matchesSearch = c.name.toLowerCase().includes(searchTerm) || c.specialization.toLowerCase().includes(searchTerm);
-        const matchesSpecialization = !specialization || c.specialization === specialization;
-        const matchesGender = !gender || (c.gender && c.gender === gender);
-        const matchesLanguage = !language || c.languages.includes(language);
-        return matchesSearch && matchesSpecialization && matchesGender && matchesLanguage;
-    });
-
-    if (sortOption === 'rating') {
-        filteredCounsellors.sort((a, b) => b.rating - a.rating);
-    } else if (sortOption === 'experience') {
-        filteredCounsellors.sort((a, b) => {
-            const yearsA = parseInt(a.experience.replace(/\D/g, "")) || 0;
-const yearsB = parseInt(b.experience.replace(/\D/g, "")) || 0;
-return yearsB - yearsA;
-
-        });
-    }
-
-    renderCounsellors(filteredCounsellors);
-};
-
-            // Set up event listeners for filters
-            searchInput.addEventListener('input', filterAndSortCounsellors);
-            specializationFilter.addEventListener('change', filterAndSortCounsellors);
-            genderFilter.addEventListener('change', filterAndSortCounsellors);
-            languageFilter.addEventListener('change', filterAndSortCounsellors);
-            sortFilter.addEventListener('change', filterAndSortCounsellors);
-
-            // Initial render
-            renderCounsellors(counsellors);
-            renderRecommendedCounsellors(counsellors);
-            
-            // "Choose Your Counsellor" Modal functionality
-            const openModal = (counsellorId) => {
-                const counsellor = counsellors.find(c => c.id === parseInt(counsellorId));
-                if (!counsellor) return;
-
-                const modalCounsellorInfo = document.getElementById('modalCounsellorInfo');
-                modalCounsellorInfo.innerHTML = `
-                    <img src="${counsellor.photo}" alt="${counsellor.name}" class="w-16 h-16 rounded-full object-cover">
-                    <div>
-                        <h4 class="text-lg font-semibold">${counsellor.name}</h4>
-                        <p class="text-sm text-gray-600">${counsellor.specialization}</p>
-                    </div>
-                `;
-                
-                // Populate time slots (dummy data)
-                timeSlotsContainer.innerHTML = '';
-                const timeSlots = ["09:00 AM", "10:30 AM", "02:00 PM", "03:30 PM", "05:00 PM", "06:30 PM", "08:00 PM"];
-                timeSlots.forEach(time => {
-                    const slot = document.createElement('button');
-                    slot.className = 'time-slot bg-gray-100 text-gray-700 py-2 px-3 rounded-lg border border-gray-200 hover:bg-gray-200 transition-colors duration-200';
-                    slot.textContent = time;
-                    slot.addEventListener('click', () => {
-                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                        slot.classList.add('selected');
-                    });
-                    timeSlotsContainer.appendChild(slot);
-                });
-                
-                // Show the modal
-                bookingModal.classList.remove('hidden');
-            };
-
-            const closeModal = () => {
-                bookingModal.classList.add('hidden');
-            };
-
-            const openSuccessModal = () => {
-                successModal.classList.remove('hidden');
-                confettiContainer.innerHTML = '';
-                for (let i = 0; i < 50; i++) {
-                    const confetti = document.createElement("div");
-                    confetti.classList.add("confetti");
-                    confetti.style.left = `${Math.random() * 100}vw`;
-                    confetti.style.animationDelay = `${Math.random() * 2}s`;
-                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                    confettiContainer.appendChild(confetti);
-                }
-            };
-
-            const closeSuccessModal = () => {
-                successModal.classList.add('hidden');
-                confettiContainer.innerHTML = '';
-            };
-
-            closeSuccessModalBtn.addEventListener("click", closeSuccessModal);
-
-
-
-            // Event listener delegation for Book Now buttons
-            document.body.addEventListener('click', (e) => {
-    const btn = e.target.closest('.book-now-btn');
-    if (btn) {
-        const counsellorId = btn.getAttribute('data-id');
-        openModal(counsellorId);
-    }
-});
-
-            closeModalBtn.addEventListener('click', closeModal);
-            bookingModal.addEventListener('click', (e) => {
-                if (e.target.id === 'bookingModal') {
-                    closeModal();
-                }
+        // --- UI FLOW & MODAL LOGIC ---
+        const showScreen = (screenId) => {
+            [moodCheckinSection, actionButtonsSection, quickBookFlow, counsellorFlow].forEach(section => {
+                section.classList.remove('visible');
+                section.classList.add('hidden');
             });
+            const screen = document.getElementById(screenId);
+            if (screen) {
+                screen.classList.remove('hidden');
+                setTimeout(() => screen.classList.add('visible'), 50);
+            }
+        };
 
-            confirmBookingBtn.addEventListener('click', () => {
+        const openModal = (counsellorId) => {
+            selectedCounsellorId = parseInt(counsellorId);
+            const counsellor = allCounsellors.find(c => c.id === selectedCounsellorId);
+            if (!counsellor) return;
+            document.getElementById('modalCounsellorInfo').innerHTML = `<img src="${counsellor.photo}" alt="${counsellor.name}" class="w-16 h-16 rounded-full object-cover"><div><h4 class="text-lg font-semibold">${counsellor.name}</h4><p class="text-sm text-gray-600">${counsellor.specialization}</p></div>`;
+            timeSlotsContainer.innerHTML = '';
+            ["09:00 AM", "10:30 AM", "02:00 PM", "03:30 PM", "05:00 PM"].forEach(time => {
+                const slot = document.createElement('button');
+                slot.className = 'time-slot bg-gray-100 text-gray-700 py-2 px-3 rounded-lg border border-gray-200';
+                slot.textContent = time;
+                slot.addEventListener('click', () => {
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    slot.classList.add('selected');
+                });
+                timeSlotsContainer.appendChild(slot);
+            });
+            bookingModal.classList.remove('hidden');
+        };
+        const closeModal = () => bookingModal.classList.add('hidden');
+        const openSuccessModal = () => successModal.classList.remove('hidden');
+        const closeSuccessModal = () => successModal.classList.add('hidden');
+        const triggerConfetti = () => {
+            confettiContainer.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confettiContainer.appendChild(confetti);
+            }
+        };
+
+        // --- EVENT LISTENERS ---
+        [searchInput, specializationFilter, genderFilter, languageFilter, sortFilter].forEach(el =>
+            el.addEventListener('input', filterAndSortCounsellors)
+        );
+        emotionButtons.forEach(button => button.addEventListener("click", () => showScreen('action-buttons')));
+        quickBookBtn.addEventListener('click', () => showScreen('quick-book-flow'));
+        seeCounsellorsBtn.addEventListener('click', () => showScreen('counsellor-flow'));
+        document.body.addEventListener('click', e => { if (e.target.closest('.book-now-btn')) openModal(e.target.closest('.book-now-btn').dataset.id); });
+        closeModalBtn.addEventListener('click', closeModal);
+        bookingModal.addEventListener('click', e => { if (e.target === bookingModal) closeModal(); });
+        closeSuccessModalBtn.addEventListener("click", () => {
+            closeSuccessModal();
+            showScreen('mood-checkin-section');
+            quickBookingForm.reset();
+        });
+
+        anonymousToggle.addEventListener("change", () => {
+            const isAnonymous = anonymousToggle.checked;
+            identifiedFields.classList.toggle("hidden", isAnonymous);
+            anonymousAliasSection.classList.toggle("hidden", !isAnonymous);
+            identifiedFields.querySelectorAll("input").forEach(input => isAnonymous ? input.removeAttribute("required") : input.setAttribute("required", "true"));
+            if (isAnonymous) aliasNameSpan.textContent = aliases[Math.floor(Math.random() * aliases.length)];
+        });
+
+        quickBookingForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            loadingOverlay.classList.remove('hidden');
+            const is_anonymous = anonymousToggle.checked;
+            const name = is_anonymous ? null : document.getElementById("name").value;
+            const email = is_anonymous ? null : document.getElementById("email").value;
+            const alias = is_anonymous ? aliasNameSpan.textContent : null;
+            const booking_code = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            const bookingData = { is_anonymous, name, email, alias, booking_code,
+                reason: document.getElementById("reason").value,
+                specialization: document.getElementById("specialization").value,
+                language: document.getElementById("language").value,
+                session_date: document.getElementById("date").value,
+                session_time: document.getElementById("time").value,
+            };
+
+            const { data: counsellorData, error: counsellorError } = await supabaseClient.from('counsellors').select('id, name').limit(1);
+            if (counsellorError || !counsellorData.length) {
+                loadingOverlay.classList.add('hidden');
+                alert('Could not find an available counselor.');
+                return;
+            }
+            bookingData.counsellor_id = counsellorData[0].id;
+
+            const { error: insertError } = await supabaseClient.from('bookings').insert([bookingData]);
+            loadingOverlay.classList.add('hidden');
+
+            if (insertError) {
+                console.error("Quick booking error:", insertError);
+                alert("Failed to save booking. Please try again.");
+            } else {
+                summaryCounselor.textContent = counsellorData[0].name;
+                summaryAlias.textContent = is_anonymous ? alias : name;
+                summaryDatetime.textContent = `${bookingData.session_date} at ${bookingData.session_time}`;
+                summaryCode.textContent = bookingData.booking_code;
+                openSuccessModal();
+                triggerConfetti();
+            }
+        });
+
+        confirmBookingBtn.addEventListener('click', async () => {
+            const date = datePicker.value;
+            const selectedSlot = timeSlotsContainer.querySelector('.time-slot.selected');
+            if (!date || !selectedSlot) {
+                alert('Please select a date and a time slot.');
+                return;
+            }
+            const time = selectedSlot.textContent;
+            const booking_code = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            loadingOverlay.classList.remove('hidden');
+            const { error } = await supabaseClient.from('bookings').insert([{
+                counsellor_id: selectedCounsellorId,
+                session_date: date,
+                session_time: time,
+                is_anonymous: true,
+                alias: "Anonymous User",
+                booking_code
+            }]);
+            
+            loadingOverlay.classList.add('hidden');
+            if (error) {
+                console.error("Booking error:", error);
+                alert("Failed to confirm booking.");
+            } else {
+                const counsellor = allCounsellors.find(c => c.id === selectedCounsellorId);
+                summaryCounselor.textContent = counsellor.name;
+                summaryAlias.textContent = "Anonymous User";
+                summaryDatetime.textContent = `${date} at ${time}`;
+                summaryCode.textContent = booking_code;
                 closeModal();
-                loadingOverlay.classList.remove('hidden');
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
-                    openSuccessModal();
-                }, 1500);
-            });
-
-
-            // Set min date for date picker to today
-            const today = new Date().toISOString().split('T')[0];
-            datePicker.setAttribute('min', today);
-
-
-            //
-            // All event handlers and initial state setup
-            //
-            const moodCheckinSection = document.getElementById('mood-checkin-section');
-            const actionButtonsSection = document.getElementById('action-buttons');
-            const quickBookFlow = document.getElementById('quick-book-flow');
-            const counsellorFlow = document.getElementById('counsellor-flow');
-            
-            
-            
-
-
-            seeCounsellorsBtn.addEventListener('click', () => {
-                moodCheckinSection.classList.add('hidden');
-                actionButtonsSection.classList.add('hidden');
-                quickBookFlow.classList.add('hidden');
-                counsellorFlow.classList.remove('hidden');
-            });
-
-            // "Quick Book" Modal functionality
-            quickBookBtn.addEventListener('click', () => {
-                moodCheckinSection.classList.add('hidden');
-                actionButtonsSection.classList.add('hidden');
-                quickBookFlow.classList.remove('hidden');
-                counsellorFlow.classList.add('hidden');
-                document.getElementById('progressBar').style.width = '0%';
-                document.getElementById('quickBookingForm').reset();
-            });
-            
-            // Mood buttons listener
-            emotionButtons.forEach((button) => {
-                button.addEventListener("click", () => {
-                    moodCheckinSection.classList.add('hidden');
-                    actionButtonsSection.classList.remove('hidden');
-                    quickBookFlow.classList.add('hidden');
-                    counsellorFlow.classList.add('hidden');
-                });
-            });
-
-            // Anonymous toggle logic
-            anonymousToggle.addEventListener("change", () => {
-                if (anonymousToggle.checked) {
-                    identifiedFields.classList.add("hidden");
-                    anonymousAliasSection.classList.remove("hidden");
-                    identifiedFields.querySelectorAll("input").forEach((input) => input.removeAttribute("required"));
-                    const randomAlias = aliases[Math.floor(Math.random() * aliases.length)];
-                    aliasNameSpan.textContent = randomAlias;
-                } else {
-                    identifiedFields.classList.remove("hidden");
-                    anonymousAliasSection.classList.add("hidden");
-                    identifiedFields.querySelectorAll("input").forEach((input) => input.setAttribute("required", "true"));
-                }
-            });
-
-            // Quick Booking form submission logic
-            quickBookingForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-                const specialization = document.getElementById("specialization").value;
-                const language = document.getElementById("language").value;
-                const date = document.getElementById("date").value;
-                const time = document.getElementById("time").value;
-
-                loadingOverlay.classList.remove('hidden');
-
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
-                    const counselor = "Sarah K.";
-                    summaryAlias.textContent = anonymousToggle.checked ? aliasNameSpan.textContent : document.getElementById("name").value;
-                    summaryCounselor.textContent = counselor;
-                    summaryDatetime.textContent = `${date} at ${time}`;
-                    summaryCode.textContent = Math.random().toString(36).substring(2, 8).toUpperCase();
-                    successModal.classList.remove('hidden');
-                    
-                    confettiContainer.innerHTML = '';
-                    for (let i = 0; i < 50; i++) {
-                        const confetti = document.createElement("div");
-                        confetti.classList.add("confetti");
-                        confetti.style.left = `${Math.random() * 100}vw`;
-                        confetti.style.animationDelay = `${Math.random() * 2}s`;
-                        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                        confettiContainer.appendChild(confetti);
-                    }
-                }, 2000);
-            });
-
-            // Emergency button logic
-            emergencyBtn.addEventListener("click", () => {
-                emergencyMessage.classList.add('show');
-                setTimeout(() => {
-                    emergencyMessage.classList.remove('show');
-                }, 10000);
-            });
-            
-        
-
-            // Set up initial state of the UI
-            moodCheckinSection.classList.remove('hidden');
-            actionButtonsSection.classList.add('hidden');
-            quickBookFlow.classList.add('hidden');
-            counsellorFlow.classList.add('hidden');
+                openSuccessModal();
+                triggerConfetti();
+            }
         });
-    </script>
+
+        emergencyBtn.addEventListener("click", () => {
+            emergencyMessage.classList.add('show');
+            setTimeout(() => emergencyMessage.classList.remove('show'), 10000);
+        });
+        
+        // --- INITIALIZATION ---
+        datePicker.setAttribute('min', new Date().toISOString().split('T')[0]);
+        showScreen('mood-checkin-section');
+        fetchCounsellors();
+    });
+</script>
+</body>
+</html>
 </body>
 </html>

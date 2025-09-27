@@ -77,20 +77,20 @@
               class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
             ></i>
             <input
-              type="text"
-              placeholder="Search MannMitra"
-              class="w-full py-2.5 pl-12 pr-4 rounded-full border border-gray-300 bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 transition-all duration-300"
-            />
+  id="searchInput" type="text"
+  placeholder="Search MannMitra"
+  class="w-full py-2.5 pl-12 pr-4 rounded-full border border-gray-300 bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 transition-all duration-300"
+/>
           </div>
         </div>
         <div class="flex items-center gap-4">
-          <a
-            href="#"
-            class="text-gray-600 hover:text-green-600 transition-colors duration-300"
-            aria-label="Notifications"
-          >
-            <i class="fa-regular fa-bell text-xl"></i>
-          </a>
+         <a
+  href="#"
+  id="notificationBtn" class="text-gray-600 hover:text-green-600 transition-colors duration-300"
+  aria-label="Notifications"
+>
+  <i class="fa-regular fa-bell text-xl"></i>
+</a>
           <button
             id="createPostBtn"
             class="bg-green-600 text-white px-4 py-2 rounded-full font-medium border border-green-600 hover:bg-green-500 transition-colors duration-300 text-sm"
@@ -495,454 +495,570 @@
       </div>
     </div>
 
-    <script>
-      // --- 1. CONFIG & DOM ELEMENTS ---
-      const API_BASE_URL = "http://localhost:5000";
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // --- 1. SUPABASE SETUP ---
+    const supabaseUrl = "https://nrjxvuzhvfvxpvdvrxdf.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yanh2dXpodmZ2eHB2ZHZyeGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjcwMjUsImV4cCI6MjA3MzEwMzAyNX0.hCga9sEp1hLuRFcAzpbz0rePyaQYUNu2DWCpBe2SGxg";
 
-      // --- Form & Modal Elements ---
-      const postForm = document.getElementById("postForm");
-      const postInput = document.getElementById("postInput");
-      const categorySelect = document.getElementById("categorySelect");
-      const mediaInput = document.getElementById("mediaInput");
-      const anonymousCheck = document.getElementById("anonymousCheck");
-      const createPostBtn = document.getElementById("createPostBtn");
-      const createPostModal = document.getElementById("createPostModal");
-      const closeCreateModal = document.getElementById("closeCreateModal");
+    // Initialize the Supabase client
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-      // --- Post Display & Filtering ---
-      const postsContainer = document.getElementById("postsContainer");
-      const postFilterBtns = document.querySelectorAll(".post-filter-btn");
-      const tagFilterBtns = document.querySelectorAll(".tag-filter-btn");
-      const navLinks = document.querySelectorAll(".nav-link");
 
-      // --- Post Detail Modal Elements ---
-      const postModal = document.getElementById("postModal");
-      const closeModal = document.getElementById("closeModal");
-      const modalContent = document.getElementById("modalContent");
-      const commentsList = document.getElementById("commentsList");
-      const commentInput = document.getElementById("commentInput");
-      const commentSubmit = document.getElementById("commentSubmit");
+    // --- 2. ELEMENT SELECTORS ---
+    const postForm = document.getElementById("postForm");
+    const postInput = document.getElementById("postInput");
+    const categorySelect = document.getElementById("categorySelect");
+    const mediaInput = document.getElementById("mediaInput");
+    const anonymousCheck = document.getElementById("anonymousCheck");
+    const createPostBtn = document.getElementById("createPostBtn");
+    const createPostModal = document.getElementById("createPostModal");
+    const closeCreateModal = document.getElementById("closeCreateModal");
+    const searchInput = document.getElementById("searchInput");
 
-      // --- Sidebar Elements ---
-      const leaderboardList = document.getElementById("leaderboardList");
-      const trendingList = document.getElementById("trendingList");
+    const postsContainer = document.getElementById("postsContainer");
+    const postFilterBtns = document.querySelectorAll(".post-filter-btn");
+    const tagFilterBtns = document.querySelectorAll(".tag-filter-btn");
+    const navLinks = document.querySelectorAll(".nav-link");
 
-      // --- Profile Dropdown Elements ---
-      const profileBtn = document.getElementById("profileBtn");
-      const profileDropdown = document.getElementById("profileDropdown");
+    const postModal = document.getElementById("postModal");
+    const closeModal = document.getElementById("closeModal");
+    const modalContent = document.getElementById("modalContent");
+    const commentsList = document.getElementById("commentsList");
+    const commentInput = document.getElementById("commentInput");
+    const commentSubmit = document.getElementById("commentSubmit");
 
-      // --- 2. STATE MANAGEMENT ---
-      let currentCategory = "Home";
-      let currentPostId = null;
-      let currentFilterType = "All";
-      let currentFilterTag = null;
+    const leaderboardList = document.getElementById("leaderboardList");
+    const trendingList = document.getElementById("trendingList");
 
-      // --- 3. HELPER FUNCTIONS ---
-      function formatDate(dateString) {
+    const profileBtn = document.getElementById("profileBtn");
+    const profileDropdown = document.getElementById("profileDropdown");
+    
+
+    // --- 3. STATE MANAGEMENT ---
+    let currentCategory = "Home";
+    let currentPostId = null;
+    let currentFilterType = "All";
+    let currentFilterTag = null;
+
+    // --- 4. HELPER FUNCTIONS ---
+    function formatDate(dateString) {
         return new Date(dateString).toLocaleString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
         });
-      }
+    }
+    const notificationBtn = document.getElementById("notificationBtn");
 
-      // --- 4. RENDER FUNCTIONS ---
-      function renderPosts(posts) {
-        postsContainer.innerHTML = "";
-        if (!Array.isArray(posts) || posts.length === 0) {
-          postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">No posts found for this category.</p>`;
-          return;
-        }
-        posts.forEach((post) => {
-          const postTypeBadge = post.is_verified
-            ? `<span class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full">🟢 Official</span>`
-            : `<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">🔵 Peer Post</span>`;
+    // Add this with your other event listeners
+    notificationBtn.addEventListener("click", () => {
+      alert("You will be notified!");
+    });
+    
 
-          const tagBadges =
-            post.tags && Array.isArray(post.tags)
-              ? post.tags
-                  .map(
-                    (tag) =>
-                      `<span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">#${tag}</span>`
-                  )
-                  .join("")
-              : "";
+    // Add this with your other event listeners
+    searchInput.addEventListener("input", () => {
+      loadPosts(); // Reload posts every time the user types
+    });
+    async function handleVote(postId, voteChange) {
+    try {
+        // Step 1: Get the current number of upvotes from the database
+        const { data: post, error: fetchError } = await supabaseClient
+            .from('posts')
+            .select('upvotes')
+            .eq('id', postId)
+            .single();
 
-          const div = document.createElement("div");
-          div.className =
-            "post-card bg-white text-gray-800 p-4 rounded-lg shadow-md border border-gray-200 hover:border-green-500 transition-all duration-300 animate-fade-in cursor-pointer";
-          div.dataset.id = post._id; // Use _id from MongoDB
+        if (fetchError) throw fetchError;
 
-          div.innerHTML = `
-      <div class="flex items-start gap-4">
-        <div class="vote-buttons flex flex-col items-center mt-2">
-          <button class="vote-up text-gray-400 hover:text-green-600 transition-colors duration-200 text-xl"><i class="fa-solid fa-arrow-up"></i></button>
-          <span class="votes font-semibold text-lg my-1 text-gray-800">${
-            post.upvotes || 0
-          }</span>
-          <button class="vote-down text-gray-400 hover:text-red-600 transition-colors duration-200 text-xl"><i class="fa-solid fa-arrow-down"></i></button>
-        </div>
-        <div class="flex-1">
-          <div class="flex items-center gap-2 mb-2 flex-wrap">
-            ${postTypeBadge}
-            <span class="text-xs text-gray-500">• Posted by u/${
-              post.pseudonym || "Anonymous"
-            }</span>
-            <span class="text-xs text-gray-500">• ${formatDate(
-              post.createdAt
-            )}</span>
-          </div>
-          <h3 class="text-lg font-semibold mb-2 leading-tight text-gray-900">${
-            post.title || "Untitled Post"
-          }</h3>
-          <p class="text-sm text-gray-700 leading-relaxed line-clamp-3">${
-            post.content
-          }</p>
-          ${
-            post.media_url
-              ? `<div class="mt-4"><img src="${post.media_url}" alt="Post image" class="rounded-lg max-h-64 w-full object-cover shadow-md"/></div>`
-              : ""
-          }
-          <div class="flex items-center gap-2 mt-4 flex-wrap">${tagBadges}</div>
-          <div class="flex items-center gap-4 mt-4 text-gray-600 text-sm">
-            <span><i class="fa-solid fa-comment-dots mr-2"></i> ${
-              post.comments_count || 0
-            } Comments</span>
-          </div>
-        </div>
-      </div>`;
+        // Calculate the new vote count, handling nulls by treating them as 0
+        const currentUpvotes = post.upvotes || 0;
+        const newUpvotes = currentUpvotes + voteChange;
 
-          div.addEventListener("click", (e) => {
-            // Prevent modal from opening when clicking vote buttons
-            if (!e.target.closest(".vote-buttons")) {
-              openPostModal(post);
+        // Step 2: Update the post in the database with the new count
+        const { error: updateError } = await supabaseClient
+            .from('posts')
+            .update({ upvotes: newUpvotes })
+            .eq('id', postId);
+
+        if (updateError) throw updateError;
+
+        // Step 3: Update the number on the screen instantly
+        const postCard = document.querySelector(`.post-card[data-id="${postId}"]`);
+        if (postCard) {
+            const votesSpan = postCard.querySelector('.votes');
+            if (votesSpan) {
+                votesSpan.textContent = newUpvotes;
             }
-          });
-          postsContainer.appendChild(div);
-        });
-      }
+        }
+    } catch (error) {
+        console.error('Error handling vote:', error);
+        alert('Could not update vote. Please try again.');
+    }
+}
 
-      function renderComments(comments) {
+    // --- 5. RENDER FUNCTIONS ---
+    function renderPosts(posts) {
+    postsContainer.innerHTML = "";
+    if (!Array.isArray(posts) || posts.length === 0) {
+        postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">No posts found for this category.</p>`;
+        return;
+    }
+    posts.forEach((post) => {
+        const postTypeBadge = post.is_verified ?
+            `<span class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full">🟢 Official</span>` :
+            `<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">🔵 Peer Post</span>`;
+
+        const tagBadges = post.category ?
+            `<span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">#${post.category}</span>` :
+            "";
+
+        const div = document.createElement("div");
+        div.className =
+            "post-card bg-white text-gray-800 p-4 rounded-lg shadow-md border border-gray-200 hover:border-green-500 transition-all duration-300 animate-fade-in";
+        div.dataset.id = post.id;
+
+        div.innerHTML = `
+            <div class="flex items-start gap-4">
+                <div class="vote-buttons flex flex-col items-center mt-2">
+                    <button class="vote-up text-gray-400 hover:text-green-600 transition-colors duration-200 text-xl"><i class="fa-solid fa-arrow-up"></i></button>
+                    <span class="votes font-semibold text-lg my-1 text-gray-800">${
+                      post.upvotes || 0
+                    }</span>
+                    <button class="vote-down text-gray-400 hover:text-red-600 transition-colors duration-200 text-xl"><i class="fa-solid fa-arrow-down"></i></button>
+                </div>
+                <div class="flex-1 cursor-pointer">
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                        ${postTypeBadge}
+                        <span class="text-xs text-gray-500">• Posted by ${
+                          post.pseudonym || "Anonymous"
+                        }</span>
+                        <span class="text-xs text-gray-500">• ${formatDate(
+                          post.created_at
+                        )}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 leading-tight text-gray-900">${
+                      post.title || "Untitled Post"
+                    }</h3>
+                    <p class="text-sm text-gray-700 leading-relaxed line-clamp-3">${
+                      post.content
+                    }</p>
+                    ${
+                      post.media_url
+                        ? `<div class="mt-4"><img src="${post.media_url}" alt="Post image" class="rounded-lg max-h-64 w-full object-cover shadow-md"/></div>`
+                        : ""
+                    }
+                    <div class="flex items-center gap-2 mt-4 flex-wrap">${tagBadges}</div>
+                    <div class="flex items-center gap-4 mt-4 text-gray-600 text-sm">
+                        <span><i class="fa-solid fa-comment-dots mr-2"></i> ${
+                          post.comments_count || 0
+                        } Comments</span>
+                    </div>
+                </div>
+            </div>`;
+
+        postsContainer.appendChild(div);
+
+        // Make the post content clickable to open the modal
+        const postContentArea = div.querySelector('.flex-1');
+        postContentArea.addEventListener('click', () => {
+            openPostModal(post);
+        });
+
+        // Add event listeners for the new vote buttons
+        const upvoteBtn = div.querySelector('.vote-up');
+        const downvoteBtn = div.querySelector('.vote-down');
+        
+        upvoteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevents the modal from opening when you vote
+            handleVote(post.id, 1); // +1 for upvote
+        });
+
+        downvoteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevents the modal from opening when you vote
+            handleVote(post.id, -1); // -1 for downvote
+        });
+    });
+}
+    function renderComments(comments) {
         commentsList.innerHTML = "";
         if (comments.length === 0) {
-          commentsList.innerHTML = `<p class="text-gray-500 text-sm text-center">No comments yet. Be the first to reply!</p>`;
-          return;
+            commentsList.innerHTML = `<p class="text-gray-500 text-sm text-center">No comments yet. Be the first to reply!</p>`;
+            return;
         }
         comments.forEach((comment) => {
-          const commentDiv = document.createElement("div");
-          commentDiv.className = "bg-gray-100 p-3 rounded-lg";
-          commentDiv.innerHTML = `
-            <div class="flex items-center justify-between mb-1">
-                <span class="font-semibold text-sm text-gray-800">u/${
-                  comment.pseudonym || "Anonymous"
-                }</span>
-                <span class="text-xs text-gray-500">${formatDate(
-                  comment.createdAt
-                )}</span>
-            </div>
-            <p class="text-sm text-gray-700">${comment.content}</p>
-        `;
-          commentsList.appendChild(commentDiv);
+            const commentDiv = document.createElement("div");
+            commentDiv.className = "bg-gray-100 p-3 rounded-lg";
+            commentDiv.innerHTML = `
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-semibold text-sm text-gray-800">${
+                      comment.pseudonym || "Anonymous"
+                    }</span>
+                    <span class="text-xs text-gray-500">${formatDate(
+                      comment.created_at
+                    )}</span>
+                </div>
+                <p class="text-sm text-gray-700">${comment.content}</p>
+            `;
+            commentsList.appendChild(commentDiv);
         });
-      }
+    }
 
-      // --- 5. API INTERACTIONS ---
-      async function loadPosts() {
-        postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">Loading posts...</p>`;
+    // --- 6. API INTERACTIONS ---
+   async function loadPosts() {
+    postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">Loading posts...</p>`;
+    const searchTerm = searchInput.value.trim();
 
-        // Build the URL with query parameters for filtering and sorting
-        let url = new URL(`${API_BASE_URL}/posts`);
+    try {
+        // Step A: Call our new Supabase function to get posts with accurate counts
+        const { data: allPosts, error: rpcError } = await supabaseClient.rpc("get_posts_with_counts");
+
+        if (rpcError) throw rpcError;
+
+        // Step B: Apply all our existing filters and sorting using JavaScript
+        let posts = allPosts;
+
+        if (searchTerm) {
+            posts = posts.filter(p => p.content && p.content.toLowerCase().includes(searchTerm.toLowerCase()));
+        }
+
         if (
-          currentCategory &&
-          currentCategory !== "Home" &&
-          currentCategory !== "All"
+            currentCategory &&
+            currentCategory !== "Home" &&
+            currentCategory !== "All" &&
+            currentCategory !== "Popular"
         ) {
-          url.searchParams.append("category", currentCategory);
+            posts = posts.filter(p => p.category === currentCategory);
         }
+
         if (currentFilterType !== "All") {
-          const isVerified = currentFilterType === "Official";
-          url.searchParams.append("is_verified", isVerified);
+            const isVerified = currentFilterType === "Official";
+            posts = posts.filter(p => p.is_verified === isVerified);
         }
+        
         if (currentFilterTag) {
-          url.searchParams.append("tag", currentFilterTag);
+            posts = posts.filter(p => p.category === currentFilterTag);
         }
+
         if (currentCategory === "Popular") {
-          url.searchParams.append("sort", "popular");
+            posts.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        } else {
+            posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         }
 
-        try {
-          const res = await fetch(url);
-          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-          const posts = await res.json();
-          renderPosts(posts);
-        } catch (err) {
-          console.error("Error fetching posts:", err);
-          postsContainer.innerHTML = `<p class="text-center text-red-500 mt-8">Failed to load posts. Please ensure your backend server is running on ${API_BASE_URL}.</p>`;
-        }
-      }
+        renderPosts(posts);
 
-      async function createPost(e) {
+    } catch (err) {
+        console.error("Error fetching posts:", err);
+        postsContainer.innerHTML = `<p class="text-center text-red-500 mt-8">Failed to load posts. Check your Supabase function and RLS policies.</p>`;
+    }
+}
+
+    async function createPost(e) {
         e.preventDefault();
         const content = postInput.value.trim();
         const mediaFile = mediaInput.files[0];
+
         if (!content && !mediaFile) {
-          return alert("Please enter some content or upload an image!");
+            return alert("Please enter some content or upload an image!");
         }
 
-        // Use FormData to correctly handle file uploads
-        const formData = new FormData();
-        formData.append("content", content);
-        formData.append("category", categorySelect.value);
-        formData.append("is_anonymous", anonymousCheck.checked);
+        let mediaUrl = null;
+
         if (mediaFile) {
-          formData.append("media", mediaFile);
+            const filePath = `public/${Date.now()}-${mediaFile.name}`;
+            const { error: uploadError } = await supabaseClient.storage
+                .from("media")
+                .upload(filePath, mediaFile);
+
+            if (uploadError) {
+                console.error("Error uploading file:", uploadError);
+                return alert("Failed to upload image.");
+            }
+
+            const { data } = supabaseClient.storage
+                .from("media")
+                .getPublicUrl(filePath);
+            mediaUrl = data.publicUrl;
         }
 
-        try {
-          const response = await fetch(`${API_BASE_URL}/posts`, {
-            method: "POST",
-            body: formData, // When using FormData, the browser automatically sets the 'Content-Type' header
-          });
+        let postTitle = content.split(" ").slice(0, 10).join(" ");
+        if (content.split(" ").length > 10) {
+            postTitle += "...";
+        }
+        if (!postTitle && mediaFile) {
+            postTitle = "A new image was posted";
+        }
+        
+        // CORRECTED: Removed the 'tags' field to match your database schema
+        const postData = {
+            title: postTitle,
+            content: content,
+            category: categorySelect.value,
+            media_url: mediaUrl,
+        };
+        
+        const { error: insertError } = await supabaseClient
+            .from("posts")
+            .insert([postData]);
 
-          if (response.ok) {
-            //alert("Post created successfully!");
+        if (insertError) {
+            console.error("Error creating post:", insertError);
+            alert(`Failed to create post: ${insertError.message}`);
+        } else {
             postForm.reset();
             createPostModal.classList.add("hidden");
             document.body.style.overflow = "auto";
-            loadPosts(); // Refresh the post list
-          } else {
-            const errorData = await response.json();
-            console.error("Failed to create post:", errorData);
-            alert(
-              `Failed to create post: ${errorData.message || "Unknown error"}`
-            );
-          }
-        } catch (error) {
-          console.error("Error creating post:", error);
-          alert("Network error: Could not connect to the server.");
+            loadPosts();
         }
-      }
+    }
 
-      async function loadComments(postId) {
+    async function loadComments(postId) {
         commentsList.innerHTML = `<p class="text-gray-500 text-sm text-center">Loading comments...</p>`;
         try {
-          const res = await fetch(`${API_BASE_URL}/posts/${postId}/comments`);
-          if (!res.ok) throw new Error("Failed to fetch comments");
-          const comments = await res.json();
-          renderComments(comments);
+            const { data: comments, error } = await supabaseClient
+                .from("comments")
+                .select("*")
+                .eq("post_id", postId)
+                .order("created_at", { ascending: true });
+
+            if (error) throw error;
+            renderComments(comments);
         } catch (error) {
-          console.error("Error loading comments:", error);
-          commentsList.innerHTML = `<p class="text-red-500 text-sm text-center">Could not load comments.</p>`;
+            console.error("Error loading comments:", error);
+            commentsList.innerHTML = `<p class="text-red-500 text-sm text-center">Could not load comments.</p>`;
         }
-      }
+    }
 
-      async function submitComment() {
-        const content = commentInput.value.trim();
-        if (!content || !currentPostId) return;
 
-        try {
-          const response = await fetch(
-            `${API_BASE_URL}/posts/${currentPostId}/comments`,
+    async function submitComment() {
+    const content = commentInput.value.trim();
+    
+    // Ensure that a post is currently open before trying to comment
+    if (!content || !currentPostId) {
+        return;
+    }
+
+    try {
+        const { error } = await supabaseClient.from("comments").insert([
             {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ content }),
-            }
-          );
+                content: content,
+                post_id: currentPostId, // This explicitly links the comment to the open post
+            },
+        ]);
 
-          if (response.ok) {
+        if (error) {
+            throw error;
+        } else {
             commentInput.value = "";
-            loadComments(currentPostId); // Refresh the comments list
-          } else {
-            alert("Failed to post comment.");
-          }
-        } catch (error) {
-          console.error("Error submitting comment:", error);
-          alert("Could not submit comment.");
+            loadComments(currentPostId); // Reload comments in the modal
+            loadPosts();                // Reload all posts to update the count
         }
-      }
+    } catch (error) {
+        console.error("Error submitting comment:", error);
+        alert("Could not submit comment.");
+    }
+}
 
-      async function updateSidebars() {
-        // Fetch and render leaderboard from the API
-        try {
-          const res = await fetch(`${API_BASE_URL}/leaderboard`);
-          const users = await res.json();
-          leaderboardList.innerHTML = users
-            .slice(0, 5)
+    async function updateSidebars() {
+        const demoLeaderboard = [{
+            pseudonym: "WellnessWarrior",
+            points: 1250
+        }, {
+            pseudonym: "MindfulMaven",
+            points: 1180
+        }, {
+            pseudonym: "StudySage",
+            points: 995
+        }, {
+            pseudonym: "AnxietyAlly",
+            points: 950
+        }, {
+            pseudonym: "ZenMaster",
+            points: 870
+        }, ];
+
+        leaderboardList.innerHTML = demoLeaderboard
             .map(
-              (user, index) => `
-            <li class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
-                <div class="flex items-center gap-3">
-                    <span class="font-bold text-green-600">#${index + 1}</span>
-                    <span class="font-medium text-gray-800">${
-                      user.pseudonym
-                    }</span>
-                </div>
-                <span class="text-sm text-gray-500">${user.points} Points</span>
-            </li>
-        `
+                (user, index) => `
+                <li class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-green-600">#${
+                          index + 1
+                        }</span>
+                        <span class="font-medium text-gray-800">${
+                          user.pseudonym
+                        }</span>
+                    </div>
+                    <span class="text-sm text-gray-500">${
+                      user.points
+                    } Points</span>
+                </li>
+                `
             )
             .join("");
-        } catch (error) {
-          leaderboardList.innerHTML = `<p class="text-xs text-red-500">Could not load helpers.</p>`;
-          console.error("Failed to fetch leaderboard:", error);
-        }
 
-        // Fetch and render trending communities from the API
         try {
-          const res = await fetch(`${API_BASE_URL}/trending`);
-          const topics = await res.json();
-          trendingList.innerHTML = topics
-            .slice(0, 4)
-            .map(
-              (topic) => `
-            <li class="trending-item flex items-center justify-between bg-gray-100 p-3 rounded-lg cursor-pointer" data-category="${topic.category}">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-heart-pulse text-green-600"></i>
-                    <span class="font-medium text-gray-800">r/${topic.category}</span>
-                </div>
-                <span class="text-xs text-gray-500">${topic.count} Posts</span>
-            </li>
-        `
-            )
-            .join("");
-        } catch (error) {
-          trendingList.innerHTML = `<p class="text-xs text-red-500">Could not load communities.</p>`;
-          console.error("Failed to fetch trending topics:", error);
-        }
-      }
+            const {
+                data: topics,
+                error
+            } = await supabaseClient.rpc(
+                "get_trending_topics"
+            );
+            if (error) throw error;
 
-      // --- 6. MODAL & UI LOGIC ---
-      function openPostModal(post) {
-        currentPostId = post._id; // Set the current post ID for comment submission
-        const postTypeBadge = post.is_verified
-          ? `<span class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full">🟢 Official</span>`
-          : `<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">🔵 Peer Post</span>`;
+            trendingList.innerHTML = topics
+                .map(
+                    (topic) => `
+                    <li class="trending-item flex items-center justify-between bg-gray-100 p-3 rounded-lg cursor-pointer" data-category="${topic.category}">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-heart-pulse text-green-600"></i>
+                            <span class="font-medium text-gray-800">r/${topic.category}</span>
+                        </div>
+                        <span class="text-xs text-gray-500">${topic.count} Posts</span>
+                    </li>
+                    `
+                )
+                .join("");
+        } catch (error) {
+            trendingList.innerHTML = `<p class="text-xs text-red-500">Could not load communities.</p>`;
+            console.error("Failed to fetch trending topics:", error);
+        }
+    }
+
+
+    // --- 7. MODAL & UI LOGIC ---
+    function openPostModal(post) {
+        currentPostId = post.id;
+        const postTypeBadge = post.is_verified ?
+            `<span class="bg-green-100 text-green-600 text-xs font-medium px-2 py-1 rounded-full">🟢 Official</span>` :
+            `<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">🔵 Peer Post</span>`;
 
         modalContent.innerHTML = `
-    <div class="flex items-center gap-4 mb-4">
-      <div class="flex-1">
-        <div class="flex items-center gap-2 mb-2 flex-wrap">
-          ${postTypeBadge}
-          <span class="text-xs font-medium text-gray-600">r/${
-            post.category
-          }</span>
-        </div>
-        <h2 class="text-3xl font-bold mb-1 leading-tight text-gray-900">${
-          post.title || "Untitled Post"
-        }</h2>
-        <span class="text-sm text-gray-500">Posted by u/${
-          post.pseudonym || "Anonymous"
-        } on ${formatDate(post.createdAt)}</span>
-      </div>
-    </div>
-    <p class="text-base text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">${
-      post.content
-    }</p>
-    ${
-      post.media_url
-        ? `<div class="my-4"><img src="${post.media_url}" alt="Post image" class="rounded-lg max-h-[400px] w-full object-contain shadow-sm"/></div>`
-        : ""
-    }
-    <div class="text-sm font-medium text-gray-600 border-t border-gray-200 pt-4">
-      <span class="font-bold">${
-        post.upvotes || 0
-      } peers found this helpful</span>
-    </div>`;
+            <div class="flex items-center gap-4 mb-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                        ${postTypeBadge}
+                        <span class="text-xs font-medium text-gray-600">r/${
+                          post.category
+                        }</span>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-1 leading-tight text-gray-900">${
+                      post.title || "Untitled Post"
+                    }</h2>
+                    <span class="text-sm text-gray-500">Posted by ${
+                      post.pseudonym || "Anonymous"
+                    } on ${formatDate(post.created_at)}</span>
+                </div>
+            </div>
+            <p class="text-base text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">${
+              post.content
+            }</p>
+            ${
+              post.media_url
+                ? `<div class="my-4"><img src="${post.media_url}" alt="Post image" class="rounded-lg max-h-[400px] w-full object-contain shadow-sm"/></div>`
+                : ""
+            }
+            <div class="text-sm font-medium text-gray-600 border-t border-gray-200 pt-4">
+                <span class="font-bold">${
+                  post.upvotes || 0
+                } peers found this helpful</span>
+            </div>`;
 
         postModal.classList.remove("hidden");
         document.body.style.overflow = "hidden";
-        loadComments(post._id); // Fetch comments for this specific post
-      }
+        loadComments(post.id);
+    }
 
-      function closeModalAndReset() {
+    function closeModalAndReset() {
         postModal.classList.add("hidden");
         document.body.style.overflow = "auto";
         currentPostId = null;
         commentsList.innerHTML = "";
         commentInput.value = "";
-      }
+    }
 
-      // --- 7. EVENT LISTENERS ---
-      profileBtn.addEventListener("click", () =>
+    // --- 8. EVENT LISTENERS ---
+    profileBtn.addEventListener("click", () =>
         profileDropdown.classList.toggle("hidden")
-      );
-      window.addEventListener("click", (e) => {
+    );
+    window.addEventListener("click", (e) => {
         if (
-          !profileBtn.contains(e.target) &&
-          !profileDropdown.contains(e.target)
+            !profileBtn.contains(e.target) &&
+            !profileDropdown.contains(e.target)
         ) {
-          profileDropdown.classList.add("hidden");
+            profileDropdown.classList.add("hidden");
         }
-      });
+    });
 
-      createPostBtn.addEventListener("click", () => {
+    createPostBtn.addEventListener("click", () => {
         createPostModal.classList.remove("hidden");
         document.body.style.overflow = "hidden";
-      });
-      closeCreateModal.addEventListener("click", () => {
+    });
+    closeCreateModal.addEventListener("click", () => {
         createPostModal.classList.add("hidden");
         document.body.style.overflow = "auto";
-      });
+    });
 
-      postFilterBtns.forEach((btn) => {
+    postFilterBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
-          postFilterBtns.forEach((b) => {
-            b.classList.remove("bg-green-600", "text-white");
-            b.classList.add("bg-gray-200", "text-gray-600");
-          });
-          btn.classList.add("bg-green-600", "text-white");
-          btn.classList.remove("bg-gray-200", "text-gray-600");
-          currentFilterType = btn.dataset.type;
-          loadPosts();
+            postFilterBtns.forEach((b) => {
+                b.classList.remove("bg-green-600", "text-white");
+                b.classList.add("bg-gray-200", "text-gray-600");
+            });
+            btn.classList.add("bg-green-600", "text-white");
+            btn.classList.remove("bg-gray-200", "text-gray-600");
+            currentFilterType = btn.dataset.type;
+            loadPosts();
         });
-      });
+    });
 
-      tagFilterBtns.forEach((btn) => {
+    tagFilterBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
-          if (currentFilterTag === btn.dataset.tag) {
-            btn.classList.remove("bg-green-500", "text-white");
-            currentFilterTag = null;
-          } else {
-            tagFilterBtns.forEach((b) =>
-              b.classList.remove("bg-green-500", "text-white")
-            );
-            btn.classList.add("bg-green-500", "text-white");
-            currentFilterTag = btn.dataset.tag;
-          }
-          loadPosts();
+            if (currentFilterTag === btn.dataset.tag) {
+                btn.classList.remove("bg-green-500", "text-white");
+                currentFilterTag = null;
+            } else {
+                tagFilterBtns.forEach((b) =>
+                    b.classList.remove("bg-green-500", "text-white")
+                );
+                btn.classList.add("bg-green-500", "text-white");
+                currentFilterTag = btn.dataset.tag;
+            }
+            loadPosts();
         });
-      });
+    });
 
-      navLinks.forEach((link) => {
+    navLinks.forEach((link) => {
         link.addEventListener("click", (e) => {
-          e.preventDefault();
-          navLinks.forEach((l) => {
-            l.classList.remove("bg-green-600", "text-white");
-            l.classList.add("text-gray-600", "hover:bg-gray-200");
-          });
-          link.classList.add("bg-green-600", "text-white");
-          link.classList.remove("text-gray-600", "hover:bg-gray-200");
-          currentCategory = link.dataset.category;
-          loadPosts();
+            e.preventDefault();
+            navLinks.forEach((l) => {
+                l.classList.remove("bg-green-600", "text-white");
+                l.classList.add("text-gray-600", "hover:bg-gray-200");
+            });
+            link.classList.add("bg-green-600", "text-white");
+            link.classList.remove("text-gray-600", "hover:bg-gray-200");
+            currentCategory = link.dataset.category;
+            loadPosts();
         });
-      });
+    });
 
-      closeModal.addEventListener("click", closeModalAndReset);
-      commentSubmit.addEventListener("click", submitComment);
-      commentInput.addEventListener("keyup", (e) => {
+    closeModal.addEventListener("click", closeModalAndReset);
+    commentSubmit.addEventListener("click", submitComment);
+    commentInput.addEventListener("keyup", (e) => {
         if (e.key === "Enter") submitComment();
-      });
+    });
 
-      postForm.addEventListener("submit", createPost);
+    postForm.addEventListener("submit", createPost);
 
-      // --- 8. INITIALIZATION ---
-      document.addEventListener("DOMContentLoaded", () => {
+    // --- 9. INITIALIZATION ---
+    document.addEventListener("DOMContentLoaded", () => {
         loadPosts();
         updateSidebars();
-      });
-    </script>
+    });
+</script>
   </body>
 </html>
