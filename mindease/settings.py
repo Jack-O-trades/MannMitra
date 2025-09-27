@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY",'django-insecure-@12v&!9z%!+10#326r8a_k-i!6kqj0m&g0b3d8y!p%d2og4sz$')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True,
+DEBUG = False,
 
 ALLOWED_HOSTS = [os.environ.get('VERCEL_URL'), '.vercel.app', '127.0.0.1', 'localhost']
 
@@ -58,7 +58,7 @@ ROOT_URLCONF = "mindease.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'templates')],
+        "DIRS": [os.path.join(BASE_DIR, 'core/templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
