@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# exit on error
+set -o errexit
 
-# Install Python packages
 pip install -r requirements.txt
 
-# Collect static files
 python manage.py collectstatic --no-input
+python manage.py migrate
