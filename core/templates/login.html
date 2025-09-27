@@ -194,12 +194,13 @@
 
       // --- Handle Google Login Button Click ---
       googleLoginBtn.addEventListener("click", async function () {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "google",
-          options: {
-            redirectTo: window.location.origin + "{% url 'auth_callback' %}",
-          },
-        });
+              const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: "https://mannmitraprivate.onrender.com/",
+        },
+      });
+
 
         if (error) {
           alert("Error logging in with Google: " + error.message);

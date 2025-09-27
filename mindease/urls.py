@@ -37,6 +37,6 @@ urlpatterns = [
     path("student/stu_dashboard", views.stu_dashboard, name="stu_dashboard"),
     path('studentdashboard/myprogress/', views.stu_progress, name='stu_progress'),
     path('studentdashboard/resource/', views.stu_resource, name='stu_resource'),
-    path("auth_callback/", views.auth_callback, name="auth_callback"),
+    path("auth/callback/", views.auth_callback, name="auth_callback"),
 
 ]

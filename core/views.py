@@ -78,5 +78,9 @@ def stu_resource(request):
 def career_resources(request):
     return render(request, 'career_resources.html')
 
+# core/views.py
+from django.shortcuts import redirect
+
 def auth_callback(request):
-    return render(request, 'auth-callback.html')
+    return redirect('stu_dashboard')  # Django URL name for student dashboard
+

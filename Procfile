@@ -1,1 +1,1 @@
-web: gunicorn mindease.wsgi
+web: gunicorn mindease.wsgi:application
