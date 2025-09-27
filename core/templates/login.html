@@ -135,7 +135,10 @@
             required
           />
         </div>
-        <a href="{% url 'stu_dashboard' %}">Sign in</a>
+            <form id="login-form">
+      <button type="submit" class="btn">Sign in</button>
+    </form>
+
       </form>
 
       <div class="divider">Or continue with</div>
@@ -169,9 +172,11 @@
       const loginForm = document.getElementById("loginForm");
       const googleLoginBtn = document.getElementById("google-login-btn");
 
+    
       // --- Handle Email/Password Form Submission ---
       loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
+        window.location.href = "{% url 'stu_dashboard' %}";
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
