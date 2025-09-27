@@ -7,6 +7,7 @@ urlpatterns = [
 
     # Main Pages
     path('', views.home, name='home'),
+    path('login/', views.login_view, name='login'),
     path('alogin/', views.alogin, name='alogin'),
     path('slogin/', views.slogin, name='slogin'),
     path('about/', views.about, name='about'),
